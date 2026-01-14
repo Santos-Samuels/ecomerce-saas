@@ -1,0 +1,12 @@
+{
+  "name": "ecomerce",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "lint": "yarn workspace frontend run lint && yarn workspace backend run lint"
+  }
+}
