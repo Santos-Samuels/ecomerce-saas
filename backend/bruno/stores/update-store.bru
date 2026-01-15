@@ -1,0 +1,16 @@
+meta {
+  name: Stores - Update
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/stores/:id
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
+

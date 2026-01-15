@@ -1,0 +1,26 @@
+meta {
+  name: Users - Create Admin
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/users/admin
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "storeId": "",
+    "name": "",
+    "email": "",
+    "password": "",
+    "phone": ""
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

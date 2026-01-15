@@ -1,0 +1,16 @@
+meta {
+  name: Stores - Get by id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/stores/:id
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
+
