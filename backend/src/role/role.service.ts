@@ -47,4 +47,16 @@ export class RoleService {
       data: { active: false },
     });
   }
+
+  async findByName(name: string): Promise<Role> {
+    const role = await this.prisma.role.findFirst({
+      where: { name, active: true },
+    });
+
+    if (!role) {
+      throw new NotFoundException('Role not found');
+    }
+
+    return role;
+  }
 }

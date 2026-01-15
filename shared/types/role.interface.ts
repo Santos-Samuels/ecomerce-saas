@@ -4,3 +4,9 @@ export interface IRole {
   permissions: string[];
   active: boolean;
 }
+
+export enum RoleById {
+  Admin = "admin",
+  Customer = "customer",
+  Staff = "staff",
+}

@@ -13,10 +13,6 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  roleId: string;
-
-  @IsString()
-  @IsNotEmpty()
   name: string;
 
   @IsEmail()

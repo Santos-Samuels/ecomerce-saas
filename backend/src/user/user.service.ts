@@ -4,20 +4,29 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import * as crypto from 'crypto';
+import { RoleById } from '@ecomerce/shared';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateUserDto): Promise<User> {
+  async create(data: CreateUserDto, roleName: RoleById): Promise<User> {
     const passwordHash = data.password
       ? this.hashPassword(data.password)
       : undefined;
 
+    const role = await this.prisma.role.findFirst({
+      where: { name: roleName, active: true },
+    });
+
+    if (!role) {
+      throw new NotFoundException('Role not found');
+    }
+
     return this.prisma.user.create({
       data: {
         storeId: data.storeId,
-        roleId: data.roleId,
+        roleId: role.id,
         name: data.name,
         email: data.email,
         phone: data.phone,
