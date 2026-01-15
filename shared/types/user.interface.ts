@@ -5,11 +5,11 @@ export interface IUser {
   storeId: string;
   name: string;
   email: string;
-  passwordHash?: string; // Optional if not returned to frontend
+  passwordHash?: string | null; // Optional if not returned to frontend
   roleId: string;
   role?: IRole;
   phone: string;
-  address?: string; // Could be a separate interface IAddress
+  address?: string | null; // Could be a separate interface IAddress
   active: boolean;
   createdAt: Date;
   updatedAt?: Date;
