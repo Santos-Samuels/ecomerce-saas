@@ -1,17 +1,10 @@
 import { DashboardLoginForm } from "@/components/auth/DashboardLoginForm";
+import { PageWrapper } from "./styles";
 
 export default function DashboardLoginPage() {
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "var(--mantine-color-gray-0)",
-      }}
-    >
+    <PageWrapper>
       <DashboardLoginForm />
-    </div>
+    </PageWrapper>
   );
 }

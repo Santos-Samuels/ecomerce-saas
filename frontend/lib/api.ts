@@ -1,6 +1,7 @@
 "use client";
 
 import axios from "axios";
+import { store } from "@/store/store";
 
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -9,4 +10,15 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+api.interceptors.request.use((config) => {
+  const state = store.getState();
+  const token = state.auth.token;
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
 });

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState, LoginPayload } from "./types";
+import { deleteCookie } from "cookies-next";
 
 const initialState: AuthState = {
   token: null,
@@ -15,9 +16,15 @@ const authSlice = createSlice({
       Object.assign(state, action.payload);
     },
     login: (_state, _action: PayloadAction<LoginPayload>) => {}, // will be handle by saga
+    validateAuth: () => {}, // will be handle by saga
+    logout: (state) => {
+      state.token = null;
+      state.user = undefined;
+      deleteCookie("ecomerce-token");
+    },
   },
 });
 
-export const { setAuthSlice, login } = authSlice.actions;
+export const { setAuthSlice, login, validateAuth, logout } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;

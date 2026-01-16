@@ -14,10 +14,15 @@ import {
 } from "@mantine/core";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { login } from "@/store/auth/authSlice";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { RoleById } from "@ecomerce/shared";
 
 export function DashboardLoginForm() {
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state) => state.auth);
+  const router = useRouter();
+  const { loading, token, user } = useAppSelector((state) => state.auth);
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -32,6 +37,12 @@ export function DashboardLoginForm() {
   const handleSubmit = (values: typeof form.values) => {
     dispatch(login(values));
   };
+
+  useEffect(() => {
+    if (token && user?.role?.name === RoleById.Admin) {
+      router.replace("/admin");
+    }
+  }, [token, user, router]);
 
   return (
     <Container w={420} my={40}>

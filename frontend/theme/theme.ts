@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { createTheme } from '@mantine/core';
+import { createTheme } from "@mantine/core";
 
 export const theme = createTheme({
-  primaryColor: 'blue',
-  fontFamily: 'Inter, sans-serif',
-  defaultRadius: 'md',
+  primaryColor: "blue",
+  fontFamily: "Inter, sans-serif",
+  defaultRadius: "md",
   components: {
     Button: {
       defaultProps: {
-        size: 'md',
+        size: "md",
       },
     },
     TextInput: {
       defaultProps: {
-        size: 'md',
+        size: "md",
       },
     },
     PasswordInput: {
       defaultProps: {
-        size: 'md',
+        size: "md",
       },
     },
   },

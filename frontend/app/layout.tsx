@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
       </head>
@@ -39,7 +39,7 @@ export default function RootLayout({
       >
         <StyledComponentsRegistry>
           <StoreProvider>
-            <MantineProvider theme={theme}>
+            <MantineProvider theme={theme} defaultColorScheme="light">
               <Notifications />
               {children}
             </MantineProvider>

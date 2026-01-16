@@ -30,6 +30,7 @@ export class AuthService {
   async getProfile(userId: string): Promise<IUser> {
     const user = await this.prisma.user.findFirst({
       where: { id: userId, active: true },
+      include: { role: true },
     });
 
     if (!user) {
@@ -42,6 +43,7 @@ export class AuthService {
   private async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findFirst({
       where: { email, active: true },
+      include: { role: true },
     });
 
     if (!user || !user.passwordHash) {
@@ -57,18 +59,7 @@ export class AuthService {
     return user;
   }
 
-  private toAuthUser(user: {
-    id: string;
-    storeId: string;
-    roleId: string;
-    name: string;
-    email: string;
-    phone: string;
-    address: string | null;
-    active: boolean;
-    createdAt: Date;
-    updatedAt: Date | null;
-  }): IUser {
+  private toAuthUser(user): IUser {
     return {
       id: user.id,
       storeId: user.storeId,
@@ -80,6 +71,7 @@ export class AuthService {
       active: user.active,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt ?? undefined,
+      role: user.role,
     };
   }
 

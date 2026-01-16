@@ -5,6 +5,7 @@ import { LoginPayload } from "../../auth/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { IUser } from "@ecomerce/shared";
 import { notifications } from "@mantine/notifications";
+import { setCookie } from "cookies-next";
 
 interface LoginResponse {
   accessToken: string;
@@ -21,18 +22,21 @@ export function* handleLogin(action: PayloadAction<LoginPayload>) {
       action.payload
     );
 
+    setCookie("ecomerce-token", response.data.accessToken);
+
     yield put(
       setAuthSlice({
         token: response.data.accessToken,
         user: response.data.user,
-        loading: false,
       })
     );
-  } catch {
+  } catch (error) {
     notifications.show({
-      title: "Erro de autenticação",
+      title: "Erro ao entrar",
       message: "Verifique seu email e senha e tente novamente.",
       color: "red",
     });
+  } finally {
+    yield put(setAuthSlice({ loading: false }));
   }
 }
