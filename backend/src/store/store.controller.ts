@@ -41,7 +41,7 @@ export class StoreController {
   }
 
   @Patch(':id')
-  @Roles(RoleById.Staff)
+  @Roles(RoleById.Staff, RoleById.Admin)
   update(
     @Param('id') id: string,
     @Body() data: UpdateStoreDto,

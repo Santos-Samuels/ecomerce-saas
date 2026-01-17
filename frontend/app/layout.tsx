@@ -3,9 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { ColorSchemeScript } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { theme } from "../theme/theme";
+import { AppThemeProvider } from "../theme/theme";
 import StyledComponentsRegistry from "../lib/registry";
 import { StoreProvider } from "../store/StoreProvider";
 
@@ -39,10 +39,10 @@ export default function RootLayout({
       >
         <StyledComponentsRegistry>
           <StoreProvider>
-            <MantineProvider theme={theme} defaultColorScheme="light">
+            <AppThemeProvider>
               <Notifications />
               {children}
-            </MantineProvider>
+            </AppThemeProvider>
           </StoreProvider>
         </StyledComponentsRegistry>
       </body>

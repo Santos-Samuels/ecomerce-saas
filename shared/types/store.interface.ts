@@ -6,6 +6,7 @@ export interface IStore {
   phone: string;
   email: string;
   logoUrl?: string | null;
+  primaryColor?: string | null;
   active: boolean;
   createdAt: Date;
   updatedAt?: Date;

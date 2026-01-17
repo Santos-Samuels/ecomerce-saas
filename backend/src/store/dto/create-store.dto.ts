@@ -24,4 +24,8 @@ export class CreateStoreDto {
   @IsString()
   @IsOptional()
   logoUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  primaryColor?: string;
 }

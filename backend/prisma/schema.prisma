@@ -15,6 +15,7 @@ model Store {
   phone       String
   email       String   @unique
   logoUrl     String?
+  primaryColor String?
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

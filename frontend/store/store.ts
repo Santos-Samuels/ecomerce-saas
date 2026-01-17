@@ -15,6 +15,7 @@ import { authReducer } from "./auth/authSlice";
 import { productCategoriesReducer } from "./productCategories/productCategoriesSlice";
 import { productMaterialsReducer } from "./productMaterials/productMaterialsSlice";
 import { adminMenuReducer } from "./adminMenu/adminMenuSlice";
+import { storeSettingsReducer } from "./storeSettings/storeSettingsSlice";
 import { rootSaga } from "./sagas";
 
 const rootReducer = combineReducers({
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   productCategories: productCategoriesReducer,
   productMaterials: productMaterialsReducer,
   adminMenu: adminMenuReducer,
+  storeSettings: storeSettingsReducer,
 });
 
 const persistConfig = {

@@ -15,6 +15,8 @@ export class Store implements IStore {
 
   logoUrl?: string | null;
 
+  primaryColor?: string | null;
+
   active: boolean;
 
   createdAt: Date;
