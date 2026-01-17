@@ -23,15 +23,13 @@ export default async function AdminLayout({
   const token = cookieStore.get("ecomerce-token")?.value;
 
   if (!token) {
-    cookieStore.delete("ecomerce-token");
     redirect("/admin/login");
   }
 
   const session = await validateAuth(token);
 
   if (!session || session.role?.name !== RoleById.Admin) {
-    cookieStore.delete("ecomerce-token");
-    redirect("/admin/login");
+    redirect("/admin/logout");
   }
 
   return <>{children}</>;

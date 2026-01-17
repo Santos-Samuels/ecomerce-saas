@@ -7,6 +7,7 @@ import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductCategoryModule } from './product-category/product-category.module';
+import { ProductMaterialModule } from './product-material/product-material.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ProductCategoryModule } from './product-category/product-category.modul
     UserModule,
     AuthModule,
     ProductCategoryModule,
+    ProductMaterialModule,
   ],
   controllers: [AppController],
   providers: [AppService],

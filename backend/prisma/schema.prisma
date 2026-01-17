@@ -22,6 +22,7 @@ model Store {
 
   users             User[]
   productCategories ProductCategory[]
+  productMaterials  ProductMaterial[]
 }
 
 model Role {
@@ -69,4 +70,20 @@ model ProductCategory {
   children ProductCategory[] @relation("ProductCategoryToParent")
 
   @@unique([storeId, slug])
+}
+
+model ProductMaterial {
+  id          String   @id @default(uuid())
+  storeId     String
+  name        String
+  description String?
+  colorName   String?
+  colorHex    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+
+  @@unique([storeId, name])
 }

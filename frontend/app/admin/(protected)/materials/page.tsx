@@ -2,63 +2,64 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@mantine/core";
-import { IProductCategory } from "@ecomerce/shared";
+import { IProductMaterial } from "@ecomerce/shared";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
 import * as S from "../styles";
 import {
-  deleteProductCategory,
-  fetchProductCategories,
-  saveProductCategory,
-} from "@/store/productCategories/productCategoriesSlice";
-import { CategoriesTable } from "@/components/admin/categories/CategoriesTable";
-import { CategoryFormModal } from "@/components/admin/categories/CategoryFormModal";
+  deleteProductMaterial,
+  fetchProductMaterials,
+  saveProductMaterial,
+} from "@/store/productMaterials/productMaterialsSlice";
+import { MaterialsTable } from "@/components/admin/materials/MaterialsTable";
+import { MaterialFormModal } from "@/components/admin/materials/MaterialFormModal";
 import { AdminContentLoader } from "@/components/admin/layout/AdminContentLoader";
 
-export default function ProductCategoriesPage() {
+export default function ProductMaterialsPage() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const {
-    items: categories,
+    items: materials,
     loading,
     saving,
     deletingId,
-  } = useAppSelector((state) => state.productCategories);
+  } = useAppSelector((state) => state.productMaterials);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<
-    IProductCategory | undefined
+  const [editingMaterial, setEditingMaterial] = useState<
+    IProductMaterial | undefined
   >(undefined);
 
   const storeId = user?.storeId;
 
   useEffect(() => {
     if (!storeId) return;
-    dispatch(fetchProductCategories({ storeId }));
+    dispatch(fetchProductMaterials({ storeId }));
   }, [dispatch, storeId]);
 
   if (!user || !storeId) return null;
 
   const handleOpenCreate = () => {
-    setEditingCategory(undefined);
+    setEditingMaterial(undefined);
     setModalOpen(true);
   };
 
-  const handleOpenEdit = (category: IProductCategory) => {
-    setEditingCategory(category);
+  const handleOpenEdit = (material: IProductMaterial) => {
+    setEditingMaterial(material);
     setModalOpen(true);
   };
 
   const handleSubmit = (values: {
     id?: string;
     name: string;
-    slug: string;
     description?: string;
+    colorName: string;
+    colorHex: string;
     active: boolean;
   }) => {
     dispatch(
-      saveProductCategory({
+      saveProductMaterial({
         ...values,
         storeId,
       })
@@ -66,10 +67,11 @@ export default function ProductCategoriesPage() {
     setModalOpen(false);
   };
 
-  const handleDelete = (category: IProductCategory) => {
+  const handleDelete = (material: IProductMaterial) => {
     dispatch(
-      deleteProductCategory({
-        id: category.id,
+      deleteProductMaterial({
+        id: material.id,
+        storeId,
       })
     );
   };
@@ -80,14 +82,14 @@ export default function ProductCategoriesPage() {
 
       <S.MainContent>
         <AdminPageHeader
-          title="Categorias de produto"
-          subtitle="Gerencie as categorias utilizadas pelos seus produtos."
-          action={<Button onClick={handleOpenCreate}>Nova categoria</Button>}
+          title="Materiais de produto"
+          subtitle="Gerencie os materiais utilizados pelos seus produtos."
+          action={<Button onClick={handleOpenCreate}>Novo material</Button>}
         />
 
-        <AdminContentLoader loading={loading} label="Carregando categorias...">
-          <CategoriesTable
-            categories={categories}
+        <AdminContentLoader loading={loading} label="Carregando materiais...">
+          <MaterialsTable
+            materials={materials}
             loading={loading}
             deletingId={deletingId}
             onEdit={handleOpenEdit}
@@ -96,11 +98,10 @@ export default function ProductCategoriesPage() {
         </AdminContentLoader>
       </S.MainContent>
 
-      <CategoryFormModal
-        key={`${editingCategory?.id ?? "new"}-${modalOpen ? "open" : "closed"}`}
+      <MaterialFormModal
         opened={modalOpen}
         saving={saving}
-        category={editingCategory}
+        material={editingMaterial}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
       />

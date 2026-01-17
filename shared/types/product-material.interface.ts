@@ -3,7 +3,8 @@ export interface IProductMaterial {
   storeId: string;
   name: string; // e.g., 'Couro', 'Tecido', 'Chinil'
   description?: string;
-  color?: string;
+  colorName?: string;
+  colorHex?: string;
   active: boolean;
   createdAt: Date;
   updatedAt?: Date;

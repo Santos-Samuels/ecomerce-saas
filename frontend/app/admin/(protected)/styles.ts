@@ -68,7 +68,7 @@ export const SidebarNav = styled.nav`
   margin-top: 12px;
 `;
 
-export const SidebarNavItem = styled.button<{ active?: boolean }>`
+export const SidebarNavItem = styled.button<{ $active?: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
@@ -76,9 +76,9 @@ export const SidebarNavItem = styled.button<{ active?: boolean }>`
   padding: 10px 12px;
   border-radius: 12px;
   border: none;
-  background: ${({ active }) =>
-    active ? "rgba(15, 23, 42, 0.9)" : "transparent"};
-  color: ${({ active }) => (active ? "#e5e7eb" : "inherit")};
+  background: ${({ $active }) =>
+    $active ? "rgba(15, 23, 42, 0.9)" : "transparent"};
+  color: ${({ $active }) => ($active ? "#e5e7eb" : "inherit")};
   font-size: 13px;
   cursor: pointer;
   transition:
@@ -126,14 +126,14 @@ export const SidebarSubNav = styled.div`
   padding-left: 38px;
 `;
 
-export const SidebarSubNavItem = styled.button<{ active?: boolean }>`
+export const SidebarSubNavItem = styled.button<{ $active?: boolean }>`
   width: 100%;
   padding: 6px 8px;
   border-radius: 10px;
   border: none;
-  background: ${({ active }) =>
-    active ? "rgba(15, 23, 42, 0.95)" : "transparent"};
-  color: ${({ active }) => (active ? "#e5e7eb" : "#cbd5f5")};
+  background: ${({ $active }) =>
+    $active ? "rgba(15, 23, 42, 0.95)" : "transparent"};
+  color: ${({ $active }) => ($active ? "#e5e7eb" : "#cbd5f5")};
   font-size: 12px;
   text-align: left;
   cursor: pointer;
@@ -223,8 +223,6 @@ export const MainContent = styled.main`
   flex-direction: column;
   padding: 28px 32px;
 `;
-
-
 
 export const PlaceholderCard = styled.section`
   border-radius: 18px;

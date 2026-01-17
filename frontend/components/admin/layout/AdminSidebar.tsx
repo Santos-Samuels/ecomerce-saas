@@ -81,7 +81,7 @@ export function AdminSidebar() {
             <div key={item.id}>
               <S.SidebarNavItem
                 type="button"
-                active={itemActive}
+                $active={itemActive}
                 onClick={
                   hasChildren
                     ? () => toggleGroup(item.id)
@@ -107,7 +107,7 @@ export function AdminSidebar() {
                       <S.SidebarSubNavItem
                         key={child.id}
                         type="button"
-                        active={childIsActive}
+                        $active={childIsActive}
                         onClick={() => handleNavigate(child.path)}
                       >
                         {child.label}

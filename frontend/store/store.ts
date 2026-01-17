@@ -13,12 +13,14 @@ import {
 import storage from "redux-persist/lib/storage";
 import { authReducer } from "./auth/authSlice";
 import { productCategoriesReducer } from "./productCategories/productCategoriesSlice";
+import { productMaterialsReducer } from "./productMaterials/productMaterialsSlice";
 import { adminMenuReducer } from "./adminMenu/adminMenuSlice";
 import { rootSaga } from "./sagas";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   productCategories: productCategoriesReducer,
+  productMaterials: productMaterialsReducer,
   adminMenu: adminMenuReducer,
 });
 
