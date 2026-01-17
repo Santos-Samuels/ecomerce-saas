@@ -23,6 +23,7 @@ export interface SaveProductPayload {
   materialId?: string;
   featured?: boolean;
   active: boolean;
+  compatibleVehicleIds?: string[];
   onSuccess?: () => void;
 }
 

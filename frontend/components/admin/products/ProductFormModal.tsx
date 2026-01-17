@@ -24,6 +24,7 @@ export interface ProductFormValues {
   featured?: boolean;
   active: boolean;
   images: string[];
+  compatibleVehicleIds: string[];
 }
 
 interface ProductFormModalProps {
@@ -47,7 +48,8 @@ export function ProductFormModal({
   const { items: materials } = useAppSelector(
     (state) => state.productMaterials
   );
-  const { store } = useAppSelector((state) => state.storeSettings);
+  const { items: vehicles } = useAppSelector((state) => state.vehicles);
+  const { user } = useAppSelector((state) => state.auth);
 
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -70,6 +72,7 @@ export function ProductFormModal({
       featured: false,
       active: true,
       images: [] as string[],
+      compatibleVehicleIds: [],
     },
     validate: {
       name: (value) =>
@@ -126,6 +129,9 @@ export function ProductFormModal({
         featured: product.featured,
         active: product.active,
         images: product.images,
+        compatibleVehicleIds: product.compatibleVehicles
+          ? product.compatibleVehicles.map((vehicle) => vehicle.id)
+          : [],
       });
     } else {
       form.reset();
@@ -140,6 +146,7 @@ export function ProductFormModal({
       current.forEach((url) => URL.revokeObjectURL(url));
       return [];
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product, opened]);
 
   const handleAddFiles = (files: File[]) => {
@@ -189,7 +196,9 @@ export function ProductFormModal({
     try {
       setUploading(true);
       const uploadedUrls: string[] = [];
-      const folder = store ? `stores/${store.id}/products` : "products";
+      const folder = user?.storeId
+        ? `stores/${user.storeId}/products`
+        : "products";
 
       for (const file of newFiles) {
         const url = await uploadToImageKit(file, folder);
@@ -241,6 +250,7 @@ export function ProductFormModal({
             categories={categories}
             materials={materials}
             isEditing={Boolean(product)}
+            vehicles={vehicles}
           />
         </Tabs>
 

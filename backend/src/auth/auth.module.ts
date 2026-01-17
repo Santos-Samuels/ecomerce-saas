@@ -17,7 +17,35 @@ function getJwtExpiresIn(): number {
     return numericValue;
   }
 
-  return 3600;
+  const durationMatch = /^(\d+)([smhd])$/i.exec(envValue.trim());
+
+  if (!durationMatch) {
+    return 3600;
+  }
+
+  const [, amountStr, unit] = durationMatch;
+  const amount = Number(amountStr);
+
+  if (Number.isNaN(amount)) {
+    return 3600;
+  }
+
+  const lowerUnit = unit.toLowerCase();
+
+  const unitMultipliers: Record<string, number> = {
+    s: 1,
+    m: 60,
+    h: 60 * 60,
+    d: 60 * 60 * 24,
+  };
+
+  const multiplier = unitMultipliers[lowerUnit];
+
+  if (!multiplier) {
+    return 3600;
+  }
+
+  return amount * multiplier;
 }
 
 @Module({

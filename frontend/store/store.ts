@@ -17,6 +17,7 @@ import { productMaterialsReducer } from "./productMaterials/productMaterialsSlic
 import { adminMenuReducer } from "./adminMenu/adminMenuSlice";
 import { storeSettingsReducer } from "./storeSettings/storeSettingsSlice";
 import { productsReducer } from "./products/productsSlice";
+import { vehiclesReducer } from "./vehicles/vehiclesSlice";
 import { rootSaga } from "./sagas";
 
 const rootReducer = combineReducers({
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   productCategories: productCategoriesReducer,
   productMaterials: productMaterialsReducer,
   products: productsReducer,
+  vehicles: vehiclesReducer,
   adminMenu: adminMenuReducer,
   storeSettings: storeSettingsReducer,
 });

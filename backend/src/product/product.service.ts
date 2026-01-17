@@ -9,37 +9,37 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.entity';
 import { Prisma } from '@prisma/client';
 
-type PrismaProductWithRelations = Prisma.ProductGetPayload<{
-  include: {
-    category: true;
-    material: true;
-    vehicles: true;
-  };
-}>;
+type PrismaProductRaw = Prisma.ProductGetPayload<Prisma.ProductDefaultArgs> & {
+  category?: Product['category'];
+  material?: Product['material'];
+  vehicles?: Product['compatibleVehicles'];
+};
 
 @Injectable()
 export class ProductService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private mapToEntity(prismaProduct: PrismaProductWithRelations): Product {
+  private mapToEntity(prismaProduct: PrismaProductRaw): Product {
     return {
       ...prismaProduct,
       price: Number(prismaProduct.price),
       promotionalPrice: prismaProduct.promotionalPrice
         ? Number(prismaProduct.promotionalPrice)
         : undefined,
-      compatibleVehicles: prismaProduct.vehicles || [], // Map vehicles relation
-      // Ensure category and material are mapped correctly if included
+      infiniteStock: prismaProduct.infiniteStock,
+      compatibleVehicles: prismaProduct.vehicles ?? [],
       category: prismaProduct.category,
       material: prismaProduct.material,
     };
   }
 
   async create(data: CreateProductDto): Promise<Product> {
+    const { compatibleVehicleIds, ...rest } = data;
+
     if (
-      data.promotionalPrice !== undefined &&
-      data.promotionalPrice !== null &&
-      data.promotionalPrice > data.price
+      rest.promotionalPrice !== undefined &&
+      rest.promotionalPrice !== null &&
+      rest.promotionalPrice > rest.price
     ) {
       throw new BadRequestException(
         'Promotional price cannot be greater than price',
@@ -48,8 +48,8 @@ export class ProductService {
 
     const existing = await this.prisma.product.findFirst({
       where: {
-        storeId: data.storeId,
-        OR: [{ slug: data.slug }, { sku: data.sku }],
+        storeId: rest.storeId,
+        OR: [{ slug: rest.slug }, { sku: rest.sku }],
       },
     });
 
@@ -60,17 +60,19 @@ export class ProductService {
     }
 
     if (existing && !existing.active) {
-      // Reactivate logic if needed, but simple create for now usually prefers clean slug
-      // But let's check if we should update the inactive one
-      // If slug matches, update. If SKU matches, update.
-      // For simplicity, let's just create new if unique constraints allow, but constraints are on [storeId, slug] and [storeId, sku]
-      // So we MUST update if it exists
       return this.mapToEntity(
         await this.prisma.product.update({
           where: { id: existing.id },
           data: {
-            ...data,
+            ...rest,
             active: true,
+            ...(compatibleVehicleIds !== undefined
+              ? {
+                  vehicles: {
+                    set: compatibleVehicleIds.map((id) => ({ id })),
+                  },
+                }
+              : {}),
           },
           include: {
             category: true,
@@ -83,8 +85,15 @@ export class ProductService {
 
     const created = await this.prisma.product.create({
       data: {
-        ...data,
-        active: data.active ?? true,
+        ...rest,
+        active: rest.active ?? true,
+        ...(compatibleVehicleIds && compatibleVehicleIds.length > 0
+          ? {
+              vehicles: {
+                connect: compatibleVehicleIds.map((id) => ({ id })),
+              },
+            }
+          : {}),
       },
       include: {
         category: true,
@@ -108,11 +117,6 @@ export class ProductService {
     const products = await this.prisma.product.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      include: {
-        category: true,
-        material: true,
-        vehicles: true,
-      },
     });
 
     return products.map((p) => this.mapToEntity(p));
@@ -138,10 +142,12 @@ export class ProductService {
   async update(id: string, data: UpdateProductDto): Promise<Product> {
     const existing = await this.findOne(id);
 
-    const price = data.price ?? existing.price;
+    const { compatibleVehicleIds, ...rest } = data;
+
+    const price = rest.price ?? existing.price;
     const promotionalPrice =
-      data.promotionalPrice !== undefined
-        ? data.promotionalPrice
+      rest.promotionalPrice !== undefined
+        ? rest.promotionalPrice
         : existing.promotionalPrice;
 
     if (
@@ -156,7 +162,18 @@ export class ProductService {
 
     const updated = await this.prisma.product.update({
       where: { id },
-      data,
+      data: {
+        ...rest,
+        ...(compatibleVehicleIds !== undefined
+          ? {
+              vehicles: {
+                set: compatibleVehicleIds.map((vehicleId) => ({
+                  id: vehicleId,
+                })),
+              },
+            }
+          : {}),
+      },
       include: {
         category: true,
         material: true,

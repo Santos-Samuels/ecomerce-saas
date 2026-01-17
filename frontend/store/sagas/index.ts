@@ -4,6 +4,7 @@ import { watchProductCategories } from "./productCategories";
 import { watchProductMaterials } from "./productMaterials";
 import { watchProducts } from "./products";
 import { watchStoreSettings } from "./storeSettings";
+import { watchVehicles } from "./vehicles";
 
 export function* rootSaga() {
   yield all([
@@ -11,6 +12,7 @@ export function* rootSaga() {
     watchProductCategories(),
     watchProductMaterials(),
     watchProducts(),
+    watchVehicles(),
     watchStoreSettings(),
   ]);
 }

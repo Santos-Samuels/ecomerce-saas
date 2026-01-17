@@ -40,6 +40,11 @@ const initialState: AdminMenuState = {
           label: "Materiais",
           path: "/admin/materials",
         },
+        {
+          id: "products-vehicles",
+          label: "Veículos",
+          path: "/admin/vehicles",
+        },
       ],
     },
     { id: "orders", label: "Pedidos", path: "/admin/orders" },

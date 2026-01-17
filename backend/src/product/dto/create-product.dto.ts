@@ -59,4 +59,9 @@ export class CreateProductDto {
   @IsBoolean()
   @IsOptional()
   active?: boolean;
+
+  @IsArray()
+  @IsUUID('4', { each: true })
+  @IsOptional()
+  compatibleVehicleIds?: string[];
 }

@@ -6,7 +6,8 @@ import {
   Tooltip,
   NumberFormatter,
 } from "@mantine/core";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import Link from "next/link";
+import { FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
 import { IProduct } from "@ecomerce/shared";
 import { DataTable, DataTableColumn } from "@/components/ui/DataTable";
 
@@ -107,23 +108,28 @@ export function ProductsTable({ data, onEdit, onDelete }: ProductsTableProps) {
       ),
     },
     {
-      key: "category",
-      header: "Categoria",
-      render: (product) => (
-        <Text size="sm">{product.category?.name || "-"}</Text>
-      ),
-    },
-    {
       key: "actions",
       header: "Ações",
       align: "right",
       width: 120,
       render: (product) => (
-        <Group gap="xs" justify="flex-end">
+        <Group gap={4} justify="flex-end">
+          <Tooltip label="Ver detalhes">
+            <ActionIcon
+              component={Link}
+              href={`/admin/products/${product.id}`}
+              variant="subtle"
+              color="gray"
+              size="sm"
+            >
+              <FiEye size={16} />
+            </ActionIcon>
+          </Tooltip>
           <Tooltip label="Editar">
             <ActionIcon
               variant="subtle"
               color="blue"
+              size="sm"
               onClick={() => onEdit(product)}
             >
               <FiEdit2 size={16} />
@@ -133,6 +139,7 @@ export function ProductsTable({ data, onEdit, onDelete }: ProductsTableProps) {
             <ActionIcon
               variant="subtle"
               color="red"
+              size="sm"
               onClick={() => onDelete(product.id)}
             >
               <FiTrash2 size={16} />

@@ -10,6 +10,7 @@ import { ProductCategoryModule } from './product-category/product-category.modul
 import { ProductMaterialModule } from './product-material/product-material.module';
 import { ProductModule } from './product/product.module';
 import { ImageKitModule } from './imagekit/imagekit.module';
+import { VehicleModule } from './vehicle/vehicle.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ImageKitModule } from './imagekit/imagekit.module';
     ProductCategoryModule,
     ProductMaterialModule,
     ProductModule,
+    VehicleModule,
     ImageKitModule,
   ],
   controllers: [AppController],

@@ -20,6 +20,7 @@ import {
 } from "@/components/admin/products/ProductFormModal";
 import { fetchProductCategories } from "@/store/productCategories/productCategoriesSlice";
 import { fetchProductMaterials } from "@/store/productMaterials/productMaterialsSlice";
+import { fetchVehicles } from "@/store/vehicles/vehiclesSlice";
 
 export default function ProductsPage() {
   const dispatch = useAppDispatch();
@@ -29,6 +30,13 @@ export default function ProductsPage() {
     loading,
     saving,
   } = useAppSelector((state) => state.products);
+  const { items: categories } = useAppSelector(
+    (state) => state.productCategories
+  );
+  const { items: materials } = useAppSelector(
+    (state) => state.productMaterials
+  );
+  const { items: vehicles } = useAppSelector((state) => state.vehicles);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<IProduct | undefined>(
@@ -40,9 +48,30 @@ export default function ProductsPage() {
   useEffect(() => {
     if (!storeId) return;
     dispatch(fetchProducts({ storeId }));
-    dispatch(fetchProductCategories({ storeId }));
-    dispatch(fetchProductMaterials({ storeId }));
   }, [dispatch, storeId]);
+
+  useEffect(() => {
+    if (!storeId || !modalOpen) return;
+
+    if (categories.length === 0) {
+      dispatch(fetchProductCategories({ storeId }));
+    }
+
+    if (materials.length === 0) {
+      dispatch(fetchProductMaterials({ storeId }));
+    }
+
+    if (vehicles.length === 0) {
+      dispatch(fetchVehicles());
+    }
+  }, [
+    dispatch,
+    storeId,
+    modalOpen,
+    categories.length,
+    materials.length,
+    vehicles.length,
+  ]);
 
   if (!user || !storeId) return null;
 
@@ -80,6 +109,7 @@ export default function ProductsPage() {
         featured: values.featured,
         active: values.active,
         images: values.images,
+        compatibleVehicleIds: values.compatibleVehicleIds,
         onSuccess: () => {
           setModalOpen(false);
           setEditingProduct(undefined);
