@@ -64,29 +64,31 @@ export const SidebarTitleSub = styled.span`
 export const SidebarNav = styled.nav`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   margin-top: 12px;
 `;
 
-export const SidebarNavItem = styled.button`
+export const SidebarNavItem = styled.button<{ active?: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
-  background: transparent;
-  color: inherit;
+  background: ${({ active }) =>
+    active ? "rgba(15, 23, 42, 0.9)" : "transparent"};
+  color: ${({ active }) => (active ? "#e5e7eb" : "inherit")};
   font-size: 13px;
   cursor: pointer;
   transition:
     background 0.18s ease,
     transform 0.12s ease,
-    box-shadow 0.18s ease;
+    box-shadow 0.18s ease,
+    color 0.18s ease;
 
   &:hover {
-    background: rgba(15, 23, 42, 0.7);
+    background: rgba(15, 23, 42, 0.8);
     box-shadow: 0 10px 18px rgba(15, 23, 42, 0.75);
     transform: translateY(-1px);
   }
@@ -98,11 +100,65 @@ export const SidebarNavItemLabel = styled.span`
   gap: 8px;
 `;
 
+export const NavIcon = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.75);
+  color: #bfdbfe;
+`;
+
 export const NavBullet = styled.span`
   width: 8px;
   height: 8px;
   border-radius: 999px;
   background: #93c5fd;
+`;
+
+export const SidebarSubNav = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+  padding-left: 38px;
+`;
+
+export const SidebarSubNavItem = styled.button<{ active?: boolean }>`
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: none;
+  background: ${({ active }) =>
+    active ? "rgba(15, 23, 42, 0.95)" : "transparent"};
+  color: ${({ active }) => (active ? "#e5e7eb" : "#cbd5f5")};
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.12s ease;
+
+  &:hover {
+    background: rgba(15, 23, 42, 0.8);
+    color: #e5e7eb;
+    transform: translateY(-0.5px);
+  }
+`;
+
+export const ChevronIcon = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  transition: transform 0.16s ease;
+
+  &[data-open="true"] {
+    transform: rotate(180deg);
+  }
 `;
 
 export const SidebarFooter = styled.div`
@@ -113,13 +169,40 @@ export const SidebarFooter = styled.div`
   color: #9ca3af;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 `;
 
 export const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
+`;
+
+export const LogoutButton = styled.button`
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(15, 23, 42, 0.6);
+  color: #e5e7eb;
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    background 0.18s ease,
+    transform 0.12s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+
+  &:hover {
+    background: rgba(30, 64, 175, 0.85);
+    border-color: rgba(191, 219, 254, 0.9);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.8);
+    transform: translateY(-0.5px);
+  }
 `;
 
 export const UserName = styled.span`
@@ -141,24 +224,7 @@ export const MainContent = styled.main`
   padding: 28px 32px;
 `;
 
-export const MainHeader = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-`;
 
-export const MainTitle = styled.h1`
-  font-size: 22px;
-  font-weight: 600;
-  color: #0f172a;
-`;
-
-export const MainSubtitle = styled.p`
-  margin-top: 4px;
-  font-size: 13px;
-  color: #64748b;
-`;
 
 export const PlaceholderCard = styled.section`
   border-radius: 18px;

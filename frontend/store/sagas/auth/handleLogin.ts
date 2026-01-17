@@ -30,7 +30,7 @@ export function* handleLogin(action: PayloadAction<LoginPayload>) {
         user: response.data.user,
       })
     );
-  } catch (error) {
+  } catch {
     notifications.show({
       title: "Erro ao entrar",
       message: "Verifique seu email e senha e tente novamente.",

@@ -1,0 +1,126 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Box, Button, Text } from "@mantine/core";
+import { IProductCategory } from "@ecomerce/shared";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
+import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
+import * as S from "../styles";
+import {
+  deleteProductCategory,
+  fetchProductCategories,
+  saveProductCategory,
+} from "@/store/productCategories/productCategoriesSlice";
+import { CategoriesTable } from "@/components/admin/categories/CategoriesTable";
+import { CategoryFormModal } from "@/components/admin/categories/CategoryFormModal";
+
+export default function ProductCategoriesPage() {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+  const {
+    items: categories,
+    loading,
+    saving,
+    deletingId,
+  } = useAppSelector((state) => state.productCategories);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<
+    IProductCategory | undefined
+  >(undefined);
+
+  const storeId = user?.storeId;
+
+  useEffect(() => {
+    if (!storeId) return;
+    dispatch(fetchProductCategories({ storeId }));
+  }, [dispatch, storeId]);
+
+  if (!user || !storeId) return null;
+
+  const handleOpenCreate = () => {
+    setEditingCategory(undefined);
+    setModalOpen(true);
+  };
+
+  const handleOpenEdit = (category: IProductCategory) => {
+    setEditingCategory(category);
+    setModalOpen(true);
+  };
+
+  const handleSubmit = (values: {
+    id?: string;
+    name: string;
+    slug: string;
+    description?: string;
+    active: boolean;
+  }) => {
+    dispatch(
+      saveProductCategory({
+        ...values,
+        storeId,
+      })
+    );
+    setModalOpen(false);
+  };
+
+  const handleDelete = (category: IProductCategory) => {
+    dispatch(
+      deleteProductCategory({
+        id: category.id,
+      })
+    );
+  };
+
+  return (
+    <S.AdminLayout>
+      <AdminSidebar />
+
+      <S.MainContent>
+        <AdminPageHeader
+          title="Categorias de produto"
+          subtitle="Gerencie as categorias utilizadas pelos seus produtos."
+          action={<Button onClick={handleOpenCreate}>Nova categoria</Button>}
+        />
+
+        <Box pos="relative">
+          {loading && (
+            <Box
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(255, 255, 255, 0.6)",
+                zIndex: 1,
+              }}
+            >
+              <Text size="sm" c="dimmed">
+                Carregando categorias...
+              </Text>
+            </Box>
+          )}
+
+          <CategoriesTable
+            categories={categories}
+            loading={loading}
+            deletingId={deletingId}
+            onEdit={handleOpenEdit}
+            onDelete={handleDelete}
+          />
+        </Box>
+      </S.MainContent>
+
+      <CategoryFormModal
+        key={`${editingCategory?.id ?? "new"}-${modalOpen ? "open" : "closed"}`}
+        opened={modalOpen}
+        saving={saving}
+        category={editingCategory}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleSubmit}
+      />
+    </S.AdminLayout>
+  );
+}

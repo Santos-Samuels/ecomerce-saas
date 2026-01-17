@@ -12,10 +12,14 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { authReducer } from "./auth/authSlice";
+import { productCategoriesReducer } from "./productCategories/productCategoriesSlice";
+import { adminMenuReducer } from "./adminMenu/adminMenuSlice";
 import { rootSaga } from "./sagas";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  productCategories: productCategoriesReducer,
+  adminMenu: adminMenuReducer,
 });
 
 const persistConfig = {
@@ -44,4 +48,3 @@ export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-

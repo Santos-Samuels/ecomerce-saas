@@ -4,7 +4,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthTokenPayload } from './auth.types';
 import * as crypto from 'crypto';
-import { IUser } from '@ecomerce/shared';
+import { IRole, IUser, RoleById } from '@ecomerce/shared';
+import { Role as PrismaRole, User as PrismaUser } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
       email: user.email,
       storeId: user.storeId,
       roleId: user.roleId,
+      roleName: user.role.name as RoleById,
     };
 
     const accessToken = this.jwtService.sign(payload);
@@ -59,7 +61,7 @@ export class AuthService {
     return user;
   }
 
-  private toAuthUser(user): IUser {
+  private toAuthUser(user: PrismaUser & { role?: PrismaRole | null }): IUser {
     return {
       id: user.id,
       storeId: user.storeId,
@@ -71,7 +73,20 @@ export class AuthService {
       active: user.active,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt ?? undefined,
-      role: user.role,
+      role: this.mapRole(user.role),
+    };
+  }
+
+  private mapRole(role: PrismaRole | null | undefined): IRole | undefined {
+    if (!role) {
+      return undefined;
+    }
+
+    return {
+      id: role.id,
+      name: role.name,
+      permissions: role.permissions,
+      active: role.active,
     };
   }
 

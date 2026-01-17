@@ -20,7 +20,8 @@ model Store {
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
 
-  users User[]
+  users             User[]
+  productCategories ProductCategory[]
 }
 
 model Role {
@@ -50,4 +51,22 @@ model User {
 
   store Store @relation(fields: [storeId], references: [id])
   role  Role  @relation(fields: [roleId], references: [id])
+}
+
+model ProductCategory {
+  id          String   @id @default(uuid())
+  storeId     String
+  name        String
+  slug        String
+  description String?
+  parentId    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  store    Store            @relation(fields: [storeId], references: [id])
+  parent   ProductCategory? @relation("ProductCategoryToParent", fields: [parentId], references: [id])
+  children ProductCategory[] @relation("ProductCategoryToParent")
+
+  @@unique([storeId, slug])
 }
