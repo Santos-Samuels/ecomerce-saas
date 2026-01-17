@@ -33,11 +33,11 @@ const HeaderContainer = styled.header`
 const Title = styled.h1`
   font-size: 22px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--mantine-color-gray-9);
 `;
 
 const Subtitle = styled.p`
   margin-top: 4px;
   font-size: 13px;
-  color: #64748b;
+  color: var(--mantine-color-gray-6);
 `;

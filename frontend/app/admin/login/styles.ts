@@ -7,7 +7,7 @@ export const PageWrapper = styled.div`
   justify-content: center;
   padding: 24px;
   background:
-    radial-gradient(circle at top left, #e0f2fe, transparent 55%),
-    radial-gradient(circle at bottom right, #e5e7eb, transparent 55%),
+    radial-gradient(circle at top left, var(--mantine-color-blue-1), transparent 55%),
+    radial-gradient(circle at bottom right, var(--mantine-color-gray-2), transparent 55%),
     var(--mantine-color-gray-0);
 `;

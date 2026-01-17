@@ -39,7 +39,7 @@ export function MaterialFormModal({
     name: material?.name ?? "",
     description: material?.description ?? "",
     colorName: material?.colorName ?? "",
-    colorHex: material?.colorHex ?? "#000000",
+    colorHex: material?.colorHex ?? "",
     active: material?.active ?? true,
   });
 
@@ -51,7 +51,7 @@ export function MaterialFormModal({
         name: material?.name ?? "",
         description: material?.description ?? "",
         colorName: material?.colorName ?? "",
-        colorHex: material?.colorHex ?? "#000000",
+        colorHex: material?.colorHex ?? "",
         active: material?.active ?? true,
       });
     }
@@ -142,7 +142,7 @@ export function MaterialFormModal({
           <Button variant="default" onClick={onClose}>
             Cancelar
           </Button>
-          <Button loading={saving} onClick={handleSubmit}>
+          <Button color="brand" loading={saving} onClick={handleSubmit}>
             {isEditing ? "Salvar alterações" : "Criar material"}
           </Button>
         </Group>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -12,7 +13,7 @@ import {
 } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { AdminMenuItem } from "@/store/adminMenu/adminMenuSlice";
-import * as S from "@/app/admin/(protected)/styles";
+import * as S from "./styles";
 import { logout } from "@/store/auth/authSlice";
 
 function getMenuIcon(id: string) {
@@ -28,12 +29,21 @@ export function AdminSidebar() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { items } = useAppSelector((state) => state.adminMenu);
+  const storeImageUrl = useAppSelector(
+    (state) => state.storeSettings.store?.logoUrl ?? null
+  );
+  const storeName = useAppSelector(
+    (state) => state.storeSettings.store?.name ?? null
+  );
 
   const router = useRouter();
   const pathname = usePathname();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   if (!user) return null;
+
+  const storeInitial =
+    (storeName ?? user.name ?? "").trim().charAt(0).toUpperCase() || "L";
 
   const handleNavigate = (path: string) => {
     router.push(path);
@@ -57,7 +67,19 @@ export function AdminSidebar() {
   return (
     <S.Sidebar>
       <S.SidebarHeader>
-        <S.LogoMark>EA</S.LogoMark>
+        {storeImageUrl ? (
+          <S.LogoImageWrapper>
+            <Image
+              src={storeImageUrl}
+              alt={storeName ?? "Logo da loja"}
+              fill
+              sizes="32px"
+              style={{ objectFit: "cover" }}
+            />
+          </S.LogoImageWrapper>
+        ) : (
+          <S.LogoMark>{storeInitial}</S.LogoMark>
+        )}
         <S.SidebarTitle>
           <S.SidebarTitleMain>Portal Admin</S.SidebarTitleMain>
           <S.SidebarTitleSub>Gestão da loja</S.SidebarTitleSub>

@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { FetchStoreSettingsPayload, SaveStoreSettingsPayload } from "../../storeSettings/types";
 import { setStoreSettingsSlice } from "../../storeSettings/storeSettingsSlice";
 import { notifications } from "@mantine/notifications";
+import { deleteCookie, setCookie } from "cookies-next";
 
 export function* handleFetchStoreSettings(
   action: PayloadAction<FetchStoreSettingsPayload>
@@ -22,6 +23,12 @@ export function* handleFetchStoreSettings(
         store: response.data,
       })
     );
+
+    if (response.data.primaryColor && response.data.primaryColor.trim().length > 0) {
+      setCookie("ecomerce-store-primary-color", response.data.primaryColor);
+    } else {
+      deleteCookie("ecomerce-store-primary-color");
+    }
   } catch {
     notifications.show({
       title: "Erro ao carregar loja",
@@ -53,6 +60,12 @@ export function* handleSaveStoreSettings(
       })
     );
 
+    if (response.data.primaryColor && response.data.primaryColor.trim().length > 0) {
+      setCookie("ecomerce-store-primary-color", response.data.primaryColor);
+    } else {
+      deleteCookie("ecomerce-store-primary-color");
+    }
+
     notifications.show({
       title: "Loja atualizada",
       message: "As informações da loja foram salvas com sucesso.",
@@ -68,4 +81,3 @@ export function* handleSaveStoreSettings(
     yield put(setStoreSettingsSlice({ saving: false }));
   }
 }
-

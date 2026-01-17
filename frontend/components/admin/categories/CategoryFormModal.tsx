@@ -98,7 +98,7 @@ export function CategoryFormModal({
           <Button variant="default" onClick={onClose}>
             Cancelar
           </Button>
-          <Button loading={saving} onClick={handleSubmit}>
+          <Button color="brand" loading={saving} onClick={handleSubmit}>
             {isEditing ? "Salvar alterações" : "Criar categoria"}
           </Button>
         </Group>

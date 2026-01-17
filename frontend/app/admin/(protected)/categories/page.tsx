@@ -82,7 +82,11 @@ export default function ProductCategoriesPage() {
         <AdminPageHeader
           title="Categorias de produto"
           subtitle="Gerencie as categorias utilizadas pelos seus produtos."
-          action={<Button onClick={handleOpenCreate}>Nova categoria</Button>}
+          action={
+            <Button color="brand" onClick={handleOpenCreate}>
+              Nova categoria
+            </Button>
+          }
         />
 
         <AdminContentLoader loading={loading} label="Carregando categorias...">

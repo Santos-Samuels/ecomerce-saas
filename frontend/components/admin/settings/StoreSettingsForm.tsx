@@ -48,7 +48,7 @@ export function StoreSettingsForm({
       style={{
         borderRadius: 18,
         padding: 20,
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        backgroundColor: "var(--mantine-color-body)",
         boxShadow:
           "0 16px 35px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(148, 163, 184, 0.18)",
         maxWidth: 640,
@@ -93,7 +93,7 @@ export function StoreSettingsForm({
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden",
-                backgroundColor: "#f9fafb",
+                backgroundColor: "var(--mantine-color-gray-0)",
                 position: "relative",
               }}
             >
@@ -160,12 +160,8 @@ export function StoreSettingsForm({
             placeholder="#2563EB"
             style={{ maxWidth: 220 }}
           />
-          <Group gap="xs">
-            {store.primaryColor && (
-              <Text size="xs" c="dimmed">
-                Essa cor poderá ser usada no tema e em destaques visuais.
-              </Text>
-            )}
+
+          {store.primaryColor && (
             <Button
               variant="subtle"
               size="xs"
@@ -175,7 +171,11 @@ export function StoreSettingsForm({
             >
               Remover cor
             </Button>
-          </Group>
+          )}
+
+          <Text size="xs" c="dimmed">
+            Essa cor poderá ser usada no design do site e em destaques visuais.
+          </Text>
         </Group>
 
         <Group justify="flex-end" mt="md">

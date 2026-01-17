@@ -21,6 +21,7 @@ const authSlice = createSlice({
       state.token = null;
       state.user = undefined;
       deleteCookie("ecomerce-token");
+      deleteCookie("ecomerce-store-primary-color");
     },
   },
 });

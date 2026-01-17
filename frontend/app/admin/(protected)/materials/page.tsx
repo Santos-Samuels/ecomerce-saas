@@ -84,7 +84,11 @@ export default function ProductMaterialsPage() {
         <AdminPageHeader
           title="Materiais de produto"
           subtitle="Gerencie os materiais utilizados pelos seus produtos."
-          action={<Button onClick={handleOpenCreate}>Novo material</Button>}
+          action={
+            <Button color="brand" onClick={handleOpenCreate}>
+              Novo material
+            </Button>
+          }
         />
 
         <AdminContentLoader loading={loading} label="Carregando materiais...">
