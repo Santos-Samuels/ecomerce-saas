@@ -2,6 +2,7 @@ import { all } from "redux-saga/effects";
 import { watchAuth } from "./auth/index";
 import { watchProductCategories } from "./productCategories";
 import { watchProductMaterials } from "./productMaterials";
+import { watchProducts } from "./products";
 import { watchStoreSettings } from "./storeSettings";
 
 export function* rootSaga() {
@@ -9,6 +10,7 @@ export function* rootSaga() {
     watchAuth(),
     watchProductCategories(),
     watchProductMaterials(),
+    watchProducts(),
     watchStoreSettings(),
   ]);
 }

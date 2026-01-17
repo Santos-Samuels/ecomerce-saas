@@ -32,7 +32,7 @@ export function AdminSidebar() {
   const storeImageUrl = useAppSelector(
     (state) => state.storeSettings.store?.logoUrl ?? null
   );
-  const storeName = useAppSelector(
+   const storeName = useAppSelector(
     (state) => state.storeSettings.store?.name ?? null
   );
 
@@ -43,7 +43,10 @@ export function AdminSidebar() {
   if (!user) return null;
 
   const storeInitial =
-    (storeName ?? user.name ?? "").trim().charAt(0).toUpperCase() || "L";
+    (storeName ?? user.name ?? "")
+      .trim()
+      .charAt(0)
+      .toUpperCase() || "E";
 
   const handleNavigate = (path: string) => {
     router.push(path);

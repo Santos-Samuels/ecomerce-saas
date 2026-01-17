@@ -16,12 +16,14 @@ import { productCategoriesReducer } from "./productCategories/productCategoriesS
 import { productMaterialsReducer } from "./productMaterials/productMaterialsSlice";
 import { adminMenuReducer } from "./adminMenu/adminMenuSlice";
 import { storeSettingsReducer } from "./storeSettings/storeSettingsSlice";
+import { productsReducer } from "./products/productsSlice";
 import { rootSaga } from "./sagas";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   productCategories: productCategoriesReducer,
   productMaterials: productMaterialsReducer,
+  products: productsReducer,
   adminMenu: adminMenuReducer,
   storeSettings: storeSettingsReducer,
 });
@@ -42,6 +44,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredActionPaths: ["payload.onSuccess"],
       },
     }).concat(sagaMiddleware),
 });

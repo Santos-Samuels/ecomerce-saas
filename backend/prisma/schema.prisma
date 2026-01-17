@@ -24,6 +24,7 @@ model Store {
   users             User[]
   productCategories ProductCategory[]
   productMaterials  ProductMaterial[]
+  products          Product[]
 }
 
 model Role {
@@ -69,6 +70,7 @@ model ProductCategory {
   store    Store            @relation(fields: [storeId], references: [id])
   parent   ProductCategory? @relation("ProductCategoryToParent", fields: [parentId], references: [id])
   children ProductCategory[] @relation("ProductCategoryToParent")
+  products Product[]
 
   @@unique([storeId, slug])
 }
@@ -85,6 +87,48 @@ model ProductMaterial {
   updatedAt   DateTime @updatedAt
 
   store Store @relation(fields: [storeId], references: [id])
+  products Product[]
 
   @@unique([storeId, name])
+}
+
+model Vehicle {
+  id        String   @id @default(uuid())
+  make      String
+  model     String
+  year      Int
+  type      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[] @relation("ProductVehicles")
+}
+
+model Product {
+  id               String   @id @default(uuid())
+  storeId          String
+  name             String
+  slug             String
+  description      String
+  price            Decimal  @db.Decimal(10, 2)
+  promotionalPrice Decimal? @db.Decimal(10, 2)
+  stock            Int
+  infiniteStock    Boolean  @default(false)
+  sku              String
+  images           String[]
+  categoryId       String
+  materialId       String?
+  featured         Boolean  @default(false)
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  store    Store            @relation(fields: [storeId], references: [id])
+  category ProductCategory  @relation(fields: [categoryId], references: [id])
+  material ProductMaterial? @relation(fields: [materialId], references: [id])
+  vehicles Vehicle[]        @relation("ProductVehicles")
+
+  @@unique([storeId, slug])
+  @@unique([storeId, sku])
 }

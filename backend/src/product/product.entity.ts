@@ -1,8 +1,11 @@
-import { IProductCategory } from "./product-category.interface";
-import { IProductMaterial } from "./product-material.interface";
-import { IVehicle } from "./vehicle.interface";
+import {
+  IProduct,
+  IProductCategory,
+  IProductMaterial,
+  IVehicle,
+} from '@ecomerce/shared';
 
-export interface IProduct {
+export class Product implements IProduct {
   id: string;
   storeId: string;
   name: string;
@@ -18,7 +21,7 @@ export interface IProduct {
   category?: IProductCategory;
   materialId?: string | null;
   material?: IProductMaterial | null;
-  compatibleVehicles: IVehicle[]; // Products compatible with specific vehicles
+  compatibleVehicles: IVehicle[];
   featured: boolean;
   active: boolean;
   createdAt: Date;

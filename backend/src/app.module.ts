@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductCategoryModule } from './product-category/product-category.module';
 import { ProductMaterialModule } from './product-material/product-material.module';
+import { ProductModule } from './product/product.module';
 import { ImageKitModule } from './imagekit/imagekit.module';
 
 @Module({
@@ -19,6 +20,7 @@ import { ImageKitModule } from './imagekit/imagekit.module';
     AuthModule,
     ProductCategoryModule,
     ProductMaterialModule,
+    ProductModule,
     ImageKitModule,
   ],
   controllers: [AppController],
