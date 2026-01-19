@@ -48,6 +48,7 @@ export default function StoreSettingsPage() {
       email: store.email,
       logoUrl: store.logoUrl ?? undefined,
       primaryColor: store.primaryColor ?? null,
+      instagramHandle: store.instagramHandle ?? undefined,
     });
     setLogoPreviewUrl(store.logoUrl ?? undefined);
     setLogoFile(null);

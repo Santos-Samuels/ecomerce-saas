@@ -28,4 +28,8 @@ export class CreateStoreDto {
   @IsString()
   @IsOptional()
   primaryColor?: string;
+
+  @IsString()
+  @IsOptional()
+  instagramHandle?: string;
 }

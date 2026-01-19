@@ -7,6 +7,7 @@ export interface IStore {
   email: string;
   logoUrl?: string | null;
   primaryColor?: string | null;
+  instagramHandle?: string | null;
   active: boolean;
   createdAt: Date;
   updatedAt?: Date;

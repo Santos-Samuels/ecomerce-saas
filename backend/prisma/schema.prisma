@@ -16,6 +16,7 @@ model Store {
   email       String   @unique
   logoUrl     String?
   primaryColor String?
+  instagramHandle String?
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

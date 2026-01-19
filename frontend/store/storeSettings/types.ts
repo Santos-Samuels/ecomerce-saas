@@ -19,4 +19,5 @@ export interface SaveStoreSettingsPayload {
   email: string;
   logoUrl?: string;
   primaryColor?: string | null;
+  instagramHandle?: string;
 }

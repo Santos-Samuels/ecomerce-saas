@@ -19,6 +19,7 @@ export interface StoreFormValues {
   email: string;
   logoUrl?: string;
   primaryColor?: string | null;
+  instagramHandle?: string;
 }
 
 interface StoreSettingsFormProps {
@@ -28,7 +29,7 @@ interface StoreSettingsFormProps {
   logoPreviewUrl?: string;
   onChange<K extends keyof StoreFormValues>(
     key: K,
-    value: StoreFormValues[K]
+    value: StoreFormValues[K],
   ): void;
   onUploadLogo(file: File): void;
   onSubmit(): void;
@@ -76,6 +77,15 @@ export function StoreSettingsForm({
               value={store.phone}
               onChange={(event) => onChange("phone", event.currentTarget.value)}
               required
+            />
+
+            <TextInput
+              label="Instagram"
+              placeholder="@seuinstagram"
+              value={store.instagramHandle ?? ""}
+              onChange={(event) =>
+                onChange("instagramHandle", event.currentTarget.value)
+              }
             />
           </Stack>
 
