@@ -64,6 +64,11 @@ const initialState: AdminMenuState = {
           label: "Feedbacks",
           path: "/admin/store/feedbacks",
         },
+        {
+          id: "store-layout",
+          label: "Layout",
+          path: "/admin/store/layout",
+        },
       ],
     },
   ],

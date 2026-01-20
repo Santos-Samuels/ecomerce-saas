@@ -8,3 +8,4 @@ export * from './product-material.interface';
 export * from './product.interface';
 export * from './orders.interface';
 export * from './payment-method.interface';
+export * from './store-layout.interface';
