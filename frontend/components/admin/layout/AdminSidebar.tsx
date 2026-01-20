@@ -21,7 +21,7 @@ function getMenuIcon(id: string) {
   if (id === "products") return <FiBox size={16} />;
   if (id === "orders") return <FiShoppingBag size={16} />;
   if (id === "customers") return <FiUsers size={16} />;
-  if (id === "settings") return <FiSettings size={16} />;
+  if (id === "store") return <FiSettings size={16} />;
   return null;
 }
 

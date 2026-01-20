@@ -49,7 +49,23 @@ const initialState: AdminMenuState = {
     },
     { id: "orders", label: "Pedidos", path: "/admin/orders" },
     { id: "customers", label: "Clientes", path: "/admin/customers" },
-    { id: "settings", label: "Configurações", path: "/admin/settings" },
+    {
+      id: "store",
+      label: "Loja",
+      path: "/admin/settings",
+      children: [
+        {
+          id: "store-profile",
+          label: "Perfil",
+          path: "/admin/settings",
+        },
+        {
+          id: "store-feedbacks",
+          label: "Feedbacks",
+          path: "/admin/store/feedbacks",
+        },
+      ],
+    },
   ],
 };
 

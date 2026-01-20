@@ -11,6 +11,7 @@ import { ProductMaterialModule } from './product-material/product-material.modul
 import { ProductModule } from './product/product.module';
 import { ImageKitModule } from './imagekit/imagekit.module';
 import { VehicleModule } from './vehicle/vehicle.module';
+import { StoreFeedbackModule } from './store-feedback/store-feedback.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { VehicleModule } from './vehicle/vehicle.module';
     ProductMaterialModule,
     ProductModule,
     VehicleModule,
+    StoreFeedbackModule,
     ImageKitModule,
   ],
   controllers: [AppController],

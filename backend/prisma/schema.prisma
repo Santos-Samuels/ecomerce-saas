@@ -26,6 +26,20 @@ model Store {
   productCategories ProductCategory[]
   productMaterials  ProductMaterial[]
   products          Product[]
+  storeFeedbacks    StoreFeedback[]
+}
+
+model StoreFeedback {
+  id           String   @id @default(uuid())
+  storeId      String
+  customerName String
+  comment      String
+  stars        Int      @default(5)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
 }
 
 model Role {

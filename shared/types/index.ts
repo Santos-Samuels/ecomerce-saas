@@ -1,4 +1,5 @@
 export * from './store.interface';
+export * from './store-feedback.interface';
 export * from './role.interface';
 export * from './user.interface';
 export * from './vehicle.interface';
