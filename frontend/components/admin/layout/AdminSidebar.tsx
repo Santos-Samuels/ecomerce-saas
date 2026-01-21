@@ -6,10 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   FiBox,
   FiHome,
-  FiSettings,
   FiShoppingBag,
   FiUsers,
   FiChevronDown,
+  FiShoppingCart,
 } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { AdminMenuItem } from "@/store/adminMenu/adminMenuSlice";
@@ -19,9 +19,9 @@ import { logout } from "@/store/auth/authSlice";
 function getMenuIcon(id: string) {
   if (id === "overview") return <FiHome size={16} />;
   if (id === "products") return <FiBox size={16} />;
-  if (id === "orders") return <FiShoppingBag size={16} />;
+  if (id === "orders") return <FiShoppingCart size={16} />;
   if (id === "customers") return <FiUsers size={16} />;
-  if (id === "store") return <FiSettings size={16} />;
+  if (id === "store") return <FiShoppingBag size={16} />;
   return null;
 }
 
@@ -30,10 +30,10 @@ export function AdminSidebar() {
   const { user } = useAppSelector((state) => state.auth);
   const { items } = useAppSelector((state) => state.adminMenu);
   const storeImageUrl = useAppSelector(
-    (state) => state.storeSettings.store?.logoUrl ?? null
+    (state) => state.storeSettings.store?.logoUrl ?? null,
   );
-   const storeName = useAppSelector(
-    (state) => state.storeSettings.store?.name ?? null
+  const storeName = useAppSelector(
+    (state) => state.storeSettings.store?.name ?? null,
   );
 
   const router = useRouter();
@@ -43,10 +43,7 @@ export function AdminSidebar() {
   if (!user) return null;
 
   const storeInitial =
-    (storeName ?? user.name ?? "")
-      .trim()
-      .charAt(0)
-      .toUpperCase() || "E";
+    (storeName ?? user.name ?? "").trim().charAt(0).toUpperCase() || "E";
 
   const handleNavigate = (path: string) => {
     router.push(path);
@@ -92,7 +89,7 @@ export function AdminSidebar() {
       <S.SidebarNav>
         {items.map((item: AdminMenuItem) => {
           const hasChildren = Boolean(
-            item.children && item.children.length > 0
+            item.children && item.children.length > 0,
           );
           const childActive =
             item.children?.some((child) => isPathActive(child.path)) ?? false;

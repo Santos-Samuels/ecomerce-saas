@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IStoreLayout } from "@ecomerce/shared";
-import { StoreLayoutState } from "./types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IStoreLayout } from '@ecomerce/shared';
+import { StoreLayoutState } from './types';
 
 const initialState: StoreLayoutState = {
   data: null,
@@ -9,13 +9,10 @@ const initialState: StoreLayoutState = {
 };
 
 const storeLayoutSlice = createSlice({
-  name: "storeLayout",
+  name: 'storeLayout',
   initialState,
   reducers: {
-    fetchStoreLayoutRequest: (
-      state,
-      action: PayloadAction<{ storeId?: string } | undefined>,
-    ) => {
+    fetchStoreLayoutRequest: (state, action: PayloadAction<{ storeId?: string } | undefined>) => {
       state.loading = true;
       state.error = null;
     },
@@ -27,10 +24,7 @@ const storeLayoutSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    updateStoreLayoutRequest: (
-      state,
-      action: PayloadAction<Partial<IStoreLayout>>,
-    ) => {
+    updateStoreLayoutRequest: (state, action: PayloadAction<Partial<IStoreLayout>>) => {
       state.loading = true;
       state.error = null;
     },

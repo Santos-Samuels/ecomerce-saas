@@ -30,6 +30,29 @@ export class StoreService {
     return store;
   }
 
+  async findPublicInfo(id: string) {
+    const store = await this.prisma.store.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        address: true,
+        phone: true,
+        email: true,
+        logoUrl: true,
+        primaryColor: true,
+        instagramHandle: true,
+      },
+    });
+
+    if (!store) {
+      throw new NotFoundException('Store not found');
+    }
+
+    return store;
+  }
+
   async update(id: string, data: UpdateStoreDto): Promise<Store> {
     await this.findOne(id);
 

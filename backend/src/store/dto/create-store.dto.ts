@@ -32,4 +32,8 @@ export class CreateStoreDto {
   @IsString()
   @IsOptional()
   instagramHandle?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  subdomain: string;
 }

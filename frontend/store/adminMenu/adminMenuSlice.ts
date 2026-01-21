@@ -47,8 +47,6 @@ const initialState: AdminMenuState = {
         },
       ],
     },
-    { id: "orders", label: "Pedidos", path: "/admin/orders" },
-    { id: "customers", label: "Clientes", path: "/admin/customers" },
     {
       id: "store",
       label: "Loja",

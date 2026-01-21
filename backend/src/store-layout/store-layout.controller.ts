@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Patch, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Patch,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import type { Request } from 'express';
 import { StoreLayoutService } from './store-layout.service';
 import { UpdateStoreLayoutDto } from './dto/update-store-layout.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -13,8 +23,21 @@ export class StoreLayoutController {
 
   @Get()
   @Public()
-  findAll(@Query('storeId') storeId: string) {
-    return this.storeLayoutService.findAll(storeId);
+  findAll(@Req() req: Request) {
+    const tenantId = (req as any).tenantId;
+    const user = (req as any).user;
+
+    // Priority 1: Subdomain (Public access)
+    if (tenantId) {
+      return this.storeLayoutService.findAll(tenantId);
+    }
+
+    // Priority 2: Token (Admin access)
+    if (user?.storeId) {
+      return this.storeLayoutService.findAll(user.storeId);
+    }
+
+    throw new NotFoundException('Store context not found');
   }
 
   @Patch()

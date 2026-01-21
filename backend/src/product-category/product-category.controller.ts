@@ -3,12 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
-  Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { ProductCategoryService } from './product-category.service';
 import { CreateProductCategoryDto } from './dto/create-product-category.dto';
 import { UpdateProductCategoryDto } from './dto/update-product-category.dto';
@@ -34,8 +36,21 @@ export class ProductCategoryController {
 
   @Get()
   @Public()
-  findAll(@Query('storeId') storeId?: string): Promise<ProductCategory[]> {
-    return this.productCategoryService.findAll(storeId);
+  findAll(@Req() req: Request): Promise<ProductCategory[]> {
+    const tenantId = (req as any).tenantId;
+    const user = (req as any).user;
+
+    // Priority 1: Subdomain (Public access)
+    if (tenantId) {
+      return this.productCategoryService.findAll(tenantId);
+    }
+
+    // Priority 2: Token (Admin access)
+    if (user?.storeId) {
+      return this.productCategoryService.findAll(user.storeId);
+    }
+
+    throw new NotFoundException('Store context not found');
   }
 
   @Get(':id')

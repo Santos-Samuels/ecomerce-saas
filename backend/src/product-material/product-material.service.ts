@@ -41,11 +41,11 @@ export class ProductMaterialService {
     });
   }
 
-  async findAll(storeId?: string): Promise<ProductMaterial[]> {
+  async findAll(storeId: string): Promise<ProductMaterial[]> {
     return this.prisma.productMaterial.findMany({
       where: {
         active: true,
-        ...(storeId ? { storeId } : {}),
+        storeId,
       },
       orderBy: { name: 'asc' },
     });

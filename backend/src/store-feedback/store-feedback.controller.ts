@@ -1,14 +1,16 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Query,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { StoreFeedbackService } from './store-feedback.service';
 import { CreateStoreFeedbackDto } from './dto/create-store-feedback.dto';
 import { UpdateStoreFeedbackDto } from './dto/update-store-feedback.dto';
@@ -31,8 +33,21 @@ export class StoreFeedbackController {
 
   @Get()
   @Public()
-  findAll(@Query('storeId') storeId: string) {
-    return this.storeFeedbackService.findAll(storeId);
+  findAll(@Req() req: Request) {
+    const tenantId = (req as any).tenantId;
+    const user = (req as any).user;
+
+    // Priority 1: Subdomain (Public access)
+    if (tenantId) {
+      return this.storeFeedbackService.findAll(tenantId);
+    }
+
+    // Priority 2: Token (Admin access)
+    if (user?.storeId) {
+      return this.storeFeedbackService.findAll(user.storeId);
+    }
+
+    throw new NotFoundException('Store context not found');
   }
 
   @Get(':id')

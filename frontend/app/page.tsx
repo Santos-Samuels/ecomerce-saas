@@ -1,65 +1,104 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { publicApi } from "@/lib/api";
+import { LoadingOverlay } from "@mantine/core";
+import { IStore, IProduct } from "@ecomerce/shared";
+import { StoreNotFound } from "@/components/storefront/StoreNotFound";
+import { StoreHeader } from "@/components/storefront/StoreHeader";
+import { ProductGrid } from "@/components/storefront/ProductGrid";
+import { StoreFooter } from "@/components/storefront/StoreFooter";
+
+export default function StoreFront() {
+  const [store, setStore] = useState<IStore | null>(null);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [subdomainInput, setSubdomainInput] = useState("");
+
+  useEffect(() => {
+    // Set initial subdomain input from current URL
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+      if (
+        hostname.includes(".localhost") ||
+        (hostname !== "localhost" && !hostname.includes("verel.app"))
+      ) {
+        setSubdomainInput(hostname.split(".")[0]);
+      }
+    }
+    loadStoreData();
+  }, []);
+
+  const loadStoreData = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      // Fetch Store Info
+      // The api client is configured to use the current hostname:3003
+      // so the backend receives the correct Host header
+      const storeRes = await publicApi.get<IStore>("/stores/current");
+      setStore(storeRes.data);
+
+      // Fetch Products
+      const productsRes = await publicApi.get<IProduct[]>("/products");
+      setProducts(productsRes.data);
+    } catch (err: any) {
+      console.error(err);
+      if (err.response?.status === 404) {
+        setError("Loja não encontrada para este subdomínio.");
+      } else {
+        setError("Não foi possível carregar a loja. Verifique a conexão.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSimulate = () => {
+    if (!subdomainInput) return;
+    const protocol = window.location.protocol;
+    // Assume localhost environment for testing
+    // If input is "localhost", go to root
+    if (subdomainInput === "localhost") {
+      window.location.href = `${protocol}//localhost:3000`;
+      return;
+    }
+
+    const newUrl = `${protocol}//${subdomainInput}.localhost:3000`;
+    window.location.href = newUrl;
+  };
+
+  if (loading) return <LoadingOverlay visible />;
+
+  if (error) {
+    return (
+      <StoreNotFound
+        subdomainInput={subdomainInput}
+        setSubdomainInput={setSubdomainInput}
+        handleSimulate={handleSimulate}
+      />
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div
+      style={{
+        backgroundColor: "#f8f9fa",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <StoreHeader store={store} />
+      <ProductGrid products={products} primaryColor={store?.primaryColor} />
+      <StoreFooter
+        storeName={store?.name}
+        subdomainInput={subdomainInput}
+        setSubdomainInput={setSubdomainInput}
+        handleSimulate={handleSimulate}
+      />
     </div>
   );
 }

@@ -105,14 +105,11 @@ export class ProductService {
     return this.mapToEntity(created);
   }
 
-  async findAll(storeId?: string): Promise<Product[]> {
+  async findAll(storeId: string): Promise<Product[]> {
     const where: Prisma.ProductWhereInput = {
       active: true,
+      storeId,
     };
-
-    if (storeId) {
-      where.storeId = storeId;
-    }
 
     const products = await this.prisma.product.findMany({
       where,

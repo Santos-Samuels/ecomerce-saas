@@ -27,12 +27,25 @@ export class JwtAuthGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    if (isPublic) {
-      return true;
-    }
-
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const header = request.headers.authorization;
+
+    if (isPublic) {
+      if (header) {
+        const [type, token] = header.split(' ');
+        if (type === 'Bearer' && token) {
+          try {
+            const payload = this.jwtService.verify<AuthTokenPayload>(token, {
+              secret: this.getSecret(),
+            });
+            request.user = payload;
+          } catch {
+            // Ignore invalid tokens on public routes
+          }
+        }
+      }
+      return true;
+    }
 
     if (!header) {
       throw new UnauthorizedException('Authorization header missing');

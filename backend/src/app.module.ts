@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -13,6 +13,7 @@ import { ImageKitModule } from './imagekit/imagekit.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { StoreFeedbackModule } from './store-feedback/store-feedback.module';
 import { StoreLayoutModule } from './store-layout/store-layout.module';
+import { TenantMiddleware } from './middleware/tenant.middleware';
 
 @Module({
   imports: [
@@ -32,4 +33,10 @@ import { StoreLayoutModule } from './store-layout/store-layout.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(TenantMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
