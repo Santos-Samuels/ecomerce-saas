@@ -1,16 +1,22 @@
 import {
-  Container,
-  Title,
-  Text,
   Button,
-  Group,
   Card,
-  TextInput,
-  Stack,
-  ThemeIcon,
   Center,
+  Container,
+  Group,
+  Stack,
+  Text,
+  TextInput,
+  ThemeIcon,
+  Title,
 } from "@mantine/core";
 import { FiAlertCircle, FiSearch } from "react-icons/fi";
+import {
+  CopyrightText,
+  NotFoundIconWrapper,
+  NotFoundPageWrapper,
+  StyledThemeIcon
+} from "./styles";
 
 interface StoreNotFoundProps {
   subdomainInput: string;
@@ -24,15 +30,7 @@ export function StoreNotFound({
   handleSimulate,
 }: StoreNotFoundProps) {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-      }}
-    >
+    <NotFoundPageWrapper>
       <Container size="sm">
         <Card
           padding={50}
@@ -40,27 +38,16 @@ export function StoreNotFound({
           shadow="xl"
           style={{ textAlign: "center", overflow: "visible" }}
         >
-          <div
-            style={{
-              marginTop: -90,
-              marginBottom: 30,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <ThemeIcon
+          <NotFoundIconWrapper>
+            <StyledThemeIcon
               size={120}
               radius="100%"
               variant="filled"
               color="red"
-              style={{
-                border: "8px solid white",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-              }}
             >
               <FiAlertCircle size={60} />
-            </ThemeIcon>
-          </div>
+            </StyledThemeIcon>
+          </NotFoundIconWrapper>
 
           <Stack gap="md" align="center">
             <Title order={2} size={32} fw={800} c="dark.8">
@@ -129,15 +116,11 @@ export function StoreNotFound({
         </Card>
 
         <Center mt="xl">
-          <Text
-            size="sm"
-            c="dimmed"
-            style={{ textShadow: "0 1px 2px rgba(255,255,255,0.8)" }}
-          >
+          <CopyrightText>
             © {new Date().getFullYear()} Ecommerce SaaS Platform
-          </Text>
+          </CopyrightText>
         </Center>
       </Container>
-    </div>
+    </NotFoundPageWrapper>
   );
 }

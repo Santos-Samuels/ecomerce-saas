@@ -1,17 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { publicApi } from "@/lib/api";
-import { LoadingOverlay } from "@mantine/core";
-import { IStore, IProduct } from "@ecomerce/shared";
-import { StoreNotFound } from "@/components/storefront/StoreNotFound";
-import { StoreHeader } from "@/components/storefront/StoreHeader";
+import { AboutSection } from "@/components/storefront/AboutSection";
+import { FeedbackSection } from "@/components/storefront/FeedbackSection";
+import { HeroSection } from "@/components/storefront/HeroSection";
 import { ProductGrid } from "@/components/storefront/ProductGrid";
 import { StoreFooter } from "@/components/storefront/StoreFooter";
+import { StoreNotFound } from "@/components/storefront/StoreNotFound";
+import { BaseScreen } from "@/components/storefront/layout/BaseScreen";
+import { MainContent } from "@/components/storefront/layout/styles";
+import { publicApi } from "@/lib/api";
+import { IProduct, IStore, IStoreFeedback, IStoreLayout } from "@ecomerce/shared";
+import { LoadingOverlay } from "@mantine/core";
+import { useEffect, useState } from "react";
 
 export default function StoreFront() {
   const [store, setStore] = useState<IStore | null>(null);
+  const [storeLayout, setStoreLayout] = useState<IStoreLayout | null>(null);
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [feedbacks, setFeedbacks] = useState<IStoreFeedback[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [subdomainInput, setSubdomainInput] = useState("");
@@ -41,9 +47,26 @@ export default function StoreFront() {
       const storeRes = await publicApi.get<IStore>("/stores/current");
       setStore(storeRes.data);
 
+      // Fetch Store Layout
+      try {
+        const layoutRes = await publicApi.get<IStoreLayout>("/store-layout");
+        setStoreLayout(layoutRes.data);
+      } catch (err) {
+        console.warn("Store layout not found or error loading layout", err);
+      }
+
       // Fetch Products
       const productsRes = await publicApi.get<IProduct[]>("/products");
       setProducts(productsRes.data);
+
+      // Fetch Feedbacks
+      try {
+        const feedbacksRes = await publicApi.get<IStoreFeedback[]>("/store/feedbacks");
+        setFeedbacks(feedbacksRes.data);
+      } catch (err) {
+        console.warn("Feedbacks fetch failed", err);
+      }
+
     } catch (err: any) {
       console.error(err);
       if (err.response?.status === 404) {
@@ -83,22 +106,36 @@ export default function StoreFront() {
   }
 
   return (
-    <div
-      style={{
-        backgroundColor: "#f8f9fa",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
+    <BaseScreen
+      store={store}
+      footer={
+        <div id="contact">
+          <StoreFooter
+            store={store}
+            subdomainInput={subdomainInput}
+            setSubdomainInput={setSubdomainInput}
+            handleSimulate={handleSimulate}
+          />
+        </div>
+      }
     >
-      <StoreHeader store={store} />
-      <ProductGrid products={products} primaryColor={store?.primaryColor} />
-      <StoreFooter
-        storeName={store?.name}
-        subdomainInput={subdomainInput}
-        setSubdomainInput={setSubdomainInput}
-        handleSimulate={handleSimulate}
-      />
-    </div>
+      {storeLayout && (
+        <HeroSection layout={storeLayout} primaryColor={store?.primaryColor} />
+      )}
+      {storeLayout && <AboutSection layout={storeLayout} />}
+      <MainContent>
+        <div id="products">
+          <ProductGrid 
+            products={products.filter(p => p.featured)} 
+            primaryColor={store?.primaryColor} 
+            title="Produtos em Destaque"
+          />
+        </div>
+        
+        {storeLayout?.showFeedbacks && (
+          <FeedbackSection feedbacks={feedbacks} />
+        )}
+      </MainContent>
+    </BaseScreen>
   );
 }
