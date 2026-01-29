@@ -9,7 +9,7 @@ import { call, put } from "redux-saga/effects";
 
 export function* handleFetchPublicCategories() {
   try {
-    const { data } = yield call(publicApi.get, "/product-categories");
+    const { data } = yield call(publicApi.get, "/products/categories");
     yield put(fetchPublicCategoriesSuccess(data as IProductCategory[]));
   } catch (_error) {
     notifications.show({

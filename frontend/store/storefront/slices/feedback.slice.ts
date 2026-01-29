@@ -4,7 +4,7 @@ import { StorefrontFeedbacksState } from "../types";
 
 const initialState: StorefrontFeedbacksState = {
   items: [],
-  loading: false,
+    loading: false,
 };
 
 export const feedbackSlice = createSlice({

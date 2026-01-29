@@ -37,8 +37,8 @@ export function StoreHeader({ store }: StoreHeaderProps) {
 
         <NavLinks>
           <NavLink href="/">Início</NavLink>
-          <NavLink href="#products">Produtos</NavLink>
-          <NavLink href="#contact">Contatos</NavLink>
+          <NavLink href="products">Produtos</NavLink>
+          <NavLink href="contact">Contatos</NavLink>
         </NavLinks>
 
         <NavActions>

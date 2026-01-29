@@ -1,12 +1,13 @@
 "use client";
 
-import { ProductFilters } from "@/components/storefront/ProductFilters";
-import { MobileFilterButton } from "@/components/storefront/ProductFilters/styles";
-import { ProductGrid } from "@/components/storefront/ProductGrid";
-import { StoreFooter } from "@/components/storefront/StoreFooter";
-import { StoreNotFound } from "@/components/storefront/StoreNotFound";
-import { BaseScreen } from "@/components/storefront/layout/BaseScreen";
-import { MainContent } from "@/components/storefront/layout/styles";
+import { ProductFilters } from "@/components/storefront/common/ProductFilters";
+import { MobileFilterButton } from "@/components/storefront/common/ProductFilters/styles";
+import { ProductGrid } from "@/components/storefront/common/ProductGrid";
+import { StoreFooter } from "@/components/storefront/common/StoreFooter";
+import { StoreNotFound } from "@/components/storefront/common/StoreNotFound";
+import { BaseScreen } from "@/components/storefront/common/layout/BaseScreen";
+import { MainContent } from "@/components/storefront/common/layout/styles";
+import { ProductsEmptyState } from "@/components/storefront/products/ProductsEmptyState";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchCurrentStore,
@@ -78,10 +79,15 @@ export default function ProductsPage() {
     dispatch(fetchCurrentStore());
   }, [dispatch]);
 
+  const hasFilters = filters.categoryId || filters.vehicleId || filters.search;
+  const showFilters = products.items.length > 0 || hasFilters;
+
   useEffect(() => {
-    dispatch(fetchPublicCategories());
-    dispatch(fetchPublicVehicles());
-  }, [dispatch]);
+    if (showFilters) {
+      dispatch(fetchPublicCategories());
+      dispatch(fetchPublicVehicles());
+    }
+  }, [dispatch, showFilters]);
 
   // Effect to load products when filters change (debounced search)
   useEffect(() => {
@@ -150,33 +156,44 @@ export default function ProductsPage() {
     >
       <MainContent>
         <PageContainer>
-          <Sidebar>
-            <ProductFilters
-              categories={categories.items}
-              vehicles={vehicles.items}
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onClear={handleClearFilters}
-            />
-          </Sidebar>
+          {showFilters && (
+            <Sidebar>
+              <ProductFilters
+                categories={categories.items}
+                vehicles={vehicles.items}
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                onClear={handleClearFilters}
+              />
+            </Sidebar>
+          )}
 
           <Content>
-            <MobileFilterButton onClick={() => setMobileFiltersOpen(true)}>
-              <FiFilter size={18} />
-              Filtrar Produtos
-            </MobileFilterButton>
+            {showFilters && (
+              <MobileFilterButton onClick={() => setMobileFiltersOpen(true)}>
+                <FiFilter size={18} />
+                Filtrar Produtos
+              </MobileFilterButton>
+            )}
             
             <div style={{ position: 'relative', minHeight: 200 }}>
                 <LoadingOverlay visible={products.loading} overlayProps={{ opacity: 0.1, blur: 1 }} />
-                <ProductGrid 
-                    products={products.items} 
-                    primaryColor={store?.primaryColor} 
-                    title={
-                        filters.search 
-                        ? `Resultados para "${filters.search}"` 
-                        : "Todos os Produtos"
-                    }
-                />
+                
+                {products.items.length > 0 ? (
+                  <ProductGrid 
+                      products={products.items} 
+                      primaryColor={store?.primaryColor} 
+                      title={
+                          filters.search 
+                          ? `Resultados para "${filters.search}"` 
+                          : "Todos os Produtos"
+                      }
+                  />
+                ) : (
+                  !products.loading && (
+                    <ProductsEmptyState hasFilters={!!hasFilters} />
+                  )
+                )}
             </div>
           </Content>
         </PageContainer>

@@ -4,6 +4,7 @@ export interface FilterProductDto {
   categoryId?: string;
   vehicleId?: string;
   search?: string;
+  featured?: boolean;
 }
 
 export interface StorefrontStoreState {
