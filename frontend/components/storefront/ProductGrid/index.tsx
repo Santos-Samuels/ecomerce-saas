@@ -17,17 +17,19 @@ interface ProductGridProps {
   products: IProduct[];
   primaryColor?: string | null;
   title?: string;
+  withoutContainer?: boolean;
 }
 
 export function ProductGrid({
   products,
   primaryColor,
   title,
+  withoutContainer,
 }: ProductGridProps) {
   if (products.length === 0) return null;
 
-  return (
-    <Container size="lg" py={60}>
+  const content = (
+    <>
       <Title order={2} mb="xl">
         {title || "Nossos Produtos"}
       </Title>
@@ -83,6 +85,16 @@ export function ProductGrid({
           </Card>
         ))}
       </SimpleGrid>
+    </>
+  );
+
+  if (withoutContainer) {
+    return <div>{content}</div>;
+  }
+
+  return (
+    <Container size="lg" py={60}>
+      {content}
     </Container>
   );
 }

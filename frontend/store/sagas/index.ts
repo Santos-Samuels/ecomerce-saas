@@ -1,12 +1,13 @@
 import { all } from "redux-saga/effects";
-import { watchAuth } from "./auth/index";
+import { watchAuth } from "./auth";
 import { watchProductCategories } from "./productCategories";
 import { watchProductMaterials } from "./productMaterials";
 import { watchProducts } from "./products";
-import { watchStoreSettings } from "./storeSettings";
 import { watchVehicles } from "./vehicles";
+import { watchStoreSettings } from "./storeSettings";
 import { watchStoreFeedbacks } from "./storeFeedbacks";
-import { storeLayoutSaga } from "./storeLayout";
+import { watchStoreLayout } from "./storeLayout";
+import { watchStorefront } from "./storefront";
 
 export function* rootSaga() {
   yield all([
@@ -17,6 +18,7 @@ export function* rootSaga() {
     watchVehicles(),
     watchStoreSettings(),
     watchStoreFeedbacks(),
-    storeLayoutSaga(),
+    watchStoreLayout(),
+    watchStorefront(),
   ]);
 }

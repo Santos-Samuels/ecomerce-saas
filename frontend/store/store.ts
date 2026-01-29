@@ -20,6 +20,7 @@ import { productsReducer } from "./products/productsSlice";
 import { vehiclesReducer } from "./vehicles/vehiclesSlice";
 import { storeFeedbacksReducer } from "./storeFeedbacks/storeFeedbacksSlice";
 import storeLayoutReducer from "./storeLayout/storeLayoutSlice";
+import { storefrontReducer } from "./storefront/storefrontSlice";
 import { rootSaga } from "./sagas";
 
 const rootReducer = combineReducers({
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   storeSettings: storeSettingsReducer,
   storeFeedbacks: storeFeedbacksReducer,
   storeLayout: storeLayoutReducer,
+  storefront: storefrontReducer,
 });
 
 const persistConfig = {

@@ -1,11 +1,14 @@
-import { call, put } from 'redux-saga/effects';
 import { api } from '@/lib/api';
+import { IStoreLayout } from '@ecomerce/shared';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { AxiosError, AxiosResponse } from 'axios';
+import { call, put } from 'redux-saga/effects';
 import {
-  fetchStoreLayoutSuccess,
-  fetchStoreLayoutFailure,
+    fetchStoreLayoutFailure,
+    fetchStoreLayoutSuccess,
 } from '../../storeLayout/storeLayoutSlice';
 
-export function* handleFetchStoreLayout(action: any) {
+export function* handleFetchStoreLayout(action: PayloadAction<{ storeId?: string } | undefined>) {
   try {
     const { storeId } = action.payload || {};
     // If storeId is not provided, we might need to get it from state or context, 
@@ -15,9 +18,10 @@ export function* handleFetchStoreLayout(action: any) {
     // However, looking at other sagas, we usually rely on the backend to know the user's store or we pass it.
     // Let's assume we pass it.
     
-    const response = yield call(api.get, `/store-layout?storeId=${storeId}`);
+    const response: AxiosResponse<IStoreLayout> = yield call(api.get, `/store-layout?storeId=${storeId}`);
     yield put(fetchStoreLayoutSuccess(response.data));
-  } catch (error: any) {
-    yield put(fetchStoreLayoutFailure(error.message || 'Failed to fetch store layout'));
+  } catch (error) {
+    const message = (error as AxiosError).message || 'Failed to fetch store layout';
+    yield put(fetchStoreLayoutFailure(message));
   }
 }

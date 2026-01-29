@@ -45,7 +45,7 @@ export function FeedbackSection({ feedbacks }: FeedbackSectionProps) {
                   />
                 ))}
               </StarRating>
-              <Comment>"{feedback.comment}"</Comment>
+              <Comment>&quot;{feedback.comment}&quot;</Comment>
               <CustomerInfo>
                 <CustomerAvatar>
                   {getInitials(feedback.customerName)}

@@ -1,25 +1,27 @@
+import { RoleById } from '@ecomerce/shared';
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    Patch,
+    Post,
+    Query,
+    Req,
+    UseGuards,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { ProductService } from './product.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Public } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 import { CreateProductDto } from './dto/create-product.dto';
+import { FilterProductDto } from './dto/filter-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { RoleById } from '@ecomerce/shared';
-import { Public } from '../auth/public.decorator';
+import { ProductService } from './product.service';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -34,18 +36,21 @@ export class ProductController {
 
   @Get()
   @Public()
-  findAll(@Req() req: Request): Promise<Product[]> {
+  findAll(
+    @Req() req: Request,
+    @Query() query: FilterProductDto,
+  ): Promise<Product[]> {
     const tenantId = (req as any).tenantId;
     const user = (req as any).user;
 
     // Priority 1: Subdomain (Public access)
     if (tenantId) {
-      return this.productService.findAll(tenantId);
+      return this.productService.findAll(tenantId, query);
     }
 
     // Priority 2: Token (Admin access)
     if (user?.storeId) {
-      return this.productService.findAll(user.storeId);
+      return this.productService.findAll(user.storeId, query);
     }
 
     throw new NotFoundException('Store context not found');

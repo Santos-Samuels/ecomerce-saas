@@ -15,6 +15,7 @@ import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Public } from '../auth/public.decorator';
 
 @Controller('vehicles')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -28,6 +29,7 @@ export class VehicleController {
   }
 
   @Get()
+  @Public()
   findAll() {
     return this.vehicleService.findAll();
   }

@@ -3,23 +3,28 @@
 import { AboutSection } from "@/components/storefront/AboutSection";
 import { FeedbackSection } from "@/components/storefront/FeedbackSection";
 import { HeroSection } from "@/components/storefront/HeroSection";
-import { ProductGrid } from "@/components/storefront/ProductGrid";
+import { ProductListing } from "@/components/storefront/ProductListing";
 import { StoreFooter } from "@/components/storefront/StoreFooter";
 import { StoreNotFound } from "@/components/storefront/StoreNotFound";
 import { BaseScreen } from "@/components/storefront/layout/BaseScreen";
 import { MainContent } from "@/components/storefront/layout/styles";
-import { publicApi } from "@/lib/api";
-import { IProduct, IStore, IStoreFeedback, IStoreLayout } from "@ecomerce/shared";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+    fetchCurrentStore,
+    fetchStoreFeedbacks,
+    fetchStoreLayout,
+} from "@/store/storefront/storefrontSlice";
 import { LoadingOverlay } from "@mantine/core";
 import { useEffect, useState } from "react";
 
 export default function StoreFront() {
-  const [store, setStore] = useState<IStore | null>(null);
-  const [storeLayout, setStoreLayout] = useState<IStoreLayout | null>(null);
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [feedbacks, setFeedbacks] = useState<IStoreFeedback[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const dispatch = useAppDispatch();
+  const {
+    store: { data: store, loading: storeLoading, notFound: storeNotFound },
+    layout: { data: storeLayout },
+    feedbacks: { items: feedbacks },
+  } = useAppSelector((state) => state.storefront);
+
   const [subdomainInput, setSubdomainInput] = useState("");
 
   useEffect(() => {
@@ -30,54 +35,14 @@ export default function StoreFront() {
         hostname.includes(".localhost") ||
         (hostname !== "localhost" && !hostname.includes("verel.app"))
       ) {
-        setSubdomainInput(hostname.split(".")[0]);
+        setSubdomainInput(hostname.split(".")[0]); // eslint-disable-line react-hooks/set-state-in-effect
       }
     }
-    loadStoreData();
-  }, []);
-
-  const loadStoreData = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      // Fetch Store Info
-      // The api client is configured to use the current hostname:3003
-      // so the backend receives the correct Host header
-      const storeRes = await publicApi.get<IStore>("/stores/current");
-      setStore(storeRes.data);
-
-      // Fetch Store Layout
-      try {
-        const layoutRes = await publicApi.get<IStoreLayout>("/store-layout");
-        setStoreLayout(layoutRes.data);
-      } catch (err) {
-        console.warn("Store layout not found or error loading layout", err);
-      }
-
-      // Fetch Products
-      const productsRes = await publicApi.get<IProduct[]>("/products");
-      setProducts(productsRes.data);
-
-      // Fetch Feedbacks
-      try {
-        const feedbacksRes = await publicApi.get<IStoreFeedback[]>("/store/feedbacks");
-        setFeedbacks(feedbacksRes.data);
-      } catch (err) {
-        console.warn("Feedbacks fetch failed", err);
-      }
-
-    } catch (err: any) {
-      console.error(err);
-      if (err.response?.status === 404) {
-        setError("Loja não encontrada para este subdomínio.");
-      } else {
-        setError("Não foi possível carregar a loja. Verifique a conexão.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+    
+    dispatch(fetchCurrentStore());
+    dispatch(fetchStoreLayout());
+    dispatch(fetchStoreFeedbacks());
+  }, [dispatch]);
 
   const handleSimulate = () => {
     if (!subdomainInput) return;
@@ -93,9 +58,9 @@ export default function StoreFront() {
     window.location.href = newUrl;
   };
 
-  if (loading) return <LoadingOverlay visible />;
+  if (storeLoading) return <LoadingOverlay visible />;
 
-  if (error) {
+  if (storeNotFound) {
     return (
       <StoreNotFound
         subdomainInput={subdomainInput}
@@ -109,31 +74,38 @@ export default function StoreFront() {
     <BaseScreen
       store={store}
       footer={
-        <div id="contact">
-          <StoreFooter
-            store={store}
-            subdomainInput={subdomainInput}
-            setSubdomainInput={setSubdomainInput}
-            handleSimulate={handleSimulate}
-          />
-        </div>
+        <StoreFooter
+          store={store}
+          subdomainInput={subdomainInput}
+          setSubdomainInput={setSubdomainInput}
+          handleSimulate={handleSimulate}
+        />
       }
     >
-      {storeLayout && (
-        <HeroSection layout={storeLayout} primaryColor={store?.primaryColor} />
-      )}
-      {storeLayout && <AboutSection layout={storeLayout} />}
       <MainContent>
-        <div id="products">
-          <ProductGrid 
-            products={products.filter(p => p.featured)} 
-            primaryColor={store?.primaryColor} 
-            title="Produtos em Destaque"
+        {/* Hero Section */}
+        {storeLayout && (
+          <HeroSection
+            layout={storeLayout}
+            primaryColor={store?.primaryColor}
           />
-        </div>
-        
+        )}
+
+        {/* About Section */}
+        {storeLayout && (
+          <AboutSection
+            layout={storeLayout}
+          />
+        )}
+
+        {/* Products Section */}
+        <ProductListing primaryColor={store?.primaryColor} />
+
+        {/* Feedback Section */}
         {storeLayout?.showFeedbacks && (
-          <FeedbackSection feedbacks={feedbacks} />
+          <FeedbackSection
+            feedbacks={feedbacks}
+          />
         )}
       </MainContent>
     </BaseScreen>

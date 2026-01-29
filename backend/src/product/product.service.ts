@@ -1,13 +1,14 @@
 import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
+    BadRequestException,
+    Injectable,
+    NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
+import { FilterProductDto } from './dto/filter-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.entity';
-import { Prisma } from '@prisma/client';
 
 type PrismaProductRaw = Prisma.ProductGetPayload<Prisma.ProductDefaultArgs> & {
   category?: Product['category'];
@@ -105,15 +106,44 @@ export class ProductService {
     return this.mapToEntity(created);
   }
 
-  async findAll(storeId: string): Promise<Product[]> {
+  async findAll(
+    storeId: string,
+    filters?: FilterProductDto,
+  ): Promise<Product[]> {
     const where: Prisma.ProductWhereInput = {
       active: true,
       storeId,
     };
 
+    if (filters) {
+      if (filters.categoryId) {
+        where.categoryId = filters.categoryId;
+      }
+
+      if (filters.vehicleId) {
+        where.vehicles = {
+          some: {
+            id: filters.vehicleId,
+          },
+        };
+      }
+
+      if (filters.search) {
+        where.OR = [
+          { name: { contains: filters.search, mode: 'insensitive' } },
+          { description: { contains: filters.search, mode: 'insensitive' } },
+        ];
+      }
+    }
+
     const products = await this.prisma.product.findMany({
       where,
       orderBy: { createdAt: 'desc' },
+      include: {
+        category: true,
+        material: true,
+        vehicles: true,
+      },
     });
 
     return products.map((p) => this.mapToEntity(p));

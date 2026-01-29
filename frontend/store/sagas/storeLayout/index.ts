@@ -6,7 +6,7 @@ import {
 import { handleFetchStoreLayout } from './handleFetchStoreLayout';
 import { handleUpdateStoreLayout } from './handleUpdateStoreLayout';
 
-export function* storeLayoutSaga() {
+export function* watchStoreLayout() {
   yield takeLatest(fetchStoreLayoutRequest.type, handleFetchStoreLayout);
   yield takeLatest(updateStoreLayoutRequest.type, handleUpdateStoreLayout);
 }
