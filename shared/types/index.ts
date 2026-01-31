@@ -1,4 +1,5 @@
 export * from './store.interface';
+export * from './store-feedback.interface';
 export * from './role.interface';
 export * from './user.interface';
 export * from './vehicle.interface';
@@ -7,3 +8,4 @@ export * from './product-material.interface';
 export * from './product.interface';
 export * from './orders.interface';
 export * from './payment-method.interface';
+export * from './store-layout.interface';

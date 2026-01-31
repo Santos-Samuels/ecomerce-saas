@@ -1,0 +1,16 @@
+meta {
+  name: Stores - Activate
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/stores/:id/activate
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
+

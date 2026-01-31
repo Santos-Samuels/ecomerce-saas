@@ -1,6 +1,6 @@
-import { IProductCategory } from './product-category.interface';
-import { IProductMaterial } from './product-material.interface';
-import { IVehicle } from './vehicle.interface';
+import { IProductCategory } from "./product-category.interface";
+import { IProductMaterial } from "./product-material.interface";
+import { IVehicle } from "./vehicle.interface";
 
 export interface IProduct {
   id: string;
@@ -11,12 +11,13 @@ export interface IProduct {
   price: number;
   promotionalPrice?: number;
   stock: number;
+  infiniteStock: boolean;
   sku: string;
   images: string[];
   categoryId: string;
   category?: IProductCategory;
-  materialId?: string;
-  material?: IProductMaterial;
+  materialId?: string | null;
+  material?: IProductMaterial | null;
   compatibleVehicles: IVehicle[]; // Products compatible with specific vehicles
   featured: boolean;
   active: boolean;

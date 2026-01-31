@@ -1,0 +1,16 @@
+meta {
+  name: Stores - Delete
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/stores/:id
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
+

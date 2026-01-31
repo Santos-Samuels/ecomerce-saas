@@ -3,8 +3,8 @@ export interface IProductCategory {
   storeId: string;
   name: string;
   slug: string;
-  description?: string;
-  parentId?: string; // For subcategories
+  description?: string | null;
+  parentId?: string | null; // For subcategories
   active: boolean;
   createdAt: Date;
   updatedAt?: Date;

@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Store {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  address     String?
+  phone       String
+  email       String   @unique
+  logoUrl     String?
+  primaryColor String?
+  instagramHandle String?
+  subdomain   String   @unique
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  users             User[]
+  productCategories ProductCategory[]
+  productMaterials  ProductMaterial[]
+  products          Product[]
+  storeFeedbacks    StoreFeedback[]
+  layout            StoreLayout?
+}
+
+model StoreLayout {
+  id        String   @id @default(uuid())
+  storeId   String   @unique
+  
+  // Hero Section
+  heroTitle       String?
+  heroSubtitle    String?
+  heroButtonText  String?
+  heroButtonLink  String?
+  heroBackgroundImage String?
+
+  // About Section
+  aboutTitle      String?
+  aboutDescription String?
+  aboutImage      String?
+
+  // Feedbacks Section
+  showFeedbacks   Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model StoreFeedback {
+  id           String   @id @default(uuid())
+  storeId      String
+  customerName String
+  comment      String
+  stars        Int      @default(5)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  permissions String[]
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users User[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  storeId      String
+  roleId       String
+  name         String
+  email        String   @unique
+  passwordHash String?
+  phone        String
+  address      String?
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  store Store @relation(fields: [storeId], references: [id])
+  role  Role  @relation(fields: [roleId], references: [id])
+}
+
+model ProductCategory {
+  id          String   @id @default(uuid())
+  storeId     String
+  name        String
+  slug        String
+  description String?
+  parentId    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  store    Store            @relation(fields: [storeId], references: [id])
+  parent   ProductCategory? @relation("ProductCategoryToParent", fields: [parentId], references: [id])
+  children ProductCategory[] @relation("ProductCategoryToParent")
+  products Product[]
+
+  @@unique([storeId, slug])
+}
+
+model ProductMaterial {
+  id          String   @id @default(uuid())
+  storeId     String
+  name        String
+  description String?
+  colorName   String?
+  colorHex    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+  products Product[]
+
+  @@unique([storeId, name])
+}
+
+model Vehicle {
+  id        String   @id @default(uuid())
+  make      String
+  model     String
+  year      Int
+  type      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[] @relation("ProductVehicles")
+}
+
+model Product {
+  id               String   @id @default(uuid())
+  storeId          String
+  name             String
+  slug             String
+  description      String
+  price            Decimal  @db.Decimal(10, 2)
+  promotionalPrice Decimal? @db.Decimal(10, 2)
+  stock            Int
+  infiniteStock    Boolean  @default(false)
+  sku              String
+  images           String[]
+  categoryId       String
+  materialId       String?
+  featured         Boolean  @default(false)
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  store    Store            @relation(fields: [storeId], references: [id])
+  category ProductCategory  @relation(fields: [categoryId], references: [id])
+  material ProductMaterial? @relation(fields: [materialId], references: [id])
+  vehicles Vehicle[]        @relation("ProductVehicles")
+
+  @@unique([storeId, slug])
+  @@unique([storeId, sku])
+}
