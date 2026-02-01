@@ -1,14 +1,16 @@
 import {
-    fetchCurrentStore,
-    fetchPublicCategories,
-    fetchPublicProducts,
-    fetchPublicVehicles,
-    fetchStoreFeedbacks,
-    fetchStoreLayout,
+  fetchCurrentStore,
+  fetchPublicCategories,
+  fetchPublicProductBySlug,
+  fetchPublicProducts,
+  fetchPublicVehicles,
+  fetchStoreFeedbacks,
+  fetchStoreLayout,
 } from "@/store/storefront/storefrontSlice";
 import { takeLatest } from "redux-saga/effects";
 import { handleFetchCurrentStore } from "./handleFetchCurrentStore";
 import { handleFetchPublicCategories } from "./handleFetchPublicCategories";
+import { handleFetchPublicProductBySlug } from "./handleFetchPublicProductBySlug";
 import { handleFetchPublicProducts } from "./handleFetchPublicProducts";
 import { handleFetchPublicVehicles } from "./handleFetchPublicVehicles";
 import { handleFetchStoreFeedbacks } from "./handleFetchStoreFeedbacks";
@@ -16,6 +18,10 @@ import { handleFetchStoreLayout } from "./handleFetchStoreLayout";
 
 export function* watchStorefront() {
   yield takeLatest(fetchPublicProducts.type, handleFetchPublicProducts);
+  yield takeLatest(
+    fetchPublicProductBySlug.type,
+    handleFetchPublicProductBySlug
+  );
   yield takeLatest(fetchPublicCategories.type, handleFetchPublicCategories);
   yield takeLatest(fetchPublicVehicles.type, handleFetchPublicVehicles);
   yield takeLatest(fetchCurrentStore.type, handleFetchCurrentStore);

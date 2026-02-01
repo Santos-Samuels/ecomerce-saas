@@ -1,33 +1,33 @@
-import { IProduct } from "@ecomerce/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FilterProductDto, StorefrontProductsState } from "../types";
 
 const initialState: StorefrontProductsState = {
   items: [],
+  currentProduct: null,
   loading: false,
+  notFound: false,
 };
 
 export const productSlice = createSlice({
   name: "storefront/products",
   initialState,
   reducers: {
+    setProductSlice(state, action: PayloadAction<Partial<StorefrontProductsState>>) {
+      Object.assign(state, action.payload);
+    },
     fetchPublicProducts(state, _action: PayloadAction<FilterProductDto | undefined>) {
       state.loading = true;
     },
-    fetchPublicProductsSuccess(state, action: PayloadAction<IProduct[]>) {
-      state.items = action.payload;
-      state.loading = false;
-    },
-    fetchPublicProductsFailure(state) {
-      state.loading = false;
+    fetchPublicProductBySlug(state, _action: PayloadAction<string>) {
+      state.loading = true;
     },
   },
 });
 
 export const {
+  setProductSlice,
   fetchPublicProducts,
-  fetchPublicProductsSuccess,
-  fetchPublicProductsFailure,
+  fetchPublicProductBySlug,
 } = productSlice.actions;
 
 export const productReducer = productSlice.reducer;

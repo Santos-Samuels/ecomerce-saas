@@ -1,4 +1,3 @@
-import { IStore } from "@ecomerce/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StorefrontStoreState } from "../types";
 
@@ -12,26 +11,18 @@ export const storeSlice = createSlice({
   name: "storefront/store",
   initialState,
   reducers: {
+    setStoreSlice(state, action: PayloadAction<Partial<StorefrontStoreState>>) {
+      Object.assign(state, action.payload);
+    },
     fetchCurrentStore(state) {
       state.loading = true;
-      state.notFound = false;
-    },
-    fetchCurrentStoreSuccess(state, action: PayloadAction<IStore>) {
-      state.data = action.payload;
-      state.loading = false;
-      state.notFound = false;
-    },
-    fetchCurrentStoreFailure(state, action: PayloadAction<boolean>) {
-      state.loading = false;
-      state.notFound = action.payload;
     },
   },
 });
 
 export const {
+  setStoreSlice,
   fetchCurrentStore,
-  fetchCurrentStoreSuccess,
-  fetchCurrentStoreFailure,
 } = storeSlice.actions;
 
 export const storeReducer = storeSlice.reducer;

@@ -1,10 +1,11 @@
 import { publicApi } from "@/lib/api";
 import {
-  setProductSlice,
+    setProductSlice,
 } from "@/store/storefront/slices/product.slice";
 import { IProduct } from "@ecomerce/shared";
 import { notifications } from "@mantine/notifications";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import { call, put } from "redux-saga/effects";
 
 export function* handleFetchPublicProductBySlug(

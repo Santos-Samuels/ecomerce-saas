@@ -28,6 +28,7 @@ export function AboutSection({ layout }: AboutSectionProps) {
         </AboutContent>
         {layout.aboutImage && (
           <AboutImageWrapper>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={layout.aboutImage} alt={layout.aboutTitle || "Sobre nós"} />
           </AboutImageWrapper>
         )}

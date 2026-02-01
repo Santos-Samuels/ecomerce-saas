@@ -1,39 +1,34 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import {
-  categoryReducer,
-  fetchPublicCategories,
-  fetchPublicCategoriesFailure,
-  fetchPublicCategoriesSuccess,
+    categoryReducer,
+    fetchPublicCategories,
+    setCategorySlice
 } from "./slices/category.slice";
 import {
-  feedbackReducer,
-  fetchStoreFeedbacks,
-  fetchStoreFeedbacksFailure,
-  fetchStoreFeedbacksSuccess,
+    feedbackReducer,
+    fetchStoreFeedbacks,
+    setFeedbackSlice
 } from "./slices/feedback.slice";
 import {
-  fetchStoreLayout,
-  fetchStoreLayoutFailure,
-  fetchStoreLayoutSuccess,
-  layoutReducer,
+    fetchStoreLayout,
+    layoutReducer,
+    setLayoutSlice
 } from "./slices/layout.slice";
 import {
-  fetchPublicProducts,
-  fetchPublicProductsFailure,
-  fetchPublicProductsSuccess,
-  productReducer,
+    fetchPublicProductBySlug,
+    fetchPublicProducts,
+    productReducer,
+    setProductSlice
 } from "./slices/product.slice";
 import {
-  fetchCurrentStore,
-  fetchCurrentStoreFailure,
-  fetchCurrentStoreSuccess,
-  storeReducer,
+    fetchCurrentStore,
+    setStoreSlice,
+    storeReducer
 } from "./slices/store.slice";
 import {
-  fetchPublicVehicles,
-  fetchPublicVehiclesFailure,
-  fetchPublicVehiclesSuccess,
-  vehicleReducer,
+    fetchPublicVehicles,
+    setVehicleSlice,
+    vehicleReducer
 } from "./slices/vehicle.slice";
 
 export const storefrontReducer = combineReducers({
@@ -46,22 +41,7 @@ export const storefrontReducer = combineReducers({
 });
 
 export {
-  fetchCurrentStore,
-  fetchCurrentStoreFailure,
-  fetchCurrentStoreSuccess,
-  fetchPublicCategories,
-  fetchPublicCategoriesFailure,
-  fetchPublicCategoriesSuccess,
-  fetchPublicProducts,
-  fetchPublicProductsFailure,
-  fetchPublicProductsSuccess,
-  fetchPublicVehicles,
-  fetchPublicVehiclesFailure,
-  fetchPublicVehiclesSuccess,
-  fetchStoreFeedbacks,
-  fetchStoreFeedbacksFailure,
-  fetchStoreFeedbacksSuccess,
-  fetchStoreLayout,
-  fetchStoreLayoutFailure,
-  fetchStoreLayoutSuccess,
+    fetchCurrentStore, fetchPublicCategories, fetchPublicProductBySlug, fetchPublicProducts,
+    fetchPublicVehicles, fetchStoreFeedbacks, fetchStoreLayout, setCategorySlice, setFeedbackSlice, setLayoutSlice, setProductSlice, setStoreSlice, setVehicleSlice
 };
+

@@ -1,9 +1,9 @@
+import { IStoreFeedback } from "@ecomerce/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  StoreFeedbacksState,
-  FetchStoreFeedbacksPayload,
-  SaveStoreFeedbackPayload,
-  DeleteStoreFeedbackPayload,
+    DeleteStoreFeedbackPayload,
+    SaveStoreFeedbackPayload,
+    StoreFeedbacksState
 } from "./types";
 
 const initialState: StoreFeedbacksState = {
@@ -17,20 +17,22 @@ export const storeFeedbacksSlice = createSlice({
   name: "storeFeedbacks",
   initialState,
   reducers: {
-    fetchStoreFeedbacks: (
+    fetchStoreFeedbacks: (_state, _action: PayloadAction<{ storeId: string }>) => {},
+    fetchStoreFeedbacksSuccess: (
       state,
-      _action: PayloadAction<FetchStoreFeedbacksPayload>
+      action: PayloadAction<IStoreFeedback[]>
     ) => {
-      // Triggered by saga
+      state.loading = false;
+      state.items = action.payload;
     },
-    saveStoreFeedback: (
-      state,
-      _action: PayloadAction<SaveStoreFeedbackPayload>
-    ) => {
-      // Triggered by saga
+    fetchStoreFeedbacksFailure: (state) => {
+      state.loading = false;
+    },
+    saveStoreFeedback: (_state, _action: PayloadAction<SaveStoreFeedbackPayload>) => {
+      // saga
     },
     deleteStoreFeedback: (
-      state,
+      _state,
       _action: PayloadAction<DeleteStoreFeedbackPayload>
     ) => {
       // Triggered by saga
@@ -39,7 +41,7 @@ export const storeFeedbacksSlice = createSlice({
       state,
       action: PayloadAction<Partial<StoreFeedbacksState>>
     ) => {
-      return { ...state, ...action.payload };
+      Object.assign(state, action.payload);
     },
   },
 });

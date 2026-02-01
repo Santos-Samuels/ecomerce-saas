@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
-import * as S from "../../styles";
+import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { StoreLayoutForm } from "@/components/admin/store/layout/StoreLayoutForm";
-import {
-  fetchStoreLayoutRequest,
-  updateStoreLayoutRequest,
-} from "@/store/storeLayout/storeLayoutSlice";
 import { api } from "@/lib/api";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  fetchStoreLayout,
+  updateStoreLayout
+} from "@/store/storeLayout/storeLayoutSlice";
 import { IStoreLayout } from "@ecomerce/shared";
 import { notifications } from "@mantine/notifications";
+import { useEffect, useState } from "react";
+import * as S from "../../styles";
 
 export default function StoreLayoutPage() {
   const dispatch = useAppDispatch();
@@ -29,23 +29,9 @@ export default function StoreLayoutPage() {
 
   useEffect(() => {
     if (storeId) {
-      dispatch(fetchStoreLayoutRequest()); // fetchStoreLayoutRequest saga will likely need storeId passed or picked from selector.
-      // Wait, my saga implementation for fetchStoreLayoutRequest expects storeId in payload?
-      // Let's check handleFetchStoreLayout.ts.
-      // "const { storeId } = action.payload || {};"
-      // But fetchStoreLayoutRequest is defined as "fetchStoreLayoutRequest: (state) => { ... }" in slice?
-      // No, let's check slice definition.
+      dispatch(fetchStoreLayout({ storeId }));
     }
   }, [dispatch, storeId]);
-
-  // Checking slice definition:
-  // reducers: { fetchStoreLayoutRequest: (state) => { ... } }
-  // It doesn't accept payload in the slice reducer, BUT the action creator generated might not accept payload if not defined.
-  // Actually, if I want to pass payload to saga, I should define it in slice.
-  // "fetchStoreLayoutRequest: (state, action: PayloadAction<{ storeId: string }>) => ..."
-  // I need to fix slice if I want to pass storeId.
-  // OR, I can just use a separate action or rely on the fact that standard redux toolkit actions can carry payload if defined.
-  // Let's fix the slice to accept payload or at least allow it.
 
   useEffect(() => {
     if (storeLayout) {
@@ -53,7 +39,7 @@ export default function StoreLayoutPage() {
     }
   }, [storeLayout]);
 
-  const handleChange = (key: keyof IStoreLayout, value: any) => {
+  const handleChange = (key: keyof IStoreLayout, value: string | boolean | null) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -61,13 +47,8 @@ export default function StoreLayoutPage() {
     file: File,
     field: "heroBackgroundImage" | "aboutImage",
   ) => {
-    // Create preview
     const previewUrl = URL.createObjectURL(file);
-
-    // Update form state with preview (so user sees it immediately)
     setFormState((prev) => ({ ...prev, [field]: previewUrl }));
-
-    // Store file for upload on save
     setFiles((prev) => ({ ...prev, [field]: file }));
   };
 
@@ -80,7 +61,7 @@ export default function StoreLayoutPage() {
       urlEndpoint: string;
     }>("/imagekit/auth");
 
-    const { token, expire, signature, publicKey, urlEndpoint } =
+    const { token, expire, signature, publicKey } =
       authResponse.data;
 
     const formData = new FormData();
@@ -112,7 +93,6 @@ export default function StoreLayoutPage() {
     try {
       const updatedValues = { ...formState };
 
-      // Upload pending files
       for (const [key, file] of Object.entries(files)) {
         try {
           const url = await uploadFile(file);
@@ -129,11 +109,7 @@ export default function StoreLayoutPage() {
         }
       }
 
-      // Dispatch update
-      // My saga expects: action.payload containing storeId and partial data.
-      dispatch(updateStoreLayoutRequest({ ...updatedValues, storeId }));
-
-      // Clear files
+      dispatch(updateStoreLayout({ ...updatedValues, storeId }));
       setFiles({});
     } catch (error) {
       console.error("Error saving layout:", error);
@@ -155,7 +131,7 @@ export default function StoreLayoutPage() {
           values={formState}
           onChange={handleChange}
           onUploadImage={handleUploadImage}
-          uploading={false} // Upload happens on save
+          uploading={false}
           onSave={handleSave}
           saving={saving || loading}
         />

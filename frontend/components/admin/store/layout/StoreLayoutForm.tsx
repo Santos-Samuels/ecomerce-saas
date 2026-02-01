@@ -6,7 +6,7 @@ import { FeedbacksSectionForm } from './FeedbacksSectionForm';
 
 interface StoreLayoutFormProps {
   values: Partial<IStoreLayout>;
-  onChange: (key: keyof IStoreLayout, value: any) => void;
+  onChange: (key: keyof IStoreLayout, value: string | boolean | null) => void;
   onUploadImage: (file: File, field: 'heroBackgroundImage' | 'aboutImage') => void;
   uploading: boolean;
   onSave: () => void;

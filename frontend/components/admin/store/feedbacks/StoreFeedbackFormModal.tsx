@@ -59,7 +59,7 @@ export function StoreFeedbackFormModal({
     } else {
       form.reset();
     }
-  }, [initialValues, opened]);
+  }, [initialValues, opened, form]);
 
   const handleSubmit = (values: StoreFeedbackFormValues) => {
     onSubmit(values);

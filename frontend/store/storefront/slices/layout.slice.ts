@@ -1,4 +1,3 @@
-import { IStoreLayout } from "@ecomerce/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StorefrontLayoutState } from "../types";
 
@@ -11,23 +10,18 @@ export const layoutSlice = createSlice({
   name: "storefront/layout",
   initialState,
   reducers: {
+    setLayoutSlice(state, action: PayloadAction<Partial<StorefrontLayoutState>>) {
+      Object.assign(state, action.payload);
+    },
     fetchStoreLayout(state) {
       state.loading = true;
-    },
-    fetchStoreLayoutSuccess(state, action: PayloadAction<IStoreLayout>) {
-      state.data = action.payload;
-      state.loading = false;
-    },
-    fetchStoreLayoutFailure(state) {
-      state.loading = false;
     },
   },
 });
 
 export const {
+  setLayoutSlice,
   fetchStoreLayout,
-  fetchStoreLayoutSuccess,
-  fetchStoreLayoutFailure,
 } = layoutSlice.actions;
 
 export const layoutReducer = layoutSlice.reducer;

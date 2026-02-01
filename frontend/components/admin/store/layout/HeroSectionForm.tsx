@@ -3,7 +3,7 @@ import { IStoreLayout } from '@ecomerce/shared';
 
 interface HeroSectionFormProps {
   values: Partial<IStoreLayout>;
-  onChange: (key: keyof IStoreLayout, value: any) => void;
+  onChange: (key: keyof IStoreLayout, value: string | boolean | null) => void;
   onUploadImage: (file: File, field: 'heroBackgroundImage') => void;
   uploading: boolean;
 }
