@@ -1,3 +1,4 @@
+import { RoleById } from '@ecomerce/shared';
 import {
   Body,
   Controller,
@@ -8,14 +9,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import type { Request } from 'express';
-import { StoreLayoutService } from './store-layout.service';
-import { UpdateStoreLayoutDto } from './dto/update-store-layout.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { RoleById } from '@ecomerce/shared';
 import { Public } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
+import type { AuthenticatedRequest } from '../common/types';
+import { UpdateStoreLayoutDto } from './dto/update-store-layout.dto';
+import { StoreLayoutService } from './store-layout.service';
 
 @Controller('store-layout')
 export class StoreLayoutController {
@@ -23,9 +23,9 @@ export class StoreLayoutController {
 
   @Get()
   @Public()
-  findAll(@Req() req: Request) {
-    const tenantId = (req as any).tenantId;
-    const user = (req as any).user;
+  findAll(@Req() req: AuthenticatedRequest) {
+    const tenantId = req.tenantId;
+    const user = req.user;
 
     // Priority 1: Subdomain (Public access)
     if (tenantId) {

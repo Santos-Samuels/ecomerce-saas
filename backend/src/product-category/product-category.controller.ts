@@ -1,3 +1,4 @@
+import { RoleById } from '@ecomerce/shared';
 import {
   Body,
   Controller,
@@ -10,16 +11,15 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import type { Request } from 'express';
-import { ProductCategoryService } from './product-category.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Public } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
+import type { AuthenticatedRequest } from '../common/types';
 import { CreateProductCategoryDto } from './dto/create-product-category.dto';
 import { UpdateProductCategoryDto } from './dto/update-product-category.dto';
 import { ProductCategory } from './product-category.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { RoleById } from '@ecomerce/shared';
-import { Public } from '../auth/public.decorator';
+import { ProductCategoryService } from './product-category.service';
 
 @Controller('products/categories')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -36,9 +36,9 @@ export class ProductCategoryController {
 
   @Get()
   @Public()
-  findAll(@Req() req: Request): Promise<ProductCategory[]> {
-    const tenantId = (req as any).tenantId;
-    const user = (req as any).user;
+  findAll(@Req() req: AuthenticatedRequest): Promise<ProductCategory[]> {
+    const tenantId = req.tenantId;
+    const user = req.user;
 
     // Priority 1: Subdomain (Public access)
     if (tenantId) {
