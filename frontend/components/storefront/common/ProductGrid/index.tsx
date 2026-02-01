@@ -10,6 +10,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import Link from "next/link";
 import { FiShoppingBag } from "react-icons/fi";
 import { ProductImageWrapper } from "./styles";
 
@@ -75,6 +76,8 @@ export function ProductGrid({
             </Text>
 
             <Button
+              component={Link}
+              href={`/products/${product.slug}`}
               fullWidth
               mt="md"
               radius="md"

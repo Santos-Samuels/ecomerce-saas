@@ -58,13 +58,13 @@ export function StoreFooter({
 
           <FooterSection>
             <FooterTitle>Links Rápidos</FooterTitle>
-            <ContactItem as="a" href="#" style={{ textDecoration: "none", cursor: "pointer" }}>
+            <ContactItem as="a" href="/" style={{ textDecoration: "none", cursor: "pointer" }}>
               Início
             </ContactItem>
-            <ContactItem as="a" href="#products" style={{ textDecoration: "none", cursor: "pointer" }}>
+            <ContactItem as="a" href="products" style={{ textDecoration: "none", cursor: "pointer" }}>
               Produtos
             </ContactItem>
-            <ContactItem as="a" href="#contact" style={{ textDecoration: "none", cursor: "pointer" }}>
+            <ContactItem as="a" href="contact" style={{ textDecoration: "none", cursor: "pointer" }}>
               Fale Conosco
             </ContactItem>
           </FooterSection>

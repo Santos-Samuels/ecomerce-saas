@@ -4,7 +4,7 @@ import { FiInfo } from 'react-icons/fi';
 
 interface FeedbacksSectionFormProps {
   values: Partial<IStoreLayout>;
-  onChange: (key: keyof IStoreLayout, value: any) => void;
+  onChange: (key: keyof IStoreLayout, value: string | boolean | null) => void;
 }
 
 export function FeedbacksSectionForm({ values, onChange }: FeedbacksSectionFormProps) {

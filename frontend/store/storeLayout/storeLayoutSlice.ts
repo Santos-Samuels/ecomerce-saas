@@ -12,40 +12,22 @@ const storeLayoutSlice = createSlice({
   name: 'storeLayout',
   initialState,
   reducers: {
-    fetchStoreLayoutRequest: (state, action: PayloadAction<{ storeId?: string } | undefined>) => {
-      state.loading = true;
-      state.error = null;
+    setStoreLayoutSlice(state, action: PayloadAction<Partial<StoreLayoutState>>) {
+      Object.assign(state, action.payload);
     },
-    fetchStoreLayoutSuccess: (state, action: PayloadAction<IStoreLayout>) => {
-      state.loading = false;
-      state.data = action.payload;
+    fetchStoreLayout: (_state, _action: PayloadAction<{ storeId?: string } | undefined>) => {
+      // Triggered by saga
     },
-    fetchStoreLayoutFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    updateStoreLayoutRequest: (state, action: PayloadAction<Partial<IStoreLayout>>) => {
-      state.loading = true;
-      state.error = null;
-    },
-    updateStoreLayoutSuccess: (state, action: PayloadAction<IStoreLayout>) => {
-      state.loading = false;
-      state.data = action.payload;
-    },
-    updateStoreLayoutFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
+    updateStoreLayout: (_state, _action: PayloadAction<Partial<IStoreLayout> & { storeId?: string }>) => {
+      // Triggered by saga
     },
   },
 });
 
 export const {
-  fetchStoreLayoutRequest,
-  fetchStoreLayoutSuccess,
-  fetchStoreLayoutFailure,
-  updateStoreLayoutRequest,
-  updateStoreLayoutSuccess,
-  updateStoreLayoutFailure,
+  setStoreLayoutSlice,
+  fetchStoreLayout,
+  updateStoreLayout,
 } = storeLayoutSlice.actions;
 
 export default storeLayoutSlice.reducer;

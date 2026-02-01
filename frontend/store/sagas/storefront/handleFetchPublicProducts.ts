@@ -1,8 +1,7 @@
 import { publicApi } from "@/lib/api";
 import {
-  fetchPublicProductsFailure,
-  fetchPublicProductsSuccess,
-} from "@/store/storefront/storefrontSlice";
+  setProductSlice,
+} from "@/store/storefront/slices/product.slice";
 import { FilterProductDto } from "@/store/storefront/types";
 import { IProduct } from "@ecomerce/shared";
 import { notifications } from "@mantine/notifications";
@@ -13,18 +12,19 @@ export function* handleFetchPublicProducts(
   action: PayloadAction<FilterProductDto | undefined>
 ) {
   try {
+    yield put(setProductSlice({ loading: true }));
     const filters = action.payload;
     const { data } = yield call(publicApi.get, "/products", {
       params: filters,
     });
 
-    yield put(fetchPublicProductsSuccess(data as IProduct[]));
+    yield put(setProductSlice({ items: data as IProduct[], loading: false }));
   } catch (_error) {
     notifications.show({
       title: "Erro",
       message: "Erro ao buscar produtos",
       color: "red",
     });
-    yield put(fetchPublicProductsFailure());
+    yield put(setProductSlice({ loading: false }));
   }
 }

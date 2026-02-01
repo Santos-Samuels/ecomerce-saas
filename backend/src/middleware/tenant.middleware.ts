@@ -1,12 +1,13 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Response } from 'express';
+import { AuthenticatedRequest } from '../common/types';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TenantMiddleware implements NestMiddleware {
   constructor(private prisma: PrismaService) {}
 
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     const host = req.headers.host;
     const subdomain = this.extractSubdomain(host);
 
@@ -16,7 +17,7 @@ export class TenantMiddleware implements NestMiddleware {
       });
 
       if (store) {
-        (req as any).tenantId = store.id;
+        req.tenantId = store.id;
       }
     }
 

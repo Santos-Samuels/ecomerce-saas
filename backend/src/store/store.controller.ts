@@ -1,3 +1,4 @@
+import { RoleById } from '@ecomerce/shared';
 import {
   Body,
   Controller,
@@ -10,16 +11,15 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import type { Request } from 'express';
-import { StoreService } from './store.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Public } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
+import type { AuthenticatedRequest } from '../common/types';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { Store } from './store.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { RoleById } from '@ecomerce/shared';
-import { Public } from '../auth/public.decorator';
+import { StoreService } from './store.service';
 
 @Controller('stores')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -28,9 +28,9 @@ export class StoreController {
 
   @Get('current')
   @Public()
-  findCurrent(@Req() req: Request) {
-    const tenantId = (req as any).tenantId;
-    const user = (req as any).user;
+  findCurrent(@Req() req: AuthenticatedRequest) {
+    const tenantId = req.tenantId;
+    const user = req.user;
 
     // Priority 1: Subdomain (Public access)
     if (tenantId) {

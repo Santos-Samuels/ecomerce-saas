@@ -25,7 +25,9 @@ export interface StorefrontFeedbacksState {
 
 export interface StorefrontProductsState {
   items: IProduct[];
+  currentProduct: IProduct | null;
   loading: boolean;
+  notFound: boolean;
 }
 
 export interface StorefrontCategoriesState {

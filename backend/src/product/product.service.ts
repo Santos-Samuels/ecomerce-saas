@@ -153,6 +153,27 @@ export class ProductService {
     return products.map((p) => this.mapToEntity(p));
   }
 
+  async findBySlug(slug: string, storeId: string): Promise<Product> {
+    const product = await this.prisma.product.findFirst({
+      where: {
+        slug,
+        storeId,
+        active: true,
+      },
+      include: {
+        category: true,
+        material: true,
+        vehicles: true,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    return this.mapToEntity(product);
+  }
+
   async findOne(id: string): Promise<Product> {
     const product = await this.prisma.product.findUnique({
       where: { id },

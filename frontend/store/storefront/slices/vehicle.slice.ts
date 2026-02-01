@@ -1,4 +1,3 @@
-import { IVehicle } from "@ecomerce/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StorefrontVehiclesState } from "../types";
 
@@ -11,23 +10,18 @@ export const vehicleSlice = createSlice({
   name: "storefront/vehicles",
   initialState,
   reducers: {
+    setVehicleSlice(state, action: PayloadAction<Partial<StorefrontVehiclesState>>) {
+      Object.assign(state, action.payload);
+    },
     fetchPublicVehicles(state) {
       state.loading = true;
-    },
-    fetchPublicVehiclesSuccess(state, action: PayloadAction<IVehicle[]>) {
-      state.items = action.payload;
-      state.loading = false;
-    },
-    fetchPublicVehiclesFailure(state) {
-      state.loading = false;
     },
   },
 });
 
 export const {
+  setVehicleSlice,
   fetchPublicVehicles,
-  fetchPublicVehiclesSuccess,
-  fetchPublicVehiclesFailure,
 } = vehicleSlice.actions;
 
 export const vehicleReducer = vehicleSlice.reducer;
