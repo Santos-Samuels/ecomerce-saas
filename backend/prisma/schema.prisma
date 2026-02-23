@@ -29,6 +29,7 @@ model Store {
   products          Product[]
   storeFeedbacks    StoreFeedback[]
   layout            StoreLayout?
+  permissions       StorePermission[]
 }
 
 model StoreLayout {
@@ -78,6 +79,28 @@ model Role {
   updatedAt   DateTime @updatedAt
 
   users User[]
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  stores StorePermission[]
+}
+
+model StorePermission {
+  storeId      String
+  permissionId String
+  createdAt    DateTime @default(now())
+
+  store      Store      @relation(fields: [storeId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([storeId, permissionId])
 }
 
 model User {

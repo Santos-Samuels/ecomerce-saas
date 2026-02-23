@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { StorePermission } from '@ecomerce/shared';
 
 export class CreateStoreDto {
   @IsString()
@@ -36,4 +43,8 @@ export class CreateStoreDto {
   @IsString()
   @IsNotEmpty()
   subdomain: string;
+
+  @IsArray()
+  @IsOptional()
+  permissions?: StorePermission[];
 }

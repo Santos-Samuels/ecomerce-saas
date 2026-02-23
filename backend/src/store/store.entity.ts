@@ -24,4 +24,6 @@ export class Store implements IStore {
   updatedAt?: Date;
 
   deletedAt?: Date | null;
+
+  permissions?: string[];
 }

@@ -13,6 +13,7 @@ import { ImageKitModule } from './imagekit/imagekit.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { StoreFeedbackModule } from './store-feedback/store-feedback.module';
 import { StoreLayoutModule } from './store-layout/store-layout.module';
+import { PermissionModule } from './permission/permission.module';
 import { TenantMiddleware } from './middleware/tenant.middleware';
 
 @Module({
@@ -29,6 +30,7 @@ import { TenantMiddleware } from './middleware/tenant.middleware';
     StoreFeedbackModule,
     StoreLayoutModule,
     ImageKitModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

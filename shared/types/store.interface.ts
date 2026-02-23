@@ -1,3 +1,5 @@
+import { StorePermission } from './role.interface';
+
 export interface IStore {
   id: string;
   name: string;
@@ -12,4 +14,5 @@ export interface IStore {
   createdAt: Date;
   updatedAt?: Date;
   deletedAt?: Date | null;
+  permissions?: StorePermission[];
 }
