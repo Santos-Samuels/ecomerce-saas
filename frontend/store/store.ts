@@ -19,6 +19,9 @@ import { storeSettingsReducer } from "./storeSettings/storeSettingsSlice";
 import { productsReducer } from "./products/productsSlice";
 import { vehiclesReducer } from "./vehicles/vehiclesSlice";
 import { storeFeedbacksReducer } from "./storeFeedbacks/storeFeedbacksSlice";
+import { staffPermissionsReducer } from "./staffPermissions/staffPermissionsSlice";
+import { staffStoresReducer } from "./staffStores/staffStoresSlice";
+import { staffRolesReducer } from "./staffRoles/staffRolesSlice";
 import storeLayoutReducer from "./storeLayout/storeLayoutSlice";
 import { storefrontReducer } from "./storefront/storefrontSlice";
 import { cartReducer } from "./cart/cartSlice";
@@ -35,6 +38,9 @@ const rootReducer = combineReducers({
   storeFeedbacks: storeFeedbacksReducer,
   storeLayout: storeLayoutReducer,
   storefront: storefrontReducer,
+  staffPermissions: staffPermissionsReducer,
+  staffStores: staffStoresReducer,
+  staffRoles: staffRolesReducer,
   cart: cartReducer,
 });
 

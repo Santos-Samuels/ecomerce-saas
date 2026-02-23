@@ -163,6 +163,7 @@ export class StoreService {
     return {
       id: db.id,
       name: db.name,
+      subdomain: db.subdomain,
       description: db.description,
       address: db.address,
       phone: db.phone,

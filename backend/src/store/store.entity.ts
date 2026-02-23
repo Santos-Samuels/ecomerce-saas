@@ -1,9 +1,11 @@
-import { IStore } from '@ecomerce/shared';
+import { IStore, StorePermission } from '@ecomerce/shared';
 
 export class Store implements IStore {
   id: string;
 
   name: string;
+
+  subdomain?: string | null;
 
   description?: string | null;
 
@@ -25,5 +27,5 @@ export class Store implements IStore {
 
   deletedAt?: Date | null;
 
-  permissions?: string[];
+  permissions?: StorePermission[];
 }

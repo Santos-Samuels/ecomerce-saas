@@ -8,6 +8,9 @@ import { watchStoreSettings } from "./storeSettings";
 import { watchStoreFeedbacks } from "./storeFeedbacks";
 import { watchStoreLayout } from "./storeLayout";
 import { watchStorefront } from "./storefront";
+import { watchStaffPermissions } from "./staffPermissions";
+import { watchStaffStores } from "./staffStores";
+import { watchStaffRoles } from "./staffRoles";
 
 export function* rootSaga() {
   yield all([
@@ -20,5 +23,8 @@ export function* rootSaga() {
     watchStoreFeedbacks(),
     watchStoreLayout(),
     watchStorefront(),
+    watchStaffPermissions(),
+    watchStaffStores(),
+    watchStaffRoles(),
   ]);
 }

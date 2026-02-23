@@ -1,11 +1,11 @@
+import { IRole, IUser, RoleById } from '@ecomerce/shared';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../prisma/prisma.service';
-import { LoginDto } from './dto/login.dto';
-import { AuthTokenPayload } from './auth.types';
-import * as crypto from 'crypto';
-import { IRole, IUser, RoleById } from '@ecomerce/shared';
 import { Role as PrismaRole, User as PrismaUser } from '@prisma/client';
+import * as crypto from 'crypto';
+import { PrismaService } from '../prisma/prisma.service';
+import { AuthTokenPayload } from './auth.types';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {

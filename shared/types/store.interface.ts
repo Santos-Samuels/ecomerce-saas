@@ -3,6 +3,7 @@ import { StorePermission } from './role.interface';
 export interface IStore {
   id: string;
   name: string;
+  subdomain?: string | null;
   description?: string | null;
   address?: string | null;
   phone: string;
