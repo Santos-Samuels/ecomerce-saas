@@ -110,6 +110,7 @@ export default function ProductsPage() {
         active: values.active,
         images: values.images,
         compatibleVehicleIds: values.compatibleVehicleIds,
+        colors: values.colors,
         onSuccess: () => {
           setModalOpen(false);
           setEditingProduct(undefined);

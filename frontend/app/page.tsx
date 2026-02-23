@@ -17,6 +17,8 @@ import {
   fetchStoreLayout,
 } from "@/store/storefront/storefrontSlice";
 import { LoadingOverlay } from "@mantine/core";
+import { FaWhatsapp } from "react-icons/fa";
+import { WhatsAppFloatingButton } from "@/components/storefront/common/layout/styles";
 import { useEffect, useState } from "react";
 
 export default function StoreFront() {
@@ -120,6 +122,17 @@ export default function StoreFront() {
           />
         )}
       </MainContent>
+      {store?.phone && (
+        <WhatsAppFloatingButton
+          href={`https://wa.me/${store.phone.replace(/\D/g, "")}?text=${encodeURIComponent(
+            "Vim pelo site e gostaria de fazer um orçamento.",
+          )}`}
+          target="_blank"
+          aria-label="Conversar no WhatsApp"
+        >
+          <FaWhatsapp size={28} />
+        </WhatsAppFloatingButton>
+      )}
     </BaseScreen>
   );
 }

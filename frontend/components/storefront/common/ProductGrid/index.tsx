@@ -1,17 +1,22 @@
+import { addToCart } from "@/store/cart/cartSlice";
+import { useAppDispatch } from "@/store/hooks";
 import { IProduct } from "@ecomerce/shared";
 import {
-  Badge,
-  Button,
-  Card,
-  Container,
-  Group,
-  Image as MantineImage,
-  SimpleGrid,
-  Text,
-  Title,
+    ActionIcon,
+    Badge,
+    Button,
+    Card,
+    Container,
+    Group,
+    Image as MantineImage,
+    SimpleGrid,
+    Text,
+    Title,
+    Tooltip,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import Link from "next/link";
-import { FiShoppingBag } from "react-icons/fi";
+import { FiCheck, FiShoppingBag, FiShoppingCart } from "react-icons/fi";
 import { ProductImageWrapper } from "./styles";
 
 interface ProductGridProps {
@@ -27,6 +32,19 @@ export function ProductGrid({
   title,
   withoutContainer,
 }: ProductGridProps) {
+  const dispatch = useAppDispatch();
+
+  const handleAddToCart = (e: React.MouseEvent, product: IProduct) => {
+    e.preventDefault(); // Evita navegar para os detalhes
+    dispatch(addToCart({ product, color: null }));
+    notifications.show({
+      title: 'Produto adicionado',
+      message: `${product.name} foi adicionado ao carrinho`,
+      color: 'green',
+      icon: <FiCheck size={18} />,
+    });
+  };
+
   if (products.length === 0) return null;
 
   const content = (
@@ -75,16 +93,30 @@ export function ProductGrid({
               {product.description}
             </Text>
 
-            <Button
-              component={Link}
-              href={`/products/${product.slug}`}
-              fullWidth
-              mt="md"
-              radius="md"
-              color={primaryColor || "blue"}
-            >
-              Ver Detalhes
-            </Button>
+            <Group mt="md" gap="xs">
+              <Button
+                component={Link}
+                href={`/products/${product.slug}`}
+                flex={1}
+                radius="md"
+                color={primaryColor || "blue"}
+              >
+                Ver Detalhes
+              </Button>
+              
+              <Tooltip label="Adicionar ao carrinho">
+                <ActionIcon 
+                  size="lg" 
+                  radius="md" 
+                  variant="filled" 
+                  color={primaryColor || "blue"}
+                  onClick={(e) => handleAddToCart(e, product)}
+                  disabled={!product.infiniteStock && product.stock <= 0}
+                >
+                  <FiShoppingCart size={18} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
           </Card>
         ))}
       </SimpleGrid>

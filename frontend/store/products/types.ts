@@ -1,4 +1,4 @@
-import { IProduct } from "@ecomerce/shared";
+import { IProduct, IProductColor } from "@ecomerce/shared";
 
 export interface ProductsState {
   items: IProduct[];
@@ -24,6 +24,7 @@ export interface SaveProductPayload {
   featured?: boolean;
   active: boolean;
   compatibleVehicleIds?: string[];
+  colors?: IProductColor[];
   onSuccess?: () => void;
 }
 

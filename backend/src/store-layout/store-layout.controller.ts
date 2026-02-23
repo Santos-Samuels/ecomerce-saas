@@ -18,6 +18,7 @@ import { UpdateStoreLayoutDto } from './dto/update-store-layout.dto';
 import { StoreLayoutService } from './store-layout.service';
 
 @Controller('store-layout')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class StoreLayoutController {
   constructor(private readonly storeLayoutService: StoreLayoutService) {}
 
@@ -41,7 +42,6 @@ export class StoreLayoutController {
   }
 
   @Patch()
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleById.Admin, RoleById.Staff)
   update(
     @Query('storeId') storeId: string,

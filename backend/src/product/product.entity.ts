@@ -1,6 +1,7 @@
 import {
   IProduct,
   IProductCategory,
+  IProductColor,
   IProductMaterial,
   IVehicle,
 } from '@ecomerce/shared';
@@ -21,6 +22,7 @@ export class Product implements IProduct {
   category?: IProductCategory;
   materialId?: string | null;
   material?: IProductMaterial | null;
+  colors?: IProductColor[];
   compatibleVehicles: IVehicle[];
   featured: boolean;
   active: boolean;

@@ -1,14 +1,14 @@
+import { uploadToImageKit } from "@/lib/imagekit";
+import { useAppSelector } from "@/store/hooks";
+import { IProduct, IProductColor } from "@ecomerce/shared";
 import { Button, Group, Modal, Tabs } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IProduct } from "@ecomerce/shared";
-import { useEffect, useState } from "react";
-import { useAppSelector } from "@/store/hooks";
 import { notifications } from "@mantine/notifications";
-import { uploadToImageKit } from "@/lib/imagekit";
+import { useEffect, useState } from "react";
+import { ProductDetailsTab } from "./ProductDetailsTab";
 import { ProductGeneralTab } from "./ProductGeneralTab";
 import { ProductImagesTab } from "./ProductImagesTab";
 import { ProductPricingTab } from "./ProductPricingTab";
-import { ProductDetailsTab } from "./ProductDetailsTab";
 
 export interface ProductFormValues {
   name: string;
@@ -25,6 +25,7 @@ export interface ProductFormValues {
   active: boolean;
   images: string[];
   compatibleVehicleIds: string[];
+  colors: IProductColor[];
 }
 
 interface ProductFormModalProps {
@@ -54,6 +55,7 @@ export function ProductFormModal({
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>("general");
 
   const maxImages = 6;
 
@@ -68,11 +70,12 @@ export function ProductFormModal({
       stock: 1,
       infiniteStock: false,
       categoryId: "",
-      materialId: "",
+      materialId: undefined,
       featured: false,
       active: true,
       images: [] as string[],
       compatibleVehicleIds: [],
+      colors: [],
     },
     validate: {
       name: (value) =>
@@ -132,6 +135,7 @@ export function ProductFormModal({
         compatibleVehicleIds: product.compatibleVehicles
           ? product.compatibleVehicles.map((vehicle) => vehicle.id)
           : [],
+        colors: product.colors ?? [],
       });
     } else {
       form.reset();
@@ -219,6 +223,60 @@ export function ProductFormModal({
     }
   };
 
+  const isGeneralComplete =
+    form.values.name.trim().length >= 3 && form.values.slug.trim().length > 0;
+
+  const isPricingComplete =
+    form.values.price !== undefined &&
+    form.values.price !== null &&
+    (!form.values.infiniteStock ? form.values.stock >= 1 : true);
+
+  const isDetailsComplete = !!form.values.categoryId;
+
+  const renderTabLabel = (label: string, complete: boolean) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <span
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: "50%",
+          backgroundColor: complete
+            ? "var(--mantine-color-green-6)"
+            : "var(--mantine-color-red-6)",
+        }}
+      />
+      <span>{label}</span>
+    </div>
+  );
+
+  const handleValidationError = () => {
+    const hasGeneralIssues = !isGeneralComplete || !!form.errors.name || !!form.errors.slug;
+    const hasPricingIssues =
+      !isPricingComplete || !!form.errors.price || !!form.errors.stock;
+    const hasDetailsIssues =
+      !isDetailsComplete || !!form.errors.categoryId;
+
+    if (hasGeneralIssues) {
+      setActiveTab("general");
+    } else if (hasImagesTabIncomplete()) {
+      setActiveTab("images");
+    } else if (hasPricingIssues) {
+      setActiveTab("pricing");
+    } else if (hasDetailsIssues) {
+      setActiveTab("details");
+    }
+
+    notifications.show({
+      title: "Campos obrigatórios pendentes",
+      message: "Preencha todos os campos obrigatórios antes de salvar o produto.",
+      color: "yellow",
+    });
+  };
+
+  const hasImagesTabIncomplete = () => {
+    return form.values.images.length === 0 && newFiles.length === 0;
+  };
+
   return (
     <Modal
       opened={opened}
@@ -226,13 +284,21 @@ export function ProductFormModal({
       title={product ? "Editar Produto" : "Novo Produto"}
       size="lg"
     >
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Tabs defaultValue="general">
+      <form onSubmit={form.onSubmit(handleSubmit, handleValidationError)}>
+        <Tabs value={activeTab ?? "general"} onChange={setActiveTab}>
           <Tabs.List mb="md">
-            <Tabs.Tab value="general">Geral</Tabs.Tab>
-            <Tabs.Tab value="images">Imagens</Tabs.Tab>
-            <Tabs.Tab value="pricing">Preço e Estoque</Tabs.Tab>
-            <Tabs.Tab value="details">Detalhes</Tabs.Tab>
+            <Tabs.Tab value="general">
+              {renderTabLabel("Geral", isGeneralComplete)}
+            </Tabs.Tab>
+            <Tabs.Tab value="images">
+              {renderTabLabel("Imagens", !hasImagesTabIncomplete())}
+            </Tabs.Tab>
+            <Tabs.Tab value="pricing">
+              {renderTabLabel("Preço e Estoque", isPricingComplete)}
+            </Tabs.Tab>
+            <Tabs.Tab value="details">
+              {renderTabLabel("Detalhes", isDetailsComplete)}
+            </Tabs.Tab>
           </Tabs.List>
 
           <ProductGeneralTab form={form} isEditing={Boolean(product)} />

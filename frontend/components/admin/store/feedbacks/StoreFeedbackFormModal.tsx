@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "@mantine/form";
 import {
   Modal,
@@ -33,12 +32,20 @@ export function StoreFeedbackFormModal({
   initialValues,
   loading,
 }: StoreFeedbackFormModalProps) {
+  const initialFormValues: StoreFeedbackFormValues = initialValues
+    ? {
+        customerName: initialValues.customerName,
+        comment: initialValues.comment,
+        stars: initialValues.stars,
+      }
+    : {
+        customerName: "",
+        comment: "",
+        stars: 5,
+      };
+
   const form = useForm<StoreFeedbackFormValues>({
-    initialValues: {
-      customerName: "",
-      comment: "",
-      stars: 5,
-    },
+    initialValues: initialFormValues,
     validate: {
       customerName: (value) =>
         value.trim().length < 2 ? "Nome deve ter pelo menos 2 caracteres" : null,
@@ -48,18 +55,6 @@ export function StoreFeedbackFormModal({
           : null,
     },
   });
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setValues({
-        customerName: initialValues.customerName,
-        comment: initialValues.comment,
-        stars: initialValues.stars,
-      });
-    } else {
-      form.reset();
-    }
-  }, [initialValues, opened, form]);
 
   const handleSubmit = (values: StoreFeedbackFormValues) => {
     onSubmit(values);

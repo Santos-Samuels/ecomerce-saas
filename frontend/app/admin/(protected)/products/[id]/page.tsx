@@ -1,35 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { notFound, useParams, useRouter } from "next/navigation";
-import {
-  Badge,
-  Box,
-  Button,
-  Divider,
-  Group,
-  Image,
-  NumberFormatter,
-  Pill,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@mantine/core";
-import { IProduct } from "@ecomerce/shared";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
-import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
 import { AdminContentLoader } from "@/components/admin/layout/AdminContentLoader";
-import * as S from "../../styles";
-import { api } from "@/lib/api";
+import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
+import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import {
-  ProductFormModal,
-  ProductFormValues,
+    ProductFormModal,
+    ProductFormValues,
 } from "@/components/admin/products/ProductFormModal";
-import { saveProduct } from "@/store/products/productsSlice";
+import { api } from "@/lib/api";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchProductCategories } from "@/store/productCategories/productCategoriesSlice";
 import { fetchProductMaterials } from "@/store/productMaterials/productMaterialsSlice";
+import { saveProduct } from "@/store/products/productsSlice";
 import { fetchVehicles } from "@/store/vehicles/vehiclesSlice";
+import { IProduct } from "@ecomerce/shared";
+import {
+    Badge,
+    Box,
+    Button,
+    Divider,
+    Group,
+    Image,
+    NumberFormatter,
+    Pill,
+    SimpleGrid,
+    Stack,
+    Text,
+} from "@mantine/core";
+import { notFound, useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import * as S from "../../styles";
 
 export default function ProductDetailsPage() {
   const params = useParams<{ id: string }>();
@@ -140,6 +140,7 @@ export default function ProductDetailsPage() {
         active: values.active,
         images: values.images,
         compatibleVehicleIds: values.compatibleVehicleIds,
+        colors: values.colors,
         onSuccess: async () => {
           setEditModalOpen(false);
           try {
@@ -268,6 +269,50 @@ export default function ProductDetailsPage() {
                 <Text size="sm" c="dimmed">
                   {product.description}
                 </Text>
+              </Stack>
+
+              <Divider />
+
+              <Stack gap="md">
+                <Group justify="space-between" align="center">
+                  <Text size="sm" fw={500}>
+                    Cores do produto
+                  </Text>
+                </Group>
+                {product.colors && product.colors.length > 0 ? (
+                  <Group gap="xs">
+                    {product.colors.map((color, index) => (
+                      <Pill
+                        key={`${color.name}-${color.hex}-${index}`}
+                        radius="xl"
+                        size="sm"
+                        style={{
+                          borderColor: color.hex,
+                          borderWidth: 1,
+                          borderStyle: "solid",
+                          paddingInline: 12,
+                        }}
+                      >
+                        <Group gap={8}>
+                          <span
+                            style={{
+                              width: 12,
+                              height: 12,
+                              borderRadius: "50%",
+                              backgroundColor: color.hex,
+                              border: "1px solid rgba(0,0,0,0.1)",
+                            }}
+                          />
+                          <span>{color.name}</span>
+                        </Group>
+                      </Pill>
+                    ))}
+                  </Group>
+                ) : (
+                  <Text size="sm" c="dimmed">
+                    Nenhuma cor cadastrada para este produto.
+                  </Text>
+                )}
               </Stack>
 
               <Divider />

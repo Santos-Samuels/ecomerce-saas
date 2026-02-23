@@ -99,4 +99,77 @@ export const ChipWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-top: 0.5rem;
+`;
+
+export const ThumbnailsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+`;
+
+export const ThumbnailItem = styled.div<{ active?: boolean }>`
+  border: 2px solid ${({ active }) => (active ? '#228be6' : '#dee2e6')};
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 1;
+  transition: all 0.2s ease;
+  opacity: ${({ active }) => (active ? 1 : 0.7)};
+
+  &:hover {
+    border-color: #228be6;
+    opacity: 1;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+export const SpecsTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  th {
+    width: 40%;
+    color: #868e96;
+    font-weight: 600;
+  }
+
+  td {
+    color: #495057;
+  }
+`;
+
+export const VehicleList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #495057;
+    
+    &::before {
+      content: "•";
+      color: #228be6;
+      font-weight: bold;
+    }
+  }
 `;

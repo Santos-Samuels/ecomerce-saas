@@ -1,4 +1,5 @@
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { ToBoolean } from '../../common/decorators/to-boolean.decorator';
 
 export class FilterProductDto {
   @IsOptional()
@@ -15,5 +16,6 @@ export class FilterProductDto {
 
   @IsOptional()
   @IsBoolean()
+  @ToBoolean()
   featured?: boolean;
 }

@@ -1,3 +1,4 @@
+import { IProductCategory } from "@ecomerce/shared";
 import {
   Button,
   Group,
@@ -6,7 +7,6 @@ import {
   TextInput,
   Textarea,
 } from "@mantine/core";
-import { IProductCategory } from "@ecomerce/shared";
 import { useState } from "react";
 
 interface FormState {
@@ -86,11 +86,12 @@ export function CategoryFormModal({
           placeholder="Descrição opcional da categoria"
           minRows={3}
           value={form.description}
-          onChange={(event) =>
-            setForm((prev) => ({
+          onChange={(event) => {
+            return setForm((prev) => ({
               ...prev,
-              description: event.currentTarget.value,
-            }))
+              description: event.target.value,
+            }));
+          }
           }
         />
 

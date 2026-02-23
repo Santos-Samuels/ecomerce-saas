@@ -5,15 +5,11 @@ import { BaseScreen } from "@/components/storefront/common/layout/BaseScreen";
 import { ProductDetails } from "@/components/storefront/product/ProductDetails";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCurrentStore } from "@/store/storefront/storefrontSlice";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
-
-export default function ProductPage({ params }: PageProps) {
+export default function ProductPage() {
+  const params = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
   const { data: store } = useAppSelector((state) => state.storefront.store);
   const [subdomainInput, setSubdomainInput] = useState("");

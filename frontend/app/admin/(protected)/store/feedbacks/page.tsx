@@ -99,6 +99,7 @@ export default function StoreFeedbacksPage() {
       </S.MainContent>
 
       <StoreFeedbackFormModal
+        key={editingFeedback?.id ?? "new"}
         opened={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSave}

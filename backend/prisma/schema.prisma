@@ -170,7 +170,19 @@ model Product {
   category ProductCategory  @relation(fields: [categoryId], references: [id])
   material ProductMaterial? @relation(fields: [materialId], references: [id])
   vehicles Vehicle[]        @relation("ProductVehicles")
+  colors   ProductColor[]
 
   @@unique([storeId, slug])
   @@unique([storeId, sku])
+}
+
+model ProductColor {
+  id        String   @id @default(uuid())
+  productId String
+  name      String
+  hex       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id])
 }

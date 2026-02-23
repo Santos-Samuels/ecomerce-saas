@@ -21,6 +21,7 @@ import { vehiclesReducer } from "./vehicles/vehiclesSlice";
 import { storeFeedbacksReducer } from "./storeFeedbacks/storeFeedbacksSlice";
 import storeLayoutReducer from "./storeLayout/storeLayoutSlice";
 import { storefrontReducer } from "./storefront/storefrontSlice";
+import { cartReducer } from "./cart/cartSlice";
 import { rootSaga } from "./sagas";
 
 const rootReducer = combineReducers({
@@ -34,12 +35,13 @@ const rootReducer = combineReducers({
   storeFeedbacks: storeFeedbacksReducer,
   storeLayout: storeLayoutReducer,
   storefront: storefrontReducer,
+  cart: cartReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"],
+  whitelist: ["auth", "cart"],
 };
 
 const sagaMiddleware = createSagaMiddleware();

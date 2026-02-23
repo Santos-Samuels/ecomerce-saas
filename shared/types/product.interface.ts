@@ -2,6 +2,11 @@ import { IProductCategory } from "./product-category.interface";
 import { IProductMaterial } from "./product-material.interface";
 import { IVehicle } from "./vehicle.interface";
 
+export interface IProductColor {
+  name: string;
+  hex: string;
+}
+
 export interface IProduct {
   id: string;
   storeId: string;
@@ -18,7 +23,8 @@ export interface IProduct {
   category?: IProductCategory;
   materialId?: string | null;
   material?: IProductMaterial | null;
-  compatibleVehicles: IVehicle[]; // Products compatible with specific vehicles
+  colors?: IProductColor[];
+  compatibleVehicles: IVehicle[];
   featured: boolean;
   active: boolean;
   createdAt: Date;

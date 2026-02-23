@@ -10,11 +10,14 @@ import { FilterProductDto } from './dto/filter-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.entity';
 
-type PrismaProductRaw = Prisma.ProductGetPayload<Prisma.ProductDefaultArgs> & {
-  category?: Product['category'];
-  material?: Product['material'];
-  vehicles?: Product['compatibleVehicles'];
-};
+type PrismaProductRaw = Prisma.ProductGetPayload<{
+  include: {
+    category: true;
+    material: true;
+    vehicles: true;
+    colors: true;
+  };
+}>;
 
 @Injectable()
 export class ProductService {
@@ -31,11 +34,15 @@ export class ProductService {
       compatibleVehicles: prismaProduct.vehicles ?? [],
       category: prismaProduct.category,
       material: prismaProduct.material,
+      colors: prismaProduct.colors?.map((color) => ({
+        name: color.name,
+        hex: color.hex,
+      })),
     };
   }
 
   async create(data: CreateProductDto): Promise<Product> {
-    const { compatibleVehicleIds, ...rest } = data;
+    const { compatibleVehicleIds, colors, ...rest } = data;
 
     if (
       rest.promotionalPrice !== undefined &&
@@ -61,27 +68,39 @@ export class ProductService {
     }
 
     if (existing && !existing.active) {
-      return this.mapToEntity(
-        await this.prisma.product.update({
-          where: { id: existing.id },
-          data: {
-            ...rest,
-            active: true,
-            ...(compatibleVehicleIds !== undefined
-              ? {
-                  vehicles: {
-                    set: compatibleVehicleIds.map((id) => ({ id })),
-                  },
-                }
-              : {}),
-          },
-          include: {
-            category: true,
-            material: true,
-            vehicles: true,
-          },
-        }),
-      );
+      const updated = await this.prisma.product.update({
+        where: { id: existing.id },
+        data: {
+          ...rest,
+          active: true,
+          ...(compatibleVehicleIds !== undefined
+            ? {
+                vehicles: {
+                  set: compatibleVehicleIds.map((id) => ({ id })),
+                },
+              }
+            : {}),
+          ...(colors !== undefined
+            ? {
+                colors: {
+                  deleteMany: {},
+                  create: colors.map((color) => ({
+                    name: color.name,
+                    hex: color.hex,
+                  })),
+                },
+              }
+            : {}),
+        },
+        include: {
+          category: true,
+          material: true,
+          vehicles: true,
+          colors: true,
+        },
+      });
+
+      return this.mapToEntity(updated);
     }
 
     const created = await this.prisma.product.create({
@@ -95,11 +114,22 @@ export class ProductService {
               },
             }
           : {}),
+        ...(colors && colors.length > 0
+          ? {
+              colors: {
+                create: colors.map((color) => ({
+                  name: color.name,
+                  hex: color.hex,
+                })),
+              },
+            }
+          : {}),
       },
       include: {
         category: true,
         material: true,
         vehicles: true,
+        colors: true,
       },
     });
 
@@ -147,6 +177,7 @@ export class ProductService {
         category: true,
         material: true,
         vehicles: true,
+        colors: true,
       },
     });
 
@@ -164,6 +195,7 @@ export class ProductService {
         category: true,
         material: true,
         vehicles: true,
+        colors: true,
       },
     });
 
@@ -181,6 +213,7 @@ export class ProductService {
         category: true,
         material: true,
         vehicles: true,
+        colors: true,
       },
     });
 
@@ -194,7 +227,7 @@ export class ProductService {
   async update(id: string, data: UpdateProductDto): Promise<Product> {
     const existing = await this.findOne(id);
 
-    const { compatibleVehicleIds, ...rest } = data;
+    const { compatibleVehicleIds, colors, ...rest } = data;
 
     const price = rest.price ?? existing.price;
     const promotionalPrice =
@@ -225,11 +258,23 @@ export class ProductService {
               },
             }
           : {}),
+        ...(colors !== undefined
+          ? {
+              colors: {
+                deleteMany: {},
+                create: colors.map((color) => ({
+                  name: color.name,
+                  hex: color.hex,
+                })),
+              },
+            }
+          : {}),
       },
       include: {
         category: true,
         material: true,
         vehicles: true,
+        colors: true,
       },
     });
 
