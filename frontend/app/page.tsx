@@ -36,28 +36,22 @@ export default function StoreFront() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
-      const parts = hostname.split(".");
-      
-      // Detect if it's the root domain (no subdomain)
-      // Local: localhost:3000 -> length 1
-      // Prod: vendemais.api.br -> length 3 (if we consider api.br as TLD) or 2
-      // For simplicity, if parts.length <= 1 (localhost) or matches exactly the main domain
-      const isLocalRoot = hostname === "localhost";
-      const isProdRoot = hostname === "vendemais.api.br" || hostname.includes("vercel.app") && !hostname.includes("."); 
-      
-      // Better logic for subdomains:
-      // foo.localhost -> length 2, foo
-      // foo.vendemais.api.br -> length 4, foo
-      let detectedSubdomain: string | null = null;
-      
-      if (hostname.endsWith("localhost")) {
-        if (parts.length > 1) detectedSubdomain = parts[0];
-      } else if (parts.length >= 3) {
-        // subdomain.domain.com or subdomain.domain.com.br
-        detectedSubdomain = parts[0];
+      const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN;
+
+      if (!baseDomain) {
+        throw new Error(
+          "A variável de ambiente NEXT_PUBLIC_BASE_DOMAIN é obrigatória para o funcionamento do sistema.",
+        );
       }
 
-      if (!detectedSubdomain) {
+      // Se o hostname termina com .BASE_DOMAIN, extraímos o que vem antes
+      let detectedSubdomain: string | null = null;
+
+      if (hostname.endsWith(`.${baseDomain}`)) {
+        detectedSubdomain = hostname.replace(`.${baseDomain}`, "");
+      }
+
+      if (!detectedSubdomain || hostname === baseDomain) {
         setIsSaasRoot(true);
       } else {
         setSubdomain(detectedSubdomain);

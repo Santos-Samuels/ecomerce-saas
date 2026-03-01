@@ -27,19 +27,23 @@ export class TenantMiddleware implements NestMiddleware {
   private extractSubdomain(host?: string): string | null {
     if (!host) return null;
 
-    // Remove port if present
     const hostname = host.split(':')[0];
+    const baseDomain = process.env.BASE_DOMAIN;
 
-    const parts = hostname.split('.');
-
-    // localhost case: foo.localhost -> foo
-    if (hostname.endsWith('localhost') && parts.length === 2) {
-      return parts[0];
+    if (!baseDomain) {
+      throw new Error(
+        'A variável de ambiente BASE_DOMAIN é obrigatória para o funcionamento do sistema.',
+      );
     }
 
-    // domain case: foo.domain.com -> foo
-    if (parts.length >= 3) {
-      return parts[0];
+    // Se o hostname é o próprio BASE_DOMAIN, não há subdomínio
+    if (hostname === baseDomain) {
+      return null;
+    }
+
+    // Se o hostname termina com .BASE_DOMAIN, extraímos o que vem antes
+    if (hostname.endsWith(`.${baseDomain}`)) {
+      return hostname.replace(`.${baseDomain}`, '');
     }
 
     return null;
