@@ -1,0 +1,7 @@
+- Generate code following SOLID principles
+- Prefer small, focused functions and components;
+- Follow single responsibility principle;
+- Avoid deep nesting of conditional statements;
+- Styles should be defined in separate files (styles.ts);
+- Create modern design components;
+- Create responsive design;

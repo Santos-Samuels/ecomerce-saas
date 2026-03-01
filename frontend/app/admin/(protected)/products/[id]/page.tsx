@@ -3,6 +3,7 @@
 import { AdminContentLoader } from "@/components/admin/layout/AdminContentLoader";
 import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
 import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
+import { AdminPermissionGuard } from "@/components/admin/layout/AdminPermissionGuard";
 import {
     ProductFormModal,
     ProductFormValues,
@@ -13,7 +14,7 @@ import { fetchProductCategories } from "@/store/productCategories/productCategor
 import { fetchProductMaterials } from "@/store/productMaterials/productMaterialsSlice";
 import { saveProduct } from "@/store/products/productsSlice";
 import { fetchVehicles } from "@/store/vehicles/vehiclesSlice";
-import { IProduct } from "@ecomerce/shared";
+import { IProduct, StorePermission } from "@ecomerce/shared";
 import {
     Badge,
     Box,
@@ -44,6 +45,10 @@ export default function ProductDetailsPage() {
     (state) => state.productMaterials
   );
   const { items: vehicles } = useAppSelector((state) => state.vehicles);
+  const storePermissions =
+    useAppSelector(
+      (state) => state.storeSettings.store?.permissions ?? [],
+    ) ?? [];
   const [product, setProduct] = useState<IProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,18 +56,28 @@ export default function ProductDetailsPage() {
 
   const storeId = user?.storeId;
 
+  const canManageCategories = storePermissions.includes(
+    StorePermission.CATEGORY_MANAGE
+  );
+  const canManageMaterials = storePermissions.includes(
+    StorePermission.MATERIAL_MANAGE
+  );
+  const canManageVehicles = storePermissions.includes(
+    StorePermission.VEHICLE_MANAGE
+  );
+
   useEffect(() => {
     if (!storeId || !editModalOpen) return;
 
-    if (categories.length === 0) {
+    if (categories.length === 0 && canManageCategories) {
       dispatch(fetchProductCategories({ storeId }));
     }
 
-    if (materials.length === 0) {
+    if (materials.length === 0 && canManageMaterials) {
       dispatch(fetchProductMaterials({ storeId }));
     }
 
-    if (vehicles.length === 0) {
+    if (vehicles.length === 0 && canManageVehicles) {
       dispatch(fetchVehicles());
     }
   }, [
@@ -72,6 +87,9 @@ export default function ProductDetailsPage() {
     categories.length,
     materials.length,
     vehicles.length,
+    canManageCategories,
+    canManageMaterials,
+    canManageVehicles,
   ]);
 
   useEffect(() => {
@@ -159,35 +177,38 @@ export default function ProductDetailsPage() {
       <AdminSidebar />
 
       <S.MainContent>
-        <AdminPageHeader
-          title={product?.name ?? "Detalhes do produto"}
-          subtitle={product ? `SKU: ${product.sku}` : undefined}
-          action={
-            <Group gap="xs">
-              <Button
-                variant="default"
-                onClick={() => router.push("/admin/products")}
-              >
-                Voltar para lista
-              </Button>
-              {product && (
-                <Button color="brand" onClick={() => setEditModalOpen(true)}>
-                  Editar produto
+        <AdminPermissionGuard
+          requiredPermissions={[StorePermission.PRODUCT_MANAGE]}
+        >
+          <AdminPageHeader
+            title={product?.name ?? "Detalhes do produto"}
+            subtitle={product ? `SKU: ${product.sku}` : undefined}
+            action={
+              <Group gap="xs">
+                <Button
+                  variant="default"
+                  onClick={() => router.push("/admin/products")}
+                >
+                  Voltar para lista
                 </Button>
-              )}
-            </Group>
-          }
-        />
+                {product && (
+                  <Button color="brand" onClick={() => setEditModalOpen(true)}>
+                    Editar produto
+                  </Button>
+                )}
+              </Group>
+            }
+          />
 
-        <AdminContentLoader loading={loading} label="Carregando produto...">
-          {error && (
-            <Text c="red" size="sm" mb="md">
-              {error}
-            </Text>
-          )}
+          <AdminContentLoader loading={loading} label="Carregando produto...">
+            {error && (
+              <Text c="red" size="sm" mb="md">
+                {error}
+              </Text>
+            )}
 
-          {product && (
-            <Stack gap="xl">
+            {product && (
+              <Stack gap="xl">
               <Group align="flex-start" justify="space-between">
                 <Stack gap="sm">
                   <Group gap="sm">
@@ -366,10 +387,11 @@ export default function ProductDetailsPage() {
                     Nenhuma imagem cadastrada para este produto.
                   </Text>
                 )}
+                </Stack>
               </Stack>
-            </Stack>
-          )}
-        </AdminContentLoader>
+            )}
+          </AdminContentLoader>
+        </AdminPermissionGuard>
       </S.MainContent>
 
       {product && storeId && (
@@ -379,6 +401,9 @@ export default function ProductDetailsPage() {
           product={product}
           onClose={() => setEditModalOpen(false)}
           onSubmit={handleSubmit}
+          canManageCategories={canManageCategories}
+          canManageMaterials={canManageMaterials}
+          canManageVehicles={canManageVehicles}
         />
       )}
     </S.AdminLayout>

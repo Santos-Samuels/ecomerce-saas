@@ -34,6 +34,9 @@ interface ProductFormModalProps {
   product?: IProduct & { infiniteStock?: boolean };
   onClose: () => void;
   onSubmit: (values: ProductFormValues) => void;
+  canManageCategories?: boolean;
+  canManageMaterials?: boolean;
+  canManageVehicles?: boolean;
 }
 
 export function ProductFormModal({
@@ -42,6 +45,9 @@ export function ProductFormModal({
   product,
   onClose,
   onSubmit,
+  canManageCategories = true,
+  canManageMaterials = true,
+  canManageVehicles = true,
 }: ProductFormModalProps) {
   const { items: categories } = useAppSelector(
     (state) => state.productCategories
@@ -83,7 +89,8 @@ export function ProductFormModal({
           ? "Nome deve ter pelo menos 3 caracteres"
           : null,
       sku: (value) => (value.trim().length < 1 ? "SKU é obrigatório" : null),
-      categoryId: (value) => (!value ? "Selecione uma categoria" : null),
+      categoryId: (value) =>
+        !canManageCategories || value ? null : "Selecione uma categoria",
       price: (value) => {
         if (value === undefined || value === null) {
           return "Preço é obrigatório";
@@ -231,7 +238,8 @@ export function ProductFormModal({
     form.values.price !== null &&
     (!form.values.infiniteStock ? form.values.stock >= 1 : true);
 
-  const isDetailsComplete = !!form.values.categoryId;
+  const isDetailsComplete =
+    !canManageCategories || !!form.values.categoryId;
 
   const renderTabLabel = (label: string, complete: boolean) => (
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -317,6 +325,9 @@ export function ProductFormModal({
             materials={materials}
             isEditing={Boolean(product)}
             vehicles={vehicles}
+            showCategorySelect={canManageCategories}
+            showMaterialSelect={canManageMaterials}
+            showVehiclesSelect={canManageVehicles}
           />
         </Tabs>
 
