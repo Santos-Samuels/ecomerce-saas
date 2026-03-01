@@ -20,6 +20,7 @@ primary_region = "gru"
   CORS_ORIGIN = "https://ecomerce-frontend.fly.dev"
   IMAGEKIT_PUBLIC_KEY = "public_ajlJblb8U67ZEENHgB3Igtz6nag="
   IMAGEKIT_URL_ENDPOINT = "https://ik.imagekit.io/wzrwpc6ga"
+  BASE_DOMAIN = "vendemais.api.br"
 
 [deploy]
   release_command = "npx prisma migrate deploy --schema=./backend/prisma/schema.prisma"
