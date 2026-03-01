@@ -2,6 +2,7 @@
 
 import { StoreFooter } from "@/components/storefront/common/StoreFooter";
 import { BaseScreen } from "@/components/storefront/common/layout/BaseScreen";
+import { clearCart } from "@/store/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCurrentStore } from "@/store/storefront/storefrontSlice";
 import {
@@ -10,17 +11,15 @@ import {
   Paper,
   Select,
   Stack,
-  Table,
   Text,
   TextInput,
   Textarea,
-  Title,
+  Title
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { clearCart } from "@/store/cart/cartSlice";
+import { useEffect, useMemo } from "react";
 import { FiShoppingBag } from "react-icons/fi";
 import * as S from "./styles";
 
@@ -190,7 +189,7 @@ export default function CheckoutPage() {
             </Stack>
           </Paper>
         ) : (
-          <S.CheckoutGrid>
+          <S.CheckoutGrid as="form" onSubmit={form.onSubmit(handleSubmit)}>
             <S.LeftColumn>
               <S.Section>
                 <S.SectionTitle>1. Contato</S.SectionTitle>
@@ -304,7 +303,7 @@ export default function CheckoutPage() {
                   </S.TotalRow>
                   <Button
                     fullWidth
-                    onClick={form.onSubmit(handleSubmit)}
+                    type="submit"
                     color="green"
                     size="md"
                   >

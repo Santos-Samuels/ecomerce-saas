@@ -8,12 +8,12 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
-  FiBox,
-  FiChevronDown,
-  FiHome,
-  FiShoppingBag,
-  FiShoppingCart,
-  FiUsers,
+    FiBox,
+    FiChevronDown,
+    FiHome,
+    FiShoppingBag,
+    FiShoppingCart,
+    FiUsers,
 } from "react-icons/fi";
 import * as S from "./styles";
 
@@ -64,8 +64,8 @@ export function AdminSidebar() {
     return required.some((perm) => storePermissions.includes(perm));
   };
 
-  const filteredItems: AdminMenuItem[] = useMemo(() => {
-    items
+  const filteredItems = useMemo(() => {
+    return items
       .map((item) => {
         const filteredChildren = item.children?.filter((child) =>
           hasPermission(child.requiredStorePermissions),
@@ -79,10 +79,12 @@ export function AdminSidebar() {
           return null;
         }
 
-        return {
+        const newItem: AdminMenuItem = {
           ...item,
           children: filteredChildren,
         };
+
+        return newItem;
       })
       .filter((item): item is AdminMenuItem => item !== null);
   }, [items, hasPermission]);
