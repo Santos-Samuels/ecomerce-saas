@@ -1,9 +1,11 @@
+import { StorePermission } from "@ecomerce/shared";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface AdminMenuChildItem {
   id: string;
   label: string;
   path: string;
+  requiredStorePermissions?: StorePermission[];
 }
 
 export interface AdminMenuItem {
@@ -11,6 +13,7 @@ export interface AdminMenuItem {
   label: string;
   path: string;
   children?: AdminMenuChildItem[];
+  requiredStorePermissions?: StorePermission[];
 }
 
 export interface AdminMenuState {
@@ -29,21 +32,25 @@ const initialState: AdminMenuState = {
           id: "products-list",
           label: "Lista de produtos",
           path: "/admin/products",
+          requiredStorePermissions: [StorePermission.PRODUCT_MANAGE],
         },
         {
           id: "products-categories",
           label: "Categorias",
           path: "/admin/categories",
+          requiredStorePermissions: [StorePermission.CATEGORY_MANAGE],
         },
         {
           id: "products-materials",
           label: "Materiais",
           path: "/admin/materials",
+          requiredStorePermissions: [StorePermission.MATERIAL_MANAGE],
         },
         {
           id: "products-vehicles",
           label: "Veículos",
           path: "/admin/vehicles",
+          requiredStorePermissions: [StorePermission.VEHICLE_MANAGE],
         },
       ],
     },

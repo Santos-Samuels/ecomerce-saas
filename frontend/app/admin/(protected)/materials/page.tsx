@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@mantine/core";
-import { IProductMaterial } from "@ecomerce/shared";
+import { IProductMaterial, StorePermission } from "@ecomerce/shared";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
+import { AdminPermissionGuard } from "@/components/admin/layout/AdminPermissionGuard";
 import * as S from "../styles";
 import {
   deleteProductMaterial,
@@ -81,25 +82,32 @@ export default function ProductMaterialsPage() {
       <AdminSidebar />
 
       <S.MainContent>
-        <AdminPageHeader
-          title="Materiais de produto"
-          subtitle="Gerencie os materiais utilizados pelos seus produtos."
-          action={
-            <Button color="brand" onClick={handleOpenCreate}>
-              Novo material
-            </Button>
-          }
-        />
-
-        <AdminContentLoader loading={loading} label="Carregando materiais...">
-          <MaterialsTable
-            materials={materials}
-            loading={loading}
-            deletingId={deletingId}
-            onEdit={handleOpenEdit}
-            onDelete={handleDelete}
+        <AdminPermissionGuard
+          requiredPermissions={[StorePermission.MATERIAL_MANAGE]}
+        >
+          <AdminPageHeader
+            title="Materiais de produto"
+            subtitle="Gerencie os materiais utilizados pelos seus produtos."
+            action={
+              <Button color="brand" onClick={handleOpenCreate}>
+                Novo material
+              </Button>
+            }
           />
-        </AdminContentLoader>
+
+          <AdminContentLoader
+            loading={loading}
+            label="Carregando materiais..."
+          >
+            <MaterialsTable
+              materials={materials}
+              loading={loading}
+              deletingId={deletingId}
+              onEdit={handleOpenEdit}
+              onDelete={handleDelete}
+            />
+          </AdminContentLoader>
+        </AdminPermissionGuard>
       </S.MainContent>
 
       <MaterialFormModal

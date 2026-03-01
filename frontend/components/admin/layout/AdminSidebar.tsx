@@ -1,20 +1,21 @@
 "use client";
 
+import { AdminMenuItem } from "@/store/adminMenu/adminMenuSlice";
+import { logout } from "@/store/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchStoreSettings } from "@/store/storeSettings/storeSettingsSlice";
 import Image from "next/image";
-import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import {
   FiBox,
+  FiChevronDown,
   FiHome,
   FiShoppingBag,
-  FiUsers,
-  FiChevronDown,
   FiShoppingCart,
+  FiUsers,
 } from "react-icons/fi";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { AdminMenuItem } from "@/store/adminMenu/adminMenuSlice";
 import * as S from "./styles";
-import { logout } from "@/store/auth/authSlice";
 
 function getMenuIcon(id: string) {
   if (id === "overview") return <FiHome size={16} />;
@@ -35,15 +36,59 @@ export function AdminSidebar() {
   const storeName = useAppSelector(
     (state) => state.storeSettings.store?.name ?? null,
   );
+  const store = useAppSelector((state) => state.storeSettings.store);
+  const storeLoading = useAppSelector((state) => state.storeSettings.loading);
 
   const router = useRouter();
   const pathname = usePathname();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
-  if (!user) return null;
+  useEffect(() => {
+    if (!user?.storeId) return;
+    if (store || storeLoading) return;
+    dispatch(
+      fetchStoreSettings({
+        storeId: user.storeId,
+      }),
+    );
+  }, [dispatch, store, storeLoading, user?.storeId]);
+
+  const storePermissions = store?.permissions ?? null;
+
+  const hasPermission = (
+    required?: AdminMenuItem["requiredStorePermissions"],
+  ) => {
+    if (!required || required.length === 0) return true;
+    if (!store) return true;
+    if (!storePermissions || storePermissions.length === 0) return false;
+    return required.some((perm) => storePermissions.includes(perm));
+  };
+
+  const filteredItems: AdminMenuItem[] = useMemo(() => {
+    items
+      .map((item) => {
+        const filteredChildren = item.children?.filter((child) =>
+          hasPermission(child.requiredStorePermissions),
+        );
+
+        const itemAllowed =
+          hasPermission(item.requiredStorePermissions) ||
+          (filteredChildren && filteredChildren.length > 0);
+
+        if (!itemAllowed) {
+          return null;
+        }
+
+        return {
+          ...item,
+          children: filteredChildren,
+        };
+      })
+      .filter((item): item is AdminMenuItem => item !== null);
+  }, [items, hasPermission]);
 
   const storeInitial =
-    (storeName ?? user.name ?? "").trim().charAt(0).toUpperCase() || "E";
+    (storeName ?? user?.name ?? "").trim().charAt(0).toUpperCase() || "E";
 
   const handleNavigate = (path: string) => {
     router.push(path);
@@ -63,6 +108,8 @@ export function AdminSidebar() {
 
   const isPathActive = (path: string) =>
     pathname === path || pathname.startsWith(`${path}/`);
+
+  if (!user) return null;
 
   return (
     <S.Sidebar>
@@ -87,7 +134,7 @@ export function AdminSidebar() {
       </S.SidebarHeader>
 
       <S.SidebarNav>
-        {items.map((item: AdminMenuItem) => {
+        {filteredItems.map((item: AdminMenuItem) => {
           const hasChildren = Boolean(
             item.children && item.children.length > 0,
           );

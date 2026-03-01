@@ -6,6 +6,7 @@ import { FiPlus } from "react-icons/fi";
 import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
 import { AdminContentLoader } from "@/components/admin/layout/AdminContentLoader";
+import { AdminPermissionGuard } from "@/components/admin/layout/AdminPermissionGuard";
 import * as S from "../styles";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -15,7 +16,7 @@ import {
 } from "@/store/vehicles/vehiclesSlice";
 import { VehiclesTable } from "@/components/admin/vehicles/VehiclesTable";
 import { VehicleFormModal } from "@/components/admin/vehicles/VehicleFormModal";
-import { IVehicle } from "@ecomerce/shared";
+import { IVehicle, StorePermission } from "@ecomerce/shared";
 import { SaveVehiclePayload } from "@/store/vehicles/types";
 
 export default function VehiclesPage() {
@@ -68,23 +69,27 @@ export default function VehiclesPage() {
       <AdminSidebar />
 
       <S.MainContent>
-        <AdminPageHeader
-          title="Veículos"
-          subtitle="Gerencie os veículos compatíveis com os produtos"
-          action={
-            <Button leftSection={<FiPlus />} onClick={handleCreate}>
-              Novo Veículo
-            </Button>
-          }
-        />
-
-        <AdminContentLoader loading={loading} label="Carregando veículos...">
-          <VehiclesTable
-            data={items}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
+        <AdminPermissionGuard
+          requiredPermissions={[StorePermission.VEHICLE_MANAGE]}
+        >
+          <AdminPageHeader
+            title="Veículos"
+            subtitle="Gerencie os veículos compatíveis com os produtos"
+            action={
+              <Button leftSection={<FiPlus />} onClick={handleCreate}>
+                Novo Veículo
+              </Button>
+            }
           />
-        </AdminContentLoader>
+
+          <AdminContentLoader loading={loading} label="Carregando veículos...">
+            <VehiclesTable
+              data={items}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </AdminContentLoader>
+        </AdminPermissionGuard>
       </S.MainContent>
 
       <VehicleFormModal

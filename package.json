@@ -1,14 +1,18 @@
 {
-  "name": "ecomerce",
   "private": true,
+  "name": "ecomerce",
   "workspaces": [
     "frontend",
     "backend",
     "shared"
   ],
   "scripts": {
+    "build:shared": "yarn workspace @ecomerce/shared run build",
+    "build:frontend": "yarn build:shared && yarn workspace frontend run build",
     "lint": "yarn workspace frontend run lint && yarn workspace backend run lint",
     "dev:front": "yarn workspace frontend run dev",
-    "dev:back": "yarn workspace backend run start:dev"
+    "dev:back": "yarn workspace backend run start:dev",
+    "deploy:backend": "fly deploy --config fly.backend.toml --app ecomerce-backend",
+    "deploy:frontend": "fly deploy --config fly.frontend.toml --app ecomerce-frontend"
   }
 }

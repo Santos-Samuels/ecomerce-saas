@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@mantine/core";
-import { IProductCategory } from "@ecomerce/shared";
+import { IProductCategory, StorePermission } from "@ecomerce/shared";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
+import { AdminPermissionGuard } from "@/components/admin/layout/AdminPermissionGuard";
 import * as S from "../styles";
 import {
   deleteProductCategory,
@@ -79,25 +80,32 @@ export default function ProductCategoriesPage() {
       <AdminSidebar />
 
       <S.MainContent>
-        <AdminPageHeader
-          title="Categorias de produto"
-          subtitle="Gerencie as categorias utilizadas pelos seus produtos."
-          action={
-            <Button color="brand" onClick={handleOpenCreate}>
-              Nova categoria
-            </Button>
-          }
-        />
-
-        <AdminContentLoader loading={loading} label="Carregando categorias...">
-          <CategoriesTable
-            categories={categories}
-            loading={loading}
-            deletingId={deletingId}
-            onEdit={handleOpenEdit}
-            onDelete={handleDelete}
+        <AdminPermissionGuard
+          requiredPermissions={[StorePermission.CATEGORY_MANAGE]}
+        >
+          <AdminPageHeader
+            title="Categorias de produto"
+            subtitle="Gerencie as categorias utilizadas pelos seus produtos."
+            action={
+              <Button color="brand" onClick={handleOpenCreate}>
+                Nova categoria
+              </Button>
+            }
           />
-        </AdminContentLoader>
+
+          <AdminContentLoader
+            loading={loading}
+            label="Carregando categorias..."
+          >
+            <CategoriesTable
+              categories={categories}
+              loading={loading}
+              deletingId={deletingId}
+              onEdit={handleOpenEdit}
+              onDelete={handleDelete}
+            />
+          </AdminContentLoader>
+        </AdminPermissionGuard>
       </S.MainContent>
 
       <CategoryFormModal

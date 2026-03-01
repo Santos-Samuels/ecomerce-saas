@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@mantine/core";
-import { IProduct } from "@ecomerce/shared";
+import { IProduct, StorePermission } from "@ecomerce/shared";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
+import { AdminPermissionGuard } from "@/components/admin/layout/AdminPermissionGuard";
 import * as S from "../styles";
 import {
   deleteProduct,
@@ -37,6 +38,10 @@ export default function ProductsPage() {
     (state) => state.productMaterials
   );
   const { items: vehicles } = useAppSelector((state) => state.vehicles);
+  const storePermissions =
+    useAppSelector(
+      (state) => state.storeSettings.store?.permissions ?? [],
+    ) ?? [];
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<IProduct | undefined>(
@@ -44,6 +49,16 @@ export default function ProductsPage() {
   );
 
   const storeId = user?.storeId;
+
+  const canManageCategories = storePermissions.includes(
+    StorePermission.CATEGORY_MANAGE
+  );
+  const canManageMaterials = storePermissions.includes(
+    StorePermission.MATERIAL_MANAGE
+  );
+  const canManageVehicles = storePermissions.includes(
+    StorePermission.VEHICLE_MANAGE
+  );
 
   useEffect(() => {
     if (!storeId) return;
@@ -53,15 +68,15 @@ export default function ProductsPage() {
   useEffect(() => {
     if (!storeId || !modalOpen) return;
 
-    if (categories.length === 0) {
+    if (categories.length === 0 && canManageCategories) {
       dispatch(fetchProductCategories({ storeId }));
     }
 
-    if (materials.length === 0) {
+    if (materials.length === 0 && canManageMaterials) {
       dispatch(fetchProductMaterials({ storeId }));
     }
 
-    if (vehicles.length === 0) {
+    if (vehicles.length === 0 && canManageVehicles) {
       dispatch(fetchVehicles());
     }
   }, [
@@ -71,6 +86,9 @@ export default function ProductsPage() {
     categories.length,
     materials.length,
     vehicles.length,
+    canManageCategories,
+    canManageMaterials,
+    canManageVehicles,
   ]);
 
   if (!user || !storeId) return null;
@@ -130,23 +148,27 @@ export default function ProductsPage() {
       <AdminSidebar />
 
       <S.MainContent>
-        <AdminPageHeader
-          title="Produtos"
-          subtitle="Gerencie o catálogo de produtos da sua loja."
-          action={
-            <Button color="brand" onClick={handleOpenCreate}>
-              Novo produto
-            </Button>
-          }
-        />
-
-        <AdminContentLoader loading={loading} label="Carregando produtos...">
-          <ProductsTable
-            data={products}
-            onEdit={handleOpenEdit}
-            onDelete={handleDelete}
+        <AdminPermissionGuard
+          requiredPermissions={[StorePermission.PRODUCT_MANAGE]}
+        >
+          <AdminPageHeader
+            title="Produtos"
+            subtitle="Gerencie o catálogo de produtos da sua loja."
+            action={
+              <Button color="brand" onClick={handleOpenCreate}>
+                Novo produto
+              </Button>
+            }
           />
-        </AdminContentLoader>
+
+          <AdminContentLoader loading={loading} label="Carregando produtos...">
+            <ProductsTable
+              data={products}
+              onEdit={handleOpenEdit}
+              onDelete={handleDelete}
+            />
+          </AdminContentLoader>
+        </AdminPermissionGuard>
       </S.MainContent>
 
       <ProductFormModal
@@ -155,6 +177,9 @@ export default function ProductsPage() {
         product={editingProduct}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
+        canManageCategories={canManageCategories}
+        canManageMaterials={canManageMaterials}
+        canManageVehicles={canManageVehicles}
       />
     </S.AdminLayout>
   );

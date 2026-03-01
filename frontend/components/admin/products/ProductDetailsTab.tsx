@@ -13,6 +13,9 @@ interface ProductDetailsTabProps {
   materials: IProductMaterial[];
   vehicles: IVehicle[];
   isEditing: boolean;
+  showCategorySelect: boolean;
+  showMaterialSelect: boolean;
+  showVehiclesSelect: boolean;
 }
 
 export function ProductDetailsTab({
@@ -20,6 +23,9 @@ export function ProductDetailsTab({
   categories,
   materials,
   vehicles,
+  showCategorySelect,
+  showMaterialSelect,
+  showVehiclesSelect,
 }: ProductDetailsTabProps) {
   const colors = form.values.colors || [];
 
@@ -55,39 +61,45 @@ export function ProductDetailsTab({
   return (
     <Tabs.Panel value="details">
       <Stack gap="md">
-        <Select
-          label="Categoria"
-          placeholder="Selecione..."
-          data={categories.map((c) => ({
-            value: c.id,
-            label: c.name,
-          }))}
-          searchable
-          required
-          {...form.getInputProps("categoryId")}
-        />
-        <Select
-          label="Material"
-          placeholder="Selecione (Opcional)"
-          data={materials.map((m) => ({
-            value: m.id,
-            label: m.name,
-          }))}
-          searchable
-          clearable
-          {...form.getInputProps("materialId")}
-        />
-        <MultiSelect
-          label="Veículos compatíveis"
-          placeholder="Selecione os veículos (Opcional)"
-          data={vehicles.map((vehicle) => ({
-            value: vehicle.id,
-            label: `${vehicle.make} • ${vehicle.model} • ${vehicle.year}`,
-          }))}
-          searchable
-          clearable
-          {...form.getInputProps("compatibleVehicleIds")}
-        />
+        {showCategorySelect && (
+          <Select
+            label="Categoria"
+            placeholder="Selecione..."
+            data={categories.map((c) => ({
+              value: c.id,
+              label: c.name,
+            }))}
+            searchable
+            required
+            {...form.getInputProps("categoryId")}
+          />
+        )}
+        {showMaterialSelect && (
+          <Select
+            label="Material"
+            placeholder="Selecione (Opcional)"
+            data={materials.map((m) => ({
+              value: m.id,
+              label: m.name,
+            }))}
+            searchable
+            clearable
+            {...form.getInputProps("materialId")}
+          />
+        )}
+        {showVehiclesSelect && (
+          <MultiSelect
+            label="Veículos compatíveis"
+            placeholder="Selecione os veículos (Opcional)"
+            data={vehicles.map((vehicle) => ({
+              value: vehicle.id,
+              label: `${vehicle.make} • ${vehicle.model} • ${vehicle.year}`,
+            }))}
+            searchable
+            clearable
+            {...form.getInputProps("compatibleVehicleIds")}
+          />
+        )}
         <Stack gap="xs">
           {colors.map((color, index) => (
             <Group key={index} align="flex-end">

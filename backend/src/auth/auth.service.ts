@@ -1,7 +1,7 @@
 import { IRole, IUser, RoleById } from '@ecomerce/shared';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Role as PrismaRole, User as PrismaUser } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import * as crypto from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthTokenPayload } from './auth.types';
@@ -61,7 +61,7 @@ export class AuthService {
     return user;
   }
 
-  private toAuthUser(user: PrismaUser & { role?: PrismaRole | null }): IUser {
+  private toAuthUser(user: Prisma.UserGetPayload<{ include: { role: true } }>): IUser {
     return {
       id: user.id,
       storeId: user.storeId,
@@ -77,7 +77,7 @@ export class AuthService {
     };
   }
 
-  private mapRole(role: PrismaRole | null | undefined): IRole | undefined {
+  private mapRole(role: Prisma.RoleGetPayload<{}> | null | undefined): IRole | undefined {
     if (!role) {
       return undefined;
     }
