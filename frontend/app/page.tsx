@@ -1,5 +1,6 @@
 "use client";
 
+import { LandingPage } from "@/components/landing/LandingPage";
 import { StoreFooter } from "@/components/storefront/common/StoreFooter";
 import { StoreNotFound } from "@/components/storefront/common/StoreNotFound";
 import { BaseScreen } from "@/components/storefront/common/layout/BaseScreen";
@@ -13,12 +14,11 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchCurrentStore,
   fetchPublicCategories,
+  fetchPublicProducts,
   fetchStoreFeedbacks,
   fetchStoreLayout,
 } from "@/store/storefront/storefrontSlice";
 import { LoadingOverlay } from "@mantine/core";
-import { FaWhatsapp } from "react-icons/fa";
-import { WhatsAppFloatingButton } from "@/components/storefront/common/layout/styles";
 import { useEffect, useState } from "react";
 
 export default function StoreFront() {
@@ -26,28 +26,53 @@ export default function StoreFront() {
   const {
     store: { data: store, loading: storeLoading, notFound: storeNotFound },
     layout: { data: storeLayout },
-    feedbacks: { items: feedbacks },
     categories: { items: categories },
+    feedbacks: { items: feedbacks },
   } = useAppSelector((state) => state.storefront);
 
-  const [subdomainInput, setSubdomainInput] = useState("");
+  const [subdomain, setSubdomain] = useState<string | null>(null);
+  const [isSaasRoot, setIsSaasRoot] = useState(false);
 
   useEffect(() => {
-    // Set initial subdomain input from current URL
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
-      if (
-        hostname.includes(".localhost") ||
-        (hostname !== "localhost" && !hostname.includes("verel.app"))
-      ) {
-        setSubdomainInput(hostname.split(".")[0]); // eslint-disable-line react-hooks/set-state-in-effect
+      const parts = hostname.split(".");
+      
+      // Detect if it's the root domain (no subdomain)
+      // Local: localhost:3000 -> length 1
+      // Prod: vendemais.api.br -> length 3 (if we consider api.br as TLD) or 2
+      // For simplicity, if parts.length <= 1 (localhost) or matches exactly the main domain
+      const isLocalRoot = hostname === "localhost";
+      const isProdRoot = hostname === "vendemais.api.br" || hostname.includes("vercel.app") && !hostname.includes("."); 
+      
+      // Better logic for subdomains:
+      // foo.localhost -> length 2, foo
+      // foo.vendemais.api.br -> length 4, foo
+      let detectedSubdomain: string | null = null;
+      
+      if (hostname.endsWith("localhost")) {
+        if (parts.length > 1) detectedSubdomain = parts[0];
+      } else if (parts.length >= 3) {
+        // subdomain.domain.com or subdomain.domain.com.br
+        detectedSubdomain = parts[0];
+      }
+
+      if (!detectedSubdomain) {
+        setIsSaasRoot(true);
+      } else {
+        setSubdomain(detectedSubdomain);
+        dispatch(fetchCurrentStore());
       }
     }
-    
-    dispatch(fetchCurrentStore());
-    dispatch(fetchStoreLayout());
-    dispatch(fetchPublicCategories());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (store) {
+      dispatch(fetchStoreLayout());
+      dispatch(fetchPublicCategories());
+      dispatch(fetchPublicProducts({ featured: true }));
+    }
+  }, [dispatch, store]);
 
   useEffect(() => {
     if (storeLayout?.showFeedbacks) {
@@ -55,28 +80,18 @@ export default function StoreFront() {
     }
   }, [dispatch, storeLayout?.showFeedbacks]);
 
-  const handleSimulate = () => {
-    if (!subdomainInput) return;
-    const protocol = window.location.protocol;
-    // Assume localhost environment for testing
-    // If input is "localhost", go to root
-    if (subdomainInput === "localhost") {
-      window.location.href = `${protocol}//localhost:3000`;
-      return;
-    }
-
-    const newUrl = `${protocol}//${subdomainInput}.localhost:3000`;
-    window.location.href = newUrl;
-  };
+  if (isSaasRoot) {
+    return <LandingPage />;
+  }
 
   if (storeLoading) return <LoadingOverlay visible />;
 
   if (storeNotFound) {
     return (
       <StoreNotFound
-        subdomainInput={subdomainInput}
-        setSubdomainInput={setSubdomainInput}
-        handleSimulate={handleSimulate}
+        subdomainInput={subdomain || ""}
+        setSubdomainInput={() => {}}
+        handleSimulate={() => {}}
       />
     );
   }
@@ -87,9 +102,9 @@ export default function StoreFront() {
       footer={
         <StoreFooter
           store={store}
-          subdomainInput={subdomainInput}
-          setSubdomainInput={setSubdomainInput}
-          handleSimulate={handleSimulate}
+          subdomainInput={subdomain || ""}
+          setSubdomainInput={() => {}}
+          handleSimulate={() => {}}
         />
       }
     >
@@ -98,41 +113,25 @@ export default function StoreFront() {
         {storeLayout && (
           <HeroSection
             layout={storeLayout}
-            primaryColor={store?.primaryColor}
           />
         )}
+
+        {/* Categories */}
+        <CategorySection categories={categories} />
+
+        {/* Product Listing */}
+        <ProductListing primaryColor={store?.primaryColor} />
 
         {/* About Section */}
         {storeLayout && (
-          <AboutSection
-            layout={storeLayout}
-          />
+          <AboutSection layout={storeLayout} />
         )}
-
-        {/* Categories Section */}
-        <CategorySection categories={categories} />
-
-        {/* Products Section */}
-        <ProductListing primaryColor={store?.primaryColor} />
 
         {/* Feedback Section */}
         {storeLayout?.showFeedbacks && (
-          <FeedbackSection
-            feedbacks={feedbacks}
-          />
+          <FeedbackSection feedbacks={feedbacks} />
         )}
       </MainContent>
-      {store?.phone && (
-        <WhatsAppFloatingButton
-          href={`https://wa.me/${store.phone.replace(/\D/g, "")}?text=${encodeURIComponent(
-            "Vim pelo site e gostaria de fazer um orçamento.",
-          )}`}
-          target="_blank"
-          aria-label="Conversar no WhatsApp"
-        >
-          <FaWhatsapp size={28} />
-        </WhatsAppFloatingButton>
-      )}
     </BaseScreen>
   );
 }
