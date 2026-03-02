@@ -10,12 +10,7 @@ interface ProductListingProps {
 }
 
 export function ProductListing({ primaryColor }: ProductListingProps) {
-  const dispatch = useAppDispatch();
   const { products } = useAppSelector((state) => state.storefront);
-
-  useEffect(() => {
-    dispatch(fetchPublicProducts({ featured: true }));
-  }, [dispatch]);
 
   const isLoading = products.loading;
 

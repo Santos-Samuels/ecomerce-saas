@@ -230,7 +230,6 @@ export default function StaffStoreDetailsPage() {
                       radius="md"
                       mah={120}
                       fit="contain"
-                      styles={{ image: { background: "transparent" } }}
                     />
                   ) : (
                     <Text size="sm" c="dimmed">

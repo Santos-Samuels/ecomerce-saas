@@ -64,8 +64,8 @@ export function AdminSidebar() {
     return required.some((perm) => storePermissions.includes(perm));
   };
 
-  const filteredItems: AdminMenuItem[] = useMemo(() => {
-    items
+  const filteredItems = useMemo(() => {
+    return items
       .map((item) => {
         const filteredChildren = item.children?.filter((child) =>
           hasPermission(child.requiredStorePermissions),
@@ -79,10 +79,12 @@ export function AdminSidebar() {
           return null;
         }
 
-        return {
+        const newItem: AdminMenuItem = {
           ...item,
           children: filteredChildren,
         };
+
+        return newItem;
       })
       .filter((item): item is AdminMenuItem => item !== null);
   }, [items, hasPermission]);
