@@ -1,3 +1,4 @@
+import { Title } from "@mantine/core";
 import styled from "styled-components";
 
 export const LandingWrapper = styled.div`
@@ -33,7 +34,7 @@ export const Hero = styled.section`
   margin: 0 auto;
 `;
 
-export const Title = styled.h1`
+export const StyledTitle = styled(Title)`
   font-size: 48px;
   font-weight: 900;
   color: #1a1b1e;

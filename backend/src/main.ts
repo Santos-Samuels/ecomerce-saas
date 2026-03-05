@@ -6,21 +6,23 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableCors({
-    origin: (
-      origin: string | undefined,
-      callback: (err: Error | null, allow?: boolean) => void,
-    ) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
+    origin: (origin, callback) => {
       if (!origin) return callback(null, true);
 
-      // Allow localhost with any subdomain
-      // Regex matches: http://localhost:3000, http://foo.localhost:3000, etc.
-      const allowedPattern = /^http:\/\/([a-z0-9-]+\.)?localhost:3000$/;
+      try {
+        const { hostname } = new URL(origin);
+        const baseDomain = process.env.BASE_DOMAIN;
 
-      if (allowedPattern.test(origin) || origin === process.env.CORS_ORIGIN) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
+        const isRoot = hostname === baseDomain;
+        const isSubdomain = hostname.endsWith(`.${baseDomain}`);
+
+        if (isRoot || isSubdomain) {
+          return callback(null, true);
+        }
+
+        return callback(new Error('Not allowed by CORS'));
+      } catch {
+        return callback(new Error('Invalid origin'));
       }
     },
     credentials: true,

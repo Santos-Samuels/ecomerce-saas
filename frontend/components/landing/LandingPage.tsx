@@ -1,18 +1,8 @@
 "use client";
 
-import {
-  Button,
-  Container,
-  Group,
-  Text,
-  Title
-} from "@mantine/core";
+import { Button, Container, Group, Text, Title } from "@mantine/core";
 import { FaWhatsapp } from "react-icons/fa";
-import {
-  FiLayout,
-  FiSmartphone,
-  FiTrendingUp
-} from "react-icons/fi";
+import { FiLayout, FiSmartphone, FiTrendingUp } from "react-icons/fi";
 import * as S from "./styles";
 
 export function LandingPage() {
@@ -33,11 +23,9 @@ export function LandingPage() {
       </S.Header>
 
       <S.Hero>
-        <Title order={1} className="title">
-          <S.Title>
-            O Ecossistema Completo para o seu E-commerce decolar
-          </S.Title>
-        </Title>
+        <S.StyledTitle order={1} className="title">
+          O Ecossistema Completo para o seu E-commerce decolar
+        </S.StyledTitle>
         <S.Subtitle>
           Muito mais que um catálogo. Uma plataforma robusta para gerenciar
           produtos, pagamentos, entregas e converter conversas em vendas reais.

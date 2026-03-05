@@ -7,7 +7,6 @@
     "shared"
   ],
   "scripts": {
-    "postinstall": "yarn workspace @ecomerce/shared run build",
     "build:shared": "yarn workspace @ecomerce/shared run build",
     "build:frontend": "yarn build:shared && yarn workspace frontend run build",
     "lint": "yarn workspace frontend run lint && yarn workspace backend run lint",

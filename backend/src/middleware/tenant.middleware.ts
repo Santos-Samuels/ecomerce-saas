@@ -29,6 +29,8 @@ export class TenantMiddleware implements NestMiddleware {
 
     const hostname = host.split(':')[0];
     const baseDomain = process.env.BASE_DOMAIN;
+    console.log("🚀 ~ TenantMiddleware ~ extractSubdomain ~ hostname:", hostname)
+    console.log("🚀 ~ TenantMiddleware ~ extractSubdomain ~ baseDomain:", baseDomain)
 
     if (!baseDomain) {
       throw new Error(
@@ -37,11 +39,13 @@ export class TenantMiddleware implements NestMiddleware {
     }
 
     // Se o hostname é o próprio BASE_DOMAIN, não há subdomínio
+    console.log("🚀 ~ TenantMiddleware ~ extractSubdomain ~ hostname === baseDomain:", hostname === baseDomain)
     if (hostname === baseDomain) {
       return null;
     }
 
     // Se o hostname termina com .BASE_DOMAIN, extraímos o que vem antes
+    console.log("🚀 ~ TenantMiddleware ~ extractSubdomain ~ hostname.endsWith(`.${baseDomain}`):", hostname.endsWith(`.${baseDomain}`))
     if (hostname.endsWith(`.${baseDomain}`)) {
       return hostname.replace(`.${baseDomain}`, '');
     }

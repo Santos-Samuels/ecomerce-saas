@@ -37,6 +37,8 @@ export default function StoreFront() {
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
       const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN;
+      const reservedSubdomains =
+        process.env.RESERVED_SUBDOMAINS?.split(",") || [];
 
       if (!baseDomain) {
         throw new Error(
@@ -44,10 +46,14 @@ export default function StoreFront() {
         );
       }
 
+      if (reservedSubdomains.includes(hostname)) {
+        throw new Error("Subdomínio reservado para o sistema.");
+      }
+
       // Se o hostname termina com .BASE_DOMAIN, extraímos o que vem antes
       let detectedSubdomain: string | null = null;
 
-      if (hostname.endsWith(`.${baseDomain}`)) {
+      if (hostname.endsWith(`.${baseDomain}`) && hostname !== "api") {
         detectedSubdomain = hostname.replace(`.${baseDomain}`, "");
       }
 
@@ -104,11 +110,7 @@ export default function StoreFront() {
     >
       <MainContent>
         {/* Hero Section */}
-        {storeLayout && (
-          <HeroSection
-            layout={storeLayout}
-          />
-        )}
+        {storeLayout && <HeroSection layout={storeLayout} />}
 
         {/* Categories */}
         <CategorySection categories={categories} />
@@ -117,9 +119,7 @@ export default function StoreFront() {
         <ProductListing primaryColor={store?.primaryColor} />
 
         {/* About Section */}
-        {storeLayout && (
-          <AboutSection layout={storeLayout} />
-        )}
+        {storeLayout && <AboutSection layout={storeLayout} />}
 
         {/* Feedback Section */}
         {storeLayout?.showFeedbacks && (
