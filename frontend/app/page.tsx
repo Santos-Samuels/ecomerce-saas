@@ -19,6 +19,7 @@ import {
   fetchStoreLayout,
 } from "@/store/storefront/storefrontSlice";
 import { LoadingOverlay } from "@mantine/core";
+import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function StoreFront() {
@@ -33,31 +34,41 @@ export default function StoreFront() {
   const [subdomain, setSubdomain] = useState<string | null>(null);
   const [isSaasRoot, setIsSaasRoot] = useState(false);
 
+  const getSubdomain = () => {
+    const hostname = window.location.hostname;
+    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN;
+    const reservedSubdomains =
+      process.env.NEXT_PUBLIC_RESERVED_SUBDOMAINS?.split(",") || [];
+
+    if (!baseDomain) {
+      throw new Error(
+        "A variável de ambiente NEXT_PUBLIC_BASE_DOMAIN é obrigatória para o funcionamento do sistema.",
+      );
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
       const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN;
       const reservedSubdomains =
-        process.env.RESERVED_SUBDOMAINS?.split(",") || [];
+        process.env.NEXT_PUBLIC_RESERVED_SUBDOMAINS?.split(",") || [];
+      console.log("🚀 ~ StoreFront ~ reservedSubdomains:", reservedSubdomains);
 
       if (!baseDomain) {
-        throw new Error(
-          "A variável de ambiente NEXT_PUBLIC_BASE_DOMAIN é obrigatória para o funcionamento do sistema.",
-        );
-      }
-
-      if (reservedSubdomains.includes(hostname)) {
-        throw new Error("Subdomínio reservado para o sistema.");
+        // A variável de ambiente NEXT_PUBLIC_BASE_DOMAIN é obrigatória para o funcionamento do sistema.
+        notFound();
       }
 
       // Se o hostname termina com .BASE_DOMAIN, extraímos o que vem antes
-      let detectedSubdomain: string | null = null;
+      let detectedSubdomain = hostname.replace(`.${baseDomain}`, "");
+      const hasSubdomain = hostname.endsWith(`.${baseDomain}`);
 
-      if (hostname.endsWith(`.${baseDomain}`) && hostname !== "api") {
-        detectedSubdomain = hostname.replace(`.${baseDomain}`, "");
+      if (reservedSubdomains.includes(detectedSubdomain)) {
+        notFound();
       }
 
-      if (!detectedSubdomain || hostname === baseDomain) {
+      if (!hasSubdomain || hostname === baseDomain) {
         setIsSaasRoot(true);
       } else {
         setSubdomain(detectedSubdomain);

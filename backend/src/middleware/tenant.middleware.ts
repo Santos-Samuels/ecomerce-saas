@@ -8,8 +8,7 @@ export class TenantMiddleware implements NestMiddleware {
   constructor(private prisma: PrismaService) {}
 
   async use(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    const host = req.headers.host;
-    const subdomain = this.extractSubdomain(host);
+    const subdomain = this.extractSubdomain(req.headers.origin);
 
     if (subdomain) {
       const store = await this.prisma.store.findUnique({
@@ -24,28 +23,26 @@ export class TenantMiddleware implements NestMiddleware {
     next();
   }
 
-  private extractSubdomain(host?: string): string | null {
-    if (!host) return null;
-
-    const hostname = host.split(':')[0];
+  private extractSubdomain(origin?: string): string | null {
+    if (!origin) return null;
+    
+    const hostname = new URL(origin).hostname;
     const baseDomain = process.env.BASE_DOMAIN;
-    console.log("🚀 ~ TenantMiddleware ~ extractSubdomain ~ hostname:", hostname)
-    console.log("🚀 ~ TenantMiddleware ~ extractSubdomain ~ baseDomain:", baseDomain)
-
+    
     if (!baseDomain) {
       throw new Error(
         'A variável de ambiente BASE_DOMAIN é obrigatória para o funcionamento do sistema.',
       );
     }
 
+     const reservedSubdomains = process.env.RESERVED_SUBDOMAINS?.split(',') || [];
+
     // Se o hostname é o próprio BASE_DOMAIN, não há subdomínio
-    console.log("🚀 ~ TenantMiddleware ~ extractSubdomain ~ hostname === baseDomain:", hostname === baseDomain)
-    if (hostname === baseDomain) {
+    if (hostname === baseDomain || reservedSubdomains.includes(hostname)) {
       return null;
     }
 
     // Se o hostname termina com .BASE_DOMAIN, extraímos o que vem antes
-    console.log("🚀 ~ TenantMiddleware ~ extractSubdomain ~ hostname.endsWith(`.${baseDomain}`):", hostname.endsWith(`.${baseDomain}`))
     if (hostname.endsWith(`.${baseDomain}`)) {
       return hostname.replace(`.${baseDomain}`, '');
     }
