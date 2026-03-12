@@ -1,8 +1,8 @@
-import { IStore } from "@ecomerce/shared";
-import { FiMenu, FiSearch, FiShoppingBag, FiUser } from "react-icons/fi";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toggleCart } from "@/store/cart/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { IStore } from "@ecomerce/shared";
 import { Indicator } from "@mantine/core";
+import { FiMenu, FiSearch, FiShoppingBag, FiUser } from "react-icons/fi";
 import {
   ActionButton,
   FallbackLogo,
@@ -45,8 +45,8 @@ export function StoreHeader({ store }: StoreHeaderProps) {
 
         <NavLinks>
           <NavLink href="/">Início</NavLink>
-          <NavLink href="products">Produtos</NavLink>
-          <NavLink href="contact">Contatos</NavLink>
+          <NavLink href="/products">Produtos</NavLink>
+          <NavLink href="/contact">Contatos</NavLink>
         </NavLinks>
 
         <NavActions>

@@ -2,22 +2,28 @@ import { addToCart } from "@/store/cart/cartSlice";
 import { useAppDispatch } from "@/store/hooks";
 import { IProduct } from "@ecomerce/shared";
 import {
-    ActionIcon,
-    Badge,
-    Button,
-    Card,
-    Container,
-    Group,
-    Image as MantineImage,
-    SimpleGrid,
-    Text,
-    Title,
-    Tooltip,
+  ActionIcon,
+  Box,
+  Card,
+  Container,
+  Image as MantineImage,
+  SimpleGrid,
+  Title,
+  Tooltip,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Link from "next/link";
 import { FiCheck, FiShoppingBag, FiShoppingCart } from "react-icons/fi";
-import { ProductImageWrapper } from "./styles";
+import {
+  CardWrapper,
+  CurrentPrice,
+  DiscountBadge,
+  FreeShipping,
+  OldPrice,
+  PriceWrapper,
+  ProductImageWrapper,
+  ProductTitle
+} from "./styles";
 
 interface ProductGridProps {
   products: IProduct[];
@@ -35,7 +41,8 @@ export function ProductGrid({
   const dispatch = useAppDispatch();
 
   const handleAddToCart = (e: React.MouseEvent, product: IProduct) => {
-    e.preventDefault(); // Evita navegar para os detalhes
+    e.stopPropagation(); // Evita navegar para os detalhes ao clicar no botão
+    e.preventDefault();
     dispatch(addToCart({ product, color: null }));
     notifications.show({
       title: 'Produto adicionado',
@@ -45,80 +52,90 @@ export function ProductGrid({
     });
   };
 
+  const calculateDiscount = (price: number, promotionalPrice: number) => {
+    return Math.round(((price - promotionalPrice) / price) * 100);
+  };
+
   if (products.length === 0) return null;
 
   const content = (
     <>
-      <Title order={2} mb="xl">
-        {title || "Nossos Produtos"}
-      </Title>
+      {title && (
+        <Title order={2} mb="xl">
+          {title}
+        </Title>
+      )}
 
-      <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="lg">
-        {products.map((product) => (
-          <Card
-            key={product.id}
-            shadow="sm"
-            padding="lg"
-            radius="md"
-            withBorder
-          >
-            <Card.Section>
-              <ProductImageWrapper>
-                {product.images?.[0] ? (
-                  <MantineImage
-                    src={product.images[0]}
-                    h={200}
-                    w="100%"
-                    fit="cover"
-                  />
-                ) : (
-                  <FiShoppingBag size={40} color="#adb5bd" />
-                )}
-              </ProductImageWrapper>
-            </Card.Section>
+      <SimpleGrid cols={{ base: 1, xs: 2, sm: 3, md: 4, lg: 4 }} spacing="md">
+        {products.map((product) => {
+          const discount = product.promotionalPrice
+            ? calculateDiscount(Number(product.price), Number(product.promotionalPrice))
+            : null;
 
-            <Group justify="space-between" mt="md" mb="xs">
-              <Text fw={600} lineClamp={1} title={product.name}>
-                {product.name}
-              </Text>
-            </Group>
-
-            <Group mb="md">
-              <Badge color="green" size="lg" variant="light">
-                R$ {Number(product.price).toFixed(2)}
-              </Badge>
-            </Group>
-
-            <Text size="sm" c="dimmed" lineClamp={2} h={40}>
-              {product.description}
-            </Text>
-
-            <Group mt="md" gap="xs">
-              <Button
+          return (
+            <CardWrapper key={product.id}>
+              <Card
                 component={Link}
                 href={`/products/${product.slug}`}
-                flex={1}
-                radius="md"
-                color={primaryColor || "blue"}
+                padding="md"
+                radius="sm"
+                shadow="none"
+                withBorder={false}
               >
-                Ver Detalhes
-              </Button>
-              
-              <Tooltip label="Adicionar ao carrinho">
-                <ActionIcon 
-                  size="lg" 
-                  radius="md" 
-                  variant="filled" 
-                  color={primaryColor || "blue"}
-                  onClick={(e) => handleAddToCart(e, product)}
-                  disabled={!product.infiniteStock && product.stock <= 0}
-                >
-                  <FiShoppingCart size={18} />
-                </ActionIcon>
-              </Tooltip>
-            </Group>
-          </Card>
-        ))}
+                <Card.Section>
+                  <ProductImageWrapper>
+                    {discount && <DiscountBadge>{discount}% OFF</DiscountBadge>}
+                    {product.images?.[0] ? (
+                      <MantineImage
+                        src={product.images[0]}
+                        h={180}
+                        w="100%"
+                        fit="contain"
+                      />
+                    ) : (
+                      <FiShoppingBag size={40} color="#eee" />
+                    )}
+                  </ProductImageWrapper>
+                </Card.Section>
+
+                <Box mt="md" style={{ flex: 1, position: 'relative' }}>
+                  <ProductTitle>{product.name}</ProductTitle>
+
+                  <PriceWrapper>
+                    {product.promotionalPrice ? (
+                      <>
+                        <OldPrice>R$ {Number(product.price).toFixed(2)}</OldPrice>
+                        <CurrentPrice>
+                          <span style={{ fontSize: '14px', alignSelf: 'flex-start', marginTop: '4px' }}>R$</span>
+                          {Number(product.promotionalPrice).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </CurrentPrice>
+                      </>
+                    ) : (
+                      <CurrentPrice>
+                        <span style={{ fontSize: '14px', alignSelf: 'flex-start', marginTop: '4px' }}>R$</span>
+                        {Number(product.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </CurrentPrice>
+                    )}
+                  </PriceWrapper>
+
+                  <FreeShipping>Frete grátis</FreeShipping>
+                  
+                  <Tooltip label="Adicionar ao carrinho">
+                    <ActionIcon
+                      variant="subtle"
+                      color={primaryColor || "blue"}
+                      onClick={(e) => handleAddToCart(e, product)}
+                      size="lg"
+                      style={{ position: 'absolute', bottom: 0, right: 0 }}
+                    >
+                      <FiShoppingCart size={20} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Box>
+              </Card>
+            </CardWrapper>
+          );
+        })}
       </SimpleGrid>
     </>
   );
@@ -133,3 +150,4 @@ export function ProductGrid({
     </Container>
   );
 }
+
