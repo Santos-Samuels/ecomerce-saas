@@ -80,7 +80,7 @@ export function StoreFooter({
             {store.phone && (
               <ContactItem>
                 <FiPhone size={18} />
-                <span>{store.phone}</span>
+                <span>{store.phone}{store.secondaryPhone ? ` / ${store.secondaryPhone}` : ""}</span>
               </ContactItem>
             )}
             {store.email && (

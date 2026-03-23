@@ -33,8 +33,14 @@ export class UserController {
     return this.userService.create(data, RoleById.Admin);
   }
 
+  @Post('staff')
+  @Roles(RoleById.Staff)
+  createForStaff(@Body() data: CreateUserDto): Promise<User> {
+    return this.userService.create(data);
+  }
+
   @Get()
-  @Roles(RoleById.Staff, RoleById.Customer)
+  @Roles(RoleById.Staff)
   findAll(): Promise<User[]> {
     return this.userService.findAll();
   }

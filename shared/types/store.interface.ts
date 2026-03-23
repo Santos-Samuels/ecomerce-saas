@@ -7,6 +7,7 @@ export interface IStore {
   description?: string | null;
   address?: string | null;
   phone: string;
+  secondaryPhone?: string | null;
   email: string;
   logoUrl?: string | null;
   primaryColor?: string | null;

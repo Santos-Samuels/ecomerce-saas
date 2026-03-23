@@ -40,7 +40,7 @@ export function ContactInfo({ store }: ContactInfoProps) {
           </IconWrapper>
           <InfoContent>
             <InfoLabel>Telefone / WhatsApp</InfoLabel>
-            <InfoValue>{store.phone}</InfoValue>
+            <InfoValue>{store.phone}{store.secondaryPhone ? ` / ${store.secondaryPhone}` : ""}</InfoValue>
           </InfoContent>
         </InfoItem>
       )}

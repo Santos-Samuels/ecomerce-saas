@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { StaffSidebar } from "@/components/staff/layout/StaffSidebar";
 import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
@@ -11,6 +11,7 @@ import {
   clearStaffStoreDetails,
   fetchStaffStoreDetails,
 } from "@/store/staffStores/staffStoresSlice";
+import { fetchStaffUsers } from "@/store/staffUsers/staffUsersSlice";
 import {
   Badge,
   Card,
@@ -23,13 +24,16 @@ import {
   ThemeIcon,
   Divider,
   Image,
+  TextInput,
 } from "@mantine/core";
 import {
   FiPackage,
   FiShoppingBag,
   FiUsers,
   FiTrendingUp,
+  FiSearch,
 } from "react-icons/fi";
+import { UsersTable, StaffUserRow } from "@/components/staff/users/UsersTable";
 
 export default function StaffStoreDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +42,11 @@ export default function StaffStoreDetailsPage() {
   const { current, currentLoading } = useAppSelector(
     (s) => s.staffStores,
   );
+  const { items: allUsers, loading: usersLoading } = useAppSelector(
+    (s) => s.staffUsers,
+  );
+
+  const [userSearch, setUserSearch] = useState("");
 
   const metrics = [
     { id: "products", label: "Produtos", value: 128, icon: FiPackage },
@@ -49,10 +58,18 @@ export default function StaffStoreDetailsPage() {
   useEffect(() => {
     if (!id) return;
     dispatch(fetchStaffStoreDetails({ id }));
+    dispatch(fetchStaffUsers());
     return () => {
       dispatch(clearStaffStoreDetails());
     };
   }, [dispatch, id]);
+
+  const storeUsers = allUsers.filter((u) => u.storeId === id);
+  const filteredUsers = storeUsers.filter(
+    (u) =>
+      u.name.toLowerCase().includes(userSearch.toLowerCase()) ||
+      u.email.toLowerCase().includes(userSearch.toLowerCase()),
+  );
 
   const title = current ? current.name : "Detalhes da loja";
   const subtitle = current ? `ID: ${current.id}` : "Carregando detalhes...";
@@ -163,7 +180,7 @@ export default function StaffStoreDetailsPage() {
                       <Text size="xs" c="dimmed">
                         Telefone
                       </Text>
-                      <Text>{current.phone}</Text>
+                      <Text>{current.phone}{current.secondaryPhone ? ` / ${current.secondaryPhone}` : ""}</Text>
                     </Stack>
                     <Stack gap={2}>
                       <Text size="xs" c="dimmed">
@@ -186,6 +203,32 @@ export default function StaffStoreDetailsPage() {
                       <Text>{current.instagramHandle ?? "—"}</Text>
                     </Stack>
                   </SimpleGrid>
+                </Stack>
+              </Card>
+            )}
+
+            {!currentLoading && current && (
+              <Card withBorder radius="md" padding="lg">
+                <Stack gap="md">
+                  <Group justify="space-between">
+                    <Text fw={600}>Usuários vinculados</Text>
+                    <Badge variant="light">{storeUsers.length}</Badge>
+                  </Group>
+
+                  <TextInput
+                    placeholder="Buscar usuários por nome ou email..."
+                    leftSection={<FiSearch size={14} />}
+                    value={userSearch}
+                    onChange={(e) => setUserSearch(e.currentTarget.value)}
+                    size="xs"
+                  />
+
+                  <UsersTable
+                    data={filteredUsers as StaffUserRow[]}
+                    loading={usersLoading}
+                    onEdit={(user) => router.push("/staff/users")}
+                    onDelete={() => {}}
+                  />
                 </Stack>
               </Card>
             )}

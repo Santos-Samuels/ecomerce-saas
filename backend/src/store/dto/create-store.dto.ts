@@ -24,6 +24,10 @@ export class CreateStoreDto {
   @IsNotEmpty()
   phone: string;
 
+  @IsString()
+  @IsOptional()
+  secondaryPhone?: string;
+
   @IsEmail()
   @IsNotEmpty()
   email: string;

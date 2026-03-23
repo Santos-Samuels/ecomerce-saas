@@ -13,6 +13,7 @@ model Store {
   description String?
   address     String?
   phone       String
+  secondaryPhone String?
   email       String   @unique
   logoUrl     String?
   primaryColor String?

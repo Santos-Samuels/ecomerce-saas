@@ -11,6 +11,7 @@ import { watchStorefront } from "./storefront";
 import { watchStaffPermissions } from "./staffPermissions";
 import { watchStaffStores } from "./staffStores";
 import { watchStaffRoles } from "./staffRoles";
+import { watchStaffUsers } from "./staffUsers";
 import { whatsappSaga } from "./whatsapp";
 
 export function* rootSaga() {
@@ -27,6 +28,7 @@ export function* rootSaga() {
     watchStaffPermissions(),
     watchStaffStores(),
     watchStaffRoles(),
+    watchStaffUsers(),
     whatsappSaga(),
   ]);
 }

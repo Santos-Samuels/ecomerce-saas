@@ -22,6 +22,7 @@ import { storeFeedbacksReducer } from "./storeFeedbacks/storeFeedbacksSlice";
 import { staffPermissionsReducer } from "./staffPermissions/staffPermissionsSlice";
 import { staffStoresReducer } from "./staffStores/staffStoresSlice";
 import { staffRolesReducer } from "./staffRoles/staffRolesSlice";
+import { staffUsersReducer } from "./staffUsers/staffUsersSlice";
 import storeLayoutReducer from "./storeLayout/storeLayoutSlice";
 import { storefrontReducer } from "./storefront/storefrontSlice";
 import { cartReducer } from "./cart/cartSlice";
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   staffPermissions: staffPermissionsReducer,
   staffStores: staffStoresReducer,
   staffRoles: staffRolesReducer,
+  staffUsers: staffUsersReducer,
   cart: cartReducer,
   whatsapp: whatsappReducer,
 });

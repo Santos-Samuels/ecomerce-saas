@@ -3,7 +3,7 @@
 import { logout } from "@/store/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { usePathname, useRouter } from "next/navigation";
-import { FiLogOut, FiPackage, FiShield, FiUsers } from "react-icons/fi";
+import { FiLogOut, FiPackage, FiShield, FiUser, FiUsers } from "react-icons/fi";
 import * as S from "./styles";
 
 export function StaffSidebar() {
@@ -70,9 +70,22 @@ export function StaffSidebar() {
         >
           <S.SidebarNavItemLabel>
             <S.NavIcon>
-              <FiUsers size={16} />
+              <FiShield size={16} />
             </S.NavIcon>
-            Papeis de usuário
+            Cargos
+          </S.SidebarNavItemLabel>
+        </S.SidebarNavItem>
+
+        <S.SidebarNavItem
+          type="button"
+          $active={isPathActive("/staff/users")}
+          onClick={() => handleNavigate("/staff/users")}
+        >
+          <S.SidebarNavItemLabel>
+            <S.NavIcon>
+              <FiUser size={16} />
+            </S.NavIcon>
+            Usuários
           </S.SidebarNavItemLabel>
         </S.SidebarNavItem>
       </S.SidebarNav>

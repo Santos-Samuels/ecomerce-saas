@@ -13,6 +13,8 @@ export class Store implements IStore {
 
   phone: string;
 
+  secondaryPhone?: string | null;
+
   email: string;
 
   logoUrl?: string | null;

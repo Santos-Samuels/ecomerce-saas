@@ -1,16 +1,16 @@
 "use client";
 
+import { StorePermission } from "@ecomerce/shared";
 import {
-  Button,
-  Group,
-  Modal,
-  MultiSelect,
-  Stack,
-  TextInput,
-  Textarea,
+    Button,
+    Group,
+    Modal,
+    MultiSelect,
+    Stack,
+    TextInput,
+    Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { StorePermission } from "@ecomerce/shared";
 
 export interface StoreFormValues {
   id?: string;
@@ -18,6 +18,7 @@ export interface StoreFormValues {
   description?: string;
   address?: string;
   phone: string;
+  secondaryPhone?: string;
   email: string;
   logoUrl?: string;
   primaryColor?: string;
@@ -52,6 +53,7 @@ export function StoreFormModal({
       description: initialValues?.description ?? "",
       address: initialValues?.address ?? "",
       phone: initialValues?.phone ?? "",
+      secondaryPhone: initialValues?.secondaryPhone ?? "",
       email: initialValues?.email ?? "",
       logoUrl: initialValues?.logoUrl ?? "",
       primaryColor: initialValues?.primaryColor ?? "",
@@ -112,18 +114,24 @@ export function StoreFormModal({
 
           <Group grow>
             <TextInput
-              label="Telefone"
+              label="Telefone Principal"
               placeholder="(99) 99999-9999"
               required
               {...form.getInputProps("phone")}
             />
             <TextInput
-              label="Email"
-              placeholder="contato@loja.com"
-              required
-              {...form.getInputProps("email")}
+              label="Telefone Secundário (Opcional)"
+              placeholder="(99) 99999-9999"
+              {...form.getInputProps("secondaryPhone")}
             />
           </Group>
+
+          <TextInput
+            label="Email"
+            placeholder="contato@loja.com"
+            required
+            {...form.getInputProps("email")}
+          />
 
           <TextInput
             label="Endereço"

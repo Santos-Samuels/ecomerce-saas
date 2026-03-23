@@ -15,7 +15,7 @@ interface DataTableProps<T> {
   columns: DataTableColumn<T>[];
   loading?: boolean;
   emptyMessage?: string;
-  getRowKey: (item: T) => string;
+  getRowKey?: (item: T) => string;
 }
 
 export function DataTable<T>({
@@ -31,6 +31,11 @@ export function DataTable<T>({
     if (align === "right") return "right";
     if (align === "center") return "center";
     return undefined;
+  };
+
+  const internalGetRowKey = (item: T): string => {
+    if (getRowKey) return getRowKey(item);
+    return (item as any).id || (item as any)._id || Math.random().toString();
   };
 
   return (
@@ -62,8 +67,8 @@ export function DataTable<T>({
             </Table.Tr>
           )}
 
-          {data.map((item) => (
-            <Table.Tr key={getRowKey(item)}>
+          {data.map((item, index) => (
+            <Table.Tr key={internalGetRowKey(item) || index}>
               {columns.map((column) => (
                 <Table.Td
                   key={column.key}

@@ -16,7 +16,9 @@ export function LandingPage() {
   return (
     <S.LandingWrapper>
       <S.Header>
-        <S.Logo>Vende Mais</S.Logo>
+        <S.Logo>
+          <img width={200} src="/logo-vendemais.svg" alt="Vende Mais" />
+        </S.Logo>
         <Button variant="light" onClick={handleContact}>
           Falar com especialista
         </Button>

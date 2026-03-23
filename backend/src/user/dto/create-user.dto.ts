@@ -12,6 +12,10 @@ export class CreateUserDto {
   storeId: string;
 
   @IsString()
+  @IsOptional()
+  roleId?: string;
+
+  @IsString()
   @IsNotEmpty()
   name: string;
 

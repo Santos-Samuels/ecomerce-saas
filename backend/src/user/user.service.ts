@@ -10,23 +10,33 @@ import { RoleById } from '@ecomerce/shared';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateUserDto, roleName: RoleById): Promise<User> {
+  async create(data: CreateUserDto, roleName?: RoleById): Promise<User> {
     const passwordHash = data.password
       ? this.hashPassword(data.password)
       : undefined;
 
-    const role = await this.prisma.role.findFirst({
-      where: { name: roleName, active: true },
-    });
+    let roleId = data.roleId;
 
-    if (!role) {
-      throw new NotFoundException('Role not found');
+    if (!roleId && roleName) {
+      const role = await this.prisma.role.findFirst({
+        where: { name: roleName, active: true },
+      });
+
+      if (!role) {
+        throw new NotFoundException('Role not found');
+      }
+
+      roleId = role.id;
+    }
+
+    if (!roleId) {
+      throw new NotFoundException('Role ID or Role Name must be provided');
     }
 
     return this.prisma.user.create({
       data: {
         storeId: data.storeId,
-        roleId: role.id,
+        roleId,
         name: data.name,
         email: data.email,
         phone: data.phone,
@@ -40,12 +50,20 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return this.prisma.user.findMany({
       where: { active: true },
+      include: {
+        role: true,
+        store: true,
+      },
     });
   }
 
   async findOne(id: string): Promise<User> {
     const user = await this.prisma.user.findFirst({
       where: { id, active: true },
+      include: {
+        role: true,
+        store: true,
+      },
     });
 
     if (!user) {
