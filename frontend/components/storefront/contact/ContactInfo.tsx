@@ -24,7 +24,7 @@ export function ContactInfo({ store }: ContactInfoProps) {
       {store.address && (
         <InfoItem>
           <IconWrapper $color={primaryColor}>
-            <FiMapPin size={24} />
+            <FiMapPin size={24} color="brand.1" />
           </IconWrapper>
           <InfoContent>
             <InfoLabel>Endereço</InfoLabel>
@@ -36,7 +36,7 @@ export function ContactInfo({ store }: ContactInfoProps) {
       {store.phone && (
         <InfoItem>
           <IconWrapper $color={primaryColor}>
-            <FiPhone size={24} />
+            <FiPhone size={24} color="brand.1" />
           </IconWrapper>
           <InfoContent>
             <InfoLabel>Telefone / WhatsApp</InfoLabel>
@@ -48,7 +48,7 @@ export function ContactInfo({ store }: ContactInfoProps) {
       {store.email && (
         <InfoItem>
           <IconWrapper $color={primaryColor}>
-            <FiMail size={24} />
+            <FiMail size={24} color="brand.1" />
           </IconWrapper>
           <InfoContent>
             <InfoLabel>E-mail</InfoLabel>

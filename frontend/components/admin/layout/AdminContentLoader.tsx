@@ -28,7 +28,7 @@ export function AdminContentLoader({
           }}
         >
           <Stack gap="xs" align="center">
-            <Loader size="sm" color="blue" />
+            <Loader size="sm" color="brand" />
             {label && (
               <Text size="sm" c="dimmed">
                 {label}

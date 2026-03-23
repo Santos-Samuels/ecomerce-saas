@@ -167,7 +167,7 @@ export function StoreSettingsForm({
             value={store.primaryColor ?? ""}
             onChange={(value) => onChange("primaryColor", value || null)}
             disallowInput
-            placeholder="#2563EB"
+            placeholder="#FA8211"
             style={{ maxWidth: 220 }}
           />
 

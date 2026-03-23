@@ -70,8 +70,8 @@ export const IconWrapper = styled.div<{ $color?: string }>`
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background-color: ${({ $color }) => $color ? `${$color}15` : 'var(--mantine-color-blue-0)'};
-  color: ${({ $color }) => $color || 'var(--mantine-color-blue-6)'};
+  background-color: ${({ $color }) => $color ? `${$color}15` : 'var(--mantine-color-brand-0)'};
+  color: ${({ $color }) => $color || 'var(--mantine-color-brand-6)'};
   display: flex;
   align-items: center;
   justify-content: center;

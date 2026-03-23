@@ -110,7 +110,7 @@ export const ThumbnailsGrid = styled.div`
 `;
 
 export const ThumbnailItem = styled.div<{ active?: boolean }>`
-  border: 2px solid ${({ active }) => (active ? '#228be6' : '#dee2e6')};
+  border: 2px solid ${({ active }) => (active ? 'var(--mantine-color-brand-1)' : '#dee2e6')};
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -119,7 +119,7 @@ export const ThumbnailItem = styled.div<{ active?: boolean }>`
   opacity: ${({ active }) => (active ? 1 : 0.7)};
 
   &:hover {
-    border-color: #228be6;
+    border-color: var(--mantine-color-green-1);
     opacity: 1;
   }
 
@@ -168,7 +168,7 @@ export const VehicleList = styled.ul`
     
     &::before {
       content: "•";
-      color: #228be6;
+      color: var(--mantine-color-brand-1);
       font-weight: bold;
     }
   }

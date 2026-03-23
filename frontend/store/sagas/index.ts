@@ -11,6 +11,7 @@ import { watchStorefront } from "./storefront";
 import { watchStaffPermissions } from "./staffPermissions";
 import { watchStaffStores } from "./staffStores";
 import { watchStaffRoles } from "./staffRoles";
+import { whatsappSaga } from "./whatsapp";
 
 export function* rootSaga() {
   yield all([
@@ -26,5 +27,6 @@ export function* rootSaga() {
     watchStaffPermissions(),
     watchStaffStores(),
     watchStaffRoles(),
+    whatsappSaga(),
   ]);
 }

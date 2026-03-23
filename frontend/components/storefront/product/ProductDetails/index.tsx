@@ -195,7 +195,7 @@ export function ProductDetails({
                         padding: '6px 10px',
                         borderRadius: 999,
                         border: isActive
-                          ? `2px solid ${primaryColor || '#228be6'}`
+                          ? `2px solid ${primaryColor || '#FA8211'}`
                           : '1px solid #dee2e6',
                         backgroundColor: isActive ? '#f1f3f5' : '#fff',
                         cursor: 'pointer',
@@ -227,7 +227,7 @@ export function ProductDetails({
           <Button
             leftSection={<FiShoppingCart size={24} />}
             size="xl"
-            color={primaryColor || "blue"}
+            color={primaryColor || "brand"}
             onClick={handleAddToCart}
             fullWidth
             mt="md"

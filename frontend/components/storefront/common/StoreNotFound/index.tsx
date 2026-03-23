@@ -1,21 +1,21 @@
 import {
-  Button,
-  Card,
-  Center,
-  Container,
-  Group,
-  Stack,
-  Text,
-  TextInput,
-  ThemeIcon,
-  Title,
+    Button,
+    Card,
+    Center,
+    Container,
+    Group,
+    Stack,
+    Text,
+    TextInput,
+    ThemeIcon,
+    Title,
 } from "@mantine/core";
 import { FiAlertCircle, FiSearch } from "react-icons/fi";
 import {
-  CopyrightText,
-  NotFoundIconWrapper,
-  NotFoundPageWrapper,
-  StyledThemeIcon
+    CopyrightText,
+    NotFoundIconWrapper,
+    NotFoundPageWrapper,
+    StyledThemeIcon
 } from "./styles";
 
 interface StoreNotFoundProps {
@@ -70,10 +70,10 @@ export function StoreNotFound({
               >
                 <Stack gap="xs" align="flex-start">
                   <Group gap="xs">
-                    <ThemeIcon variant="light" color="blue" size="sm">
+                    <ThemeIcon variant="light" color="brand" size="sm">
                       <FiSearch size={12} />
                     </ThemeIcon>
-                    <Text size="sm" fw={700} tt="uppercase" c="blue.8">
+                    <Text size="sm" fw={700} tt="uppercase" c="brand.8">
                       Modo Desenvolvedor
                     </Text>
                   </Group>
@@ -100,7 +100,7 @@ export function StoreNotFound({
                       }
                       rightSectionWidth={80}
                     />
-                    <Button onClick={handleSimulate} color="blue">
+                    <Button onClick={handleSimulate} color="brand">
                       Acessar Loja
                     </Button>
                   </Group>

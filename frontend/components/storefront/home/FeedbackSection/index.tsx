@@ -15,9 +15,10 @@ import {
 
 interface FeedbackSectionProps {
   feedbacks: IStoreFeedback[];
+  primaryColor?: string | null;
 }
 
-export function FeedbackSection({ feedbacks }: FeedbackSectionProps) {
+export function FeedbackSection({ feedbacks, primaryColor }: FeedbackSectionProps) {
   if (!feedbacks || feedbacks.length === 0) return null;
 
   const getInitials = (name: string) => {
@@ -47,7 +48,7 @@ export function FeedbackSection({ feedbacks }: FeedbackSectionProps) {
               </StarRating>
               <Comment>&quot;{feedback.comment}&quot;</Comment>
               <CustomerInfo>
-                <CustomerAvatar>
+                <CustomerAvatar $bgColor={primaryColor ?? undefined}>
                   {getInitials(feedback.customerName)}
                 </CustomerAvatar>
                 <CustomerName>{feedback.customerName}</CustomerName>

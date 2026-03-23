@@ -59,7 +59,7 @@ export const SocialLink = styled.a`
   text-decoration: none;
 
   &:hover {
-    background-color: var(--mantine-color-blue-6);
+    background-color: var(--mantine-color-brand-6);
     color: white;
   }
 `;

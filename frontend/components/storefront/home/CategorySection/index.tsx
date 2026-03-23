@@ -3,7 +3,7 @@ import { Container, Grid, Paper, Title } from "@mantine/core";
 import Link from "next/link";
 import styled from "styled-components";
 
-const CardWrapper = styled.div`
+const CardWrapper = styled.div<{ primaryColor?: string }>`
   height: 100%;
   
   .mantine-Paper-root {
@@ -18,7 +18,7 @@ const CardWrapper = styled.div`
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border-color: var(--mantine-color-blue-6);
+      border-color: ${({ primaryColor }) => primaryColor || "brand"};
     }
   }
 `;
@@ -28,10 +28,11 @@ const SectionWrapper = styled.div`
 `;
 
 interface CategorySectionProps {
+  primaryColor?: string | null;
   categories: IProductCategory[];
 }
 
-export function CategorySection({ categories }: CategorySectionProps) {
+export function CategorySection({ primaryColor, categories }: CategorySectionProps) {
   if (!categories || categories.length === 0) return null;
 
   return (
@@ -47,7 +48,7 @@ export function CategorySection({ categories }: CategorySectionProps) {
                 href={`/products?category=${category.id}`}
                 style={{ textDecoration: "none" }}
               >
-                <CardWrapper>
+                <CardWrapper primaryColor={primaryColor ?? undefined}>
                   <Paper p="xl" radius="md" withBorder shadow="sm">
                     <Title order={4} ta="center" size="h5">
                       {category.name}

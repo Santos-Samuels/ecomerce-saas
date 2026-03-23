@@ -63,12 +63,12 @@ export const CustomerInfo = styled.div`
   padding-top: 16px;
 `;
 
-export const CustomerAvatar = styled.div`
+export const CustomerAvatar = styled.div<{ $bgColor?: string }>`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--mantine-color-blue-1);
-  color: var(--mantine-color-blue-7);
+  background-color: ${({ $bgColor }) => $bgColor ? `${$bgColor}15` : "var(--mantine-color-brand-6)"};
+  color: ${({ $bgColor }) => $bgColor ?? "var(--mantine-color-white)"};
   display: flex;
   align-items: center;
   justify-content: center;

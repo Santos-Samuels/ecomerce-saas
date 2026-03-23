@@ -39,8 +39,8 @@ export const Brand = styled.span`
   border-radius: 8px;
   background: linear-gradient(
     135deg,
-    var(--mantine-color-indigo-5),
-    var(--mantine-color-indigo-7)
+    var(--mantine-color-green-5),
+    var(--mantine-color-green-7)
   );
   color: white;
   font-weight: 700;
@@ -85,7 +85,7 @@ export const SidebarNavItem = styled.button<{ $active?: boolean }>`
   }
 
   &:focus-visible {
-    outline: 2px solid var(--mantine-color-indigo-5);
+    outline: 2px solid var(--mantine-color-green-5);
     outline-offset: 2px;
   }
 `;

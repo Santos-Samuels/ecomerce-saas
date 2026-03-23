@@ -89,7 +89,7 @@ export function ContactForm({ primaryColor }: ContactFormProps) {
         <Button
           type="submit"
           size="lg"
-          color={primaryColor || "blue"}
+          color={primaryColor || "brand"}
           fullWidth
           loading={loading}
           leftSection={<FiSend size={18} />}

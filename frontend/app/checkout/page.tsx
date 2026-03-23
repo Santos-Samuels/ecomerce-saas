@@ -5,6 +5,7 @@ import { BaseScreen } from "@/components/storefront/common/layout/BaseScreen";
 import { clearCart } from "@/store/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCurrentStore } from "@/store/storefront/storefrontSlice";
+import { sendWhatsAppMessage } from "@/store/whatsapp/whatsappSlice";
 import {
   Button,
   LoadingOverlay,
@@ -92,6 +93,32 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Preparar os dados para o WhatsApp Business API
+    // Aqui assumimos que você tem um template configurado chamado 'novo_pedido_vende_mais'
+    const itemsDescription = items
+      .map((item) => `${item.quantity}x ${item.name}${item.selectedColor ? ` (Cor: ${item.selectedColor.name})` : ""}`)
+      .join(", ");
+
+    dispatch(
+      sendWhatsAppMessage({
+        to: phoneDigits,
+        templateName: "novo_pedido_vende_mais",
+        languageCode: "pt_BR",
+        components: [
+          {
+            type: "body",
+            parameters: [
+              { type: "text", text: values.customerName }, // {{1}} - Nome do Cliente
+              { type: "text", text: itemsDescription }, // {{2}} - Itens do Pedido
+              { type: "text", text: formatPrice(total) }, // {{3}} - Total
+              { type: "text", text: values.paymentMethod }, // {{4}} - Forma de Pagamento
+            ],
+          },
+        ],
+      })
+    );
+
+    // Fallback: Manter o redirecionamento manual para o WhatsApp pessoal se a API falhar ou para lojas sem API
     const now = new Date();
     const dateStr = now.toLocaleDateString("pt-BR");
     const timeStr = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
@@ -143,6 +170,8 @@ export default function CheckoutPage() {
 
     const message = lines.join("\n");
     const url = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`;
+    
+    // Abre o WhatsApp e limpa o carrinho
     window.open(url, "_blank");
     dispatch(clearCart());
     router.push("/checkout/success");
@@ -210,11 +239,8 @@ export default function CheckoutPage() {
               </S.Section>
 
               <S.Section>
-                <S.SectionTitle>2. Entrega</S.SectionTitle>
+                <S.SectionTitle>2. Forma de entrega</S.SectionTitle>
                 <Stack gap="sm">
-                  <Text size="sm" c="dimmed">
-                    Forma de entrega
-                  </Text>
                   <Text fw={600}>Retirada na loja</Text>
                   {store?.address && (
                     <Text c="dimmed" size="sm">

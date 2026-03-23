@@ -6,7 +6,7 @@ export const AdminLayout = styled.div`
   background:
     radial-gradient(
       circle at top left,
-      var(--mantine-color-blue-1),
+      var(--mantine-color-brand-1),
       transparent 55%
     ),
     radial-gradient(

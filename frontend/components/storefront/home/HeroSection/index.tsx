@@ -33,7 +33,7 @@ export function HeroSection({ layout, primaryColor }: HeroSectionProps) {
             href={layout.heroButtonLink}
             size="lg"
             radius="md"
-            color={primaryColor || "blue"}
+            color={primaryColor || "brand"}
           >
             {layout.heroButtonText}
           </Button>

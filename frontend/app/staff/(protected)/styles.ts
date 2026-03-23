@@ -6,7 +6,7 @@ export const StaffLayout = styled.div`
   background:
     radial-gradient(
       circle at top left,
-      var(--mantine-color-indigo-1),
+      var(--mantine-color-green-1),
       transparent 55%
     ),
     radial-gradient(

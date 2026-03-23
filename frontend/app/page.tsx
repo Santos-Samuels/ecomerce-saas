@@ -121,10 +121,10 @@ export default function StoreFront() {
     >
       <MainContent>
         {/* Hero Section */}
-        {storeLayout && <HeroSection layout={storeLayout} />}
+        {storeLayout && <HeroSection primaryColor={store?.primaryColor} layout={storeLayout} />}
 
         {/* Categories */}
-        <CategorySection categories={categories} />
+        <CategorySection primaryColor={store?.primaryColor} categories={categories} />
 
         {/* Product Listing */}
         <ProductListing primaryColor={store?.primaryColor} />
@@ -134,7 +134,10 @@ export default function StoreFront() {
 
         {/* Feedback Section */}
         {storeLayout?.showFeedbacks && (
-          <FeedbackSection feedbacks={feedbacks} />
+          <FeedbackSection
+            primaryColor={store?.primaryColor}
+            feedbacks={feedbacks}
+          />
         )}
       </MainContent>
     </BaseScreen>

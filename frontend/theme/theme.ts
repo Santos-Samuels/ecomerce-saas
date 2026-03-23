@@ -5,7 +5,7 @@ import { MantineProvider, createTheme } from "@mantine/core";
 import { useAppSelector } from "@/store/hooks";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
-const defaultPrimaryColor = "#2563EB";
+const defaultPrimaryColor = "#FA8211";
 
 const buildColorScale = (
   color: string
@@ -28,6 +28,9 @@ export const theme = createTheme({
   defaultRadius: "md",
   colors: {
     brand: buildColorScale(defaultPrimaryColor),
+    orange: buildColorScale("#FA8211"),
+    green: buildColorScale("#88A80D"),
+    navy: buildColorScale("#041730"),
   },
   components: {
     Button: {

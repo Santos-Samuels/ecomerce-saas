@@ -34,7 +34,7 @@ export function LandingPage() {
           <Button
             size="lg"
             radius="xl"
-            color="blue"
+            color="orange"
             onClick={handleContact}
             leftSection={<FaWhatsapp size={20} />}
           >
@@ -44,6 +44,7 @@ export function LandingPage() {
             size="lg"
             radius="xl"
             variant="outline"
+            color="brand"
             onClick={() => (window.location.href = "/admin/login")}
           >
             Acessar Painel
@@ -60,7 +61,7 @@ export function LandingPage() {
             <S.FeatureCard>
               <FiLayout
                 size={40}
-                color="#228be6"
+                color="#88A80D"
                 style={{ marginBottom: 15 }}
               />
               <Title order={3} mb={10}>
@@ -75,7 +76,7 @@ export function LandingPage() {
             <S.FeatureCard>
               <FiSmartphone
                 size={40}
-                color="#228be6"
+                color="#88A80D"
                 style={{ marginBottom: 15 }}
               />
               <Title order={3} mb={10}>
@@ -90,7 +91,7 @@ export function LandingPage() {
             <S.FeatureCard>
               <FiTrendingUp
                 size={40}
-                color="#228be6"
+                color="#88A80D"
                 style={{ marginBottom: 15 }}
               />
               <Title order={3} mb={10}>
@@ -118,7 +119,7 @@ export function LandingPage() {
             size="xl"
             radius="xl"
             variant="white"
-            color="blue"
+            style={{ color: "#041730" }}
             onClick={handleContact}
           >
             Solicitar Demonstração

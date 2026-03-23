@@ -23,7 +23,7 @@ export const Header = styled.header`
 export const Logo = styled.div`
   font-size: 24px;
   font-weight: 800;
-  color: #228be6;
+  color: #FA8211;
   letter-spacing: -1px;
 `;
 
@@ -81,7 +81,7 @@ export const FeatureCard = styled.div`
 export const CTASection = styled.section`
   padding: 80px 20px;
   text-align: center;
-  background: #228be6;
+  background: #041730;
   color: white;
 `;
 

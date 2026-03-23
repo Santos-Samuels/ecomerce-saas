@@ -41,15 +41,15 @@ export const LogoMark = styled.div`
   border-radius: 999px;
   background: radial-gradient(
     circle at 30% 30%,
-    var(--mantine-color-blue-2),
-    var(--mantine-color-blue-7)
+    var(--mantine-color-brand-3),
+    var(--mantine-color-brand-6)
   );
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 14px;
-  color: var(--mantine-color-gray-9);
+  color: white;
 `;
 
 export const SidebarTitle = styled.div`
@@ -123,7 +123,7 @@ export const NavBullet = styled.span`
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: var(--mantine-color-blue-3);
+  background: var(--mantine-color-brand-4);
 `;
 
 export const SidebarSubNav = styled.div`
@@ -142,7 +142,7 @@ export const SidebarSubNavItem = styled.button<{ $active?: boolean }>`
   background: ${({ $active }) =>
     $active ? "rgba(15, 23, 42, 0.95)" : "transparent"};
   color: ${({ $active }) =>
-    $active ? "var(--mantine-color-gray-2)" : "var(--mantine-color-indigo-1)"};
+    $active ? "var(--mantine-color-gray-2)" : "var(--mantine-color-gray-4)"};
   font-size: 12px;
   text-align: left;
   cursor: pointer;

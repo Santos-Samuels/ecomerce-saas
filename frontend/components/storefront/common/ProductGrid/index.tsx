@@ -9,7 +9,7 @@ import {
   Image as MantineImage,
   SimpleGrid,
   Title,
-  Tooltip,
+  Tooltip
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Link from "next/link";

@@ -25,6 +25,7 @@ import { staffRolesReducer } from "./staffRoles/staffRolesSlice";
 import storeLayoutReducer from "./storeLayout/storeLayoutSlice";
 import { storefrontReducer } from "./storefront/storefrontSlice";
 import { cartReducer } from "./cart/cartSlice";
+import { whatsappReducer } from "./whatsapp/whatsappSlice";
 import { rootSaga } from "./sagas";
 
 const rootReducer = combineReducers({
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   staffStores: staffStoresReducer,
   staffRoles: staffRolesReducer,
   cart: cartReducer,
+  whatsapp: whatsappReducer,
 });
 
 const persistConfig = {
