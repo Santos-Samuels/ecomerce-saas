@@ -21,6 +21,8 @@ export class Store implements IStore {
 
   primaryColor?: string | null;
 
+  instagramHandle?: string | null;
+
   active: boolean;
 
   createdAt: Date;

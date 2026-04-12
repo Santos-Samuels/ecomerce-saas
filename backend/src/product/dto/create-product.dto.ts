@@ -1,16 +1,17 @@
-import {
-  ArrayMaxSize,
-  IsArray,
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Matches,
-  Min,
-  ValidateNested,
-} from 'class-validator';
 import { Type } from 'class-transformer';
+import {
+    ArrayMaxSize,
+    IsArray,
+    IsBoolean,
+    IsNumber,
+    IsOptional,
+    IsString,
+    IsUUID,
+    Matches,
+    Min,
+    ValidateIf,
+    ValidateNested,
+} from 'class-validator';
 
 class ProductColorDto {
   @IsString()
@@ -65,6 +66,7 @@ export class CreateProductDto {
 
   @IsUUID()
   @IsOptional()
+  @ValidateIf((o) => o.materialId && o.materialId !== '')
   materialId?: string;
 
   @IsBoolean()

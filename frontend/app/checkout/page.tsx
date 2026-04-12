@@ -266,7 +266,6 @@ export default function CheckoutPage() {
                     { value: "Cartão de crédito", label: "Cartão de crédito" },
                     { value: "Cartão de débito", label: "Cartão de débito" },
                     { value: "Dinheiro", label: "Dinheiro" },
-                    { value: "Transferência", label: "Transferência" },
                   ]}
                   {...form.getInputProps("paymentMethod")}
                   required

@@ -15,6 +15,11 @@ import {
     setLayoutSlice
 } from "./slices/layout.slice";
 import {
+    fetchPublicMaterials,
+    materialReducer,
+    setMaterialSlice
+} from "./slices/material.slice";
+import {
     fetchPublicProductBySlug,
     fetchPublicProducts,
     productReducer,
@@ -38,10 +43,11 @@ export const storefrontReducer = combineReducers({
   products: productReducer,
   categories: categoryReducer,
   vehicles: vehicleReducer,
+  materials: materialReducer,
 });
 
 export {
-    fetchCurrentStore, fetchPublicCategories, fetchPublicProductBySlug, fetchPublicProducts,
-    fetchPublicVehicles, fetchStoreFeedbacks, fetchStoreLayout, setCategorySlice, setFeedbackSlice, setLayoutSlice, setProductSlice, setStoreSlice, setVehicleSlice
+    fetchCurrentStore, fetchPublicCategories, fetchPublicMaterials, fetchPublicProductBySlug, fetchPublicProducts,
+    fetchPublicVehicles, fetchStoreFeedbacks, fetchStoreLayout, setCategorySlice, setFeedbackSlice, setLayoutSlice, setMaterialSlice, setProductSlice, setStoreSlice, setVehicleSlice
 };
 

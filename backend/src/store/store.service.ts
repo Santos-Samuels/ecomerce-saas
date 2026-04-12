@@ -1,9 +1,9 @@
+import { StorePermission } from '@ecomerce/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { Store } from './store.entity';
-import { StorePermission } from '@ecomerce/shared';
 
 @Injectable()
 export class StoreService {
@@ -38,14 +38,16 @@ export class StoreService {
   }
 
   async findAll(): Promise<Store[]> {
-    return this.prisma.store.findMany({
-      where: { active: true },
+    const stores = await this.prisma.store.findMany({
+      orderBy: { createdAt: 'desc' },
     });
+
+    return stores.map((s) => this.mapStore(s));
   }
 
   async findOne(id: string): Promise<Store> {
-    const store = await this.prisma.store.findFirst({
-      where: { id, active: true },
+    const store = await this.prisma.store.findUnique({
+      where: { id },
       include: {
         permissions: {
           include: { permission: true },
@@ -63,16 +65,10 @@ export class StoreService {
   async findPublicInfo(id: string) {
     const store = await this.prisma.store.findUnique({
       where: { id },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        address: true,
-        phone: true,
-        email: true,
-        logoUrl: true,
-        primaryColor: true,
-        instagramHandle: true,
+      include: {
+        permissions: {
+          include: { permission: true },
+        },
       },
     });
 
@@ -80,7 +76,7 @@ export class StoreService {
       throw new NotFoundException('Store not found');
     }
 
-    return store;
+    return this.mapStore(store);
   }
 
   async update(id: string, data: UpdateStoreDto): Promise<Store> {
@@ -167,9 +163,11 @@ export class StoreService {
       description: db.description,
       address: db.address,
       phone: db.phone,
+      secondaryPhone: db.secondaryPhone,
       email: db.email,
       logoUrl: db.logoUrl,
       primaryColor: db.primaryColor,
+      instagramHandle: db.instagramHandle,
       active: db.active,
       createdAt: db.createdAt,
       updatedAt: db.updatedAt,

@@ -20,7 +20,7 @@ export interface SaveProductPayload {
   sku: string;
   images: string[];
   categoryId: string;
-  materialId?: string;
+  materialId?: string | null;
   featured?: boolean;
   active: boolean;
   compatibleVehicleIds?: string[];

@@ -20,7 +20,7 @@ export interface ProductFormValues {
   stock: number;
   infiniteStock: boolean;
   categoryId: string;
-  materialId?: string;
+  materialId?: string | null;
   featured?: boolean;
   active: boolean;
   images: string[];
@@ -217,7 +217,12 @@ export function ProductFormModal({
       }
 
       const finalImages = [...values.images, ...uploadedUrls];
-      onSubmit({ ...values, images: finalImages });
+      const payload = {
+        ...values,
+        images: finalImages,
+        materialId: values.materialId === "" ? null : values.materialId,
+      };
+      onSubmit(payload);
     } catch (error) {
       console.error(error);
       notifications.show({

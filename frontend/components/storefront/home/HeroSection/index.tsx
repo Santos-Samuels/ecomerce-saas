@@ -1,11 +1,12 @@
 import { IStoreLayout } from "@ecomerce/shared";
-import { Button } from "@mantine/core";
+import { Button, Group } from "@mantine/core";
 import Link from "next/link";
+import { useBudget } from "../../common/BudgetModal/BudgetContext";
 import {
-  HeroContent,
-  HeroSubtitle,
-  HeroTitle,
-  HeroWrapper,
+    HeroContent,
+    HeroSubtitle,
+    HeroTitle,
+    HeroWrapper,
 } from "./styles";
 
 interface HeroSectionProps {
@@ -14,6 +15,8 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ layout, primaryColor }: HeroSectionProps) {
+  const { openBudget } = useBudget();
+
   if (!layout.heroTitle && !layout.heroSubtitle && !layout.heroBackgroundImage) {
     return null;
   }
@@ -27,17 +30,28 @@ export function HeroSection({ layout, primaryColor }: HeroSectionProps) {
         {layout.heroSubtitle && (
           <HeroSubtitle>{layout.heroSubtitle}</HeroSubtitle>
         )}
-        {layout.heroButtonText && layout.heroButtonLink && (
+        <Group mt="xl">
+          {layout.heroButtonText && layout.heroButtonLink && (
+            <Button
+              component={Link}
+              href={layout.heroButtonLink}
+              size="lg"
+              radius="md"
+              color={primaryColor || "brand"}
+            >
+              {layout.heroButtonText}
+            </Button>
+          )}
           <Button
-            component={Link}
-            href={layout.heroButtonLink}
+            variant="white"
             size="lg"
             radius="md"
+            onClick={openBudget}
             color={primaryColor || "brand"}
           >
-            {layout.heroButtonText}
+            Fazer Orçamento
           </Button>
-        )}
+        </Group>
       </HeroContent>
     </HeroWrapper>
   );

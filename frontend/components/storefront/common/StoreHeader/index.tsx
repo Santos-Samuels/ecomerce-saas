@@ -19,9 +19,10 @@ import {
 
 interface StoreHeaderProps {
   store: IStore | null;
+  onOpenBudget?: () => void;
 }
 
-export function StoreHeader({ store }: StoreHeaderProps) {
+export function StoreHeader({ store, onOpenBudget }: StoreHeaderProps) {
   const dispatch = useAppDispatch();
   const cartItemsCount = useAppSelector((state) => 
     state.cart.items.reduce((acc, item) => acc + item.quantity, 0)
@@ -47,6 +48,7 @@ export function StoreHeader({ store }: StoreHeaderProps) {
           <NavLink href="/">Início</NavLink>
           <NavLink href="/products">Produtos</NavLink>
           <NavLink href="/contact">Contatos</NavLink>
+          <NavLink as="button" onClick={onOpenBudget}>Orçamento</NavLink>
         </NavLinks>
 
         <NavActions>
