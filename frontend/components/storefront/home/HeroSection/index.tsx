@@ -3,10 +3,10 @@ import { Button, Group } from "@mantine/core";
 import Link from "next/link";
 import { useBudget } from "../../common/BudgetModal/BudgetContext";
 import {
-    HeroContent,
-    HeroSubtitle,
-    HeroTitle,
-    HeroWrapper,
+  HeroContent,
+  HeroSubtitle,
+  HeroTitle,
+  HeroWrapper,
 } from "./styles";
 
 interface HeroSectionProps {
@@ -42,7 +42,7 @@ export function HeroSection({ layout, primaryColor }: HeroSectionProps) {
               {layout.heroButtonText}
             </Button>
           )}
-          <Button
+          {layout.heroButtonText && !layout.heroButtonLink && <Button
             variant="white"
             size="lg"
             radius="md"
@@ -50,7 +50,7 @@ export function HeroSection({ layout, primaryColor }: HeroSectionProps) {
             color={primaryColor || "brand"}
           >
             Fazer Orçamento
-          </Button>
+          </Button>}
         </Group>
       </HeroContent>
     </HeroWrapper>

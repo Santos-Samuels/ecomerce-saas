@@ -8,8 +8,7 @@ export const HeroWrapper = styled.div<{ $backgroundImage?: string | null }>`
     $backgroundImage ? `url(${$backgroundImage})` : "none"};
   background-size: cover;
   background-position: center;
-  background-color: ${({ $backgroundImage }) =>
-    $backgroundImage ? "transparent" : "var(--mantine-color-gray-1)"};
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,8 +25,8 @@ export const HeroWrapper = styled.div<{ $backgroundImage?: string | null }>`
     bottom: 0;
     background: ${({ $backgroundImage }) =>
       $backgroundImage
-        ? "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5))"
-        : "none"};
+        ? "none"
+        : "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5))"};
     z-index: 1;
   }
 `;

@@ -53,7 +53,7 @@ export function HeroSectionForm({ values, onChange, onUploadImage, uploading }: 
             src={values.heroBackgroundImage}
             alt="Hero Background"
             radius="md"
-            h={200}
+            h={500}
             w="100%"
             fit="cover"
             mb="sm"
