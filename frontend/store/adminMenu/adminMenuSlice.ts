@@ -74,6 +74,11 @@ const initialState: AdminMenuState = {
           label: "Layout",
           path: "/admin/store/layout",
         },
+        {
+          id: "store-gallery",
+          label: "Galeria",
+          path: "/admin/store/gallery",
+        },
       ],
     },
   ],

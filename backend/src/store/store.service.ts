@@ -166,6 +166,8 @@ export class StoreService {
       secondaryPhone: db.secondaryPhone,
       email: db.email,
       logoUrl: db.logoUrl,
+      mapEmbedUrl: db.mapEmbedUrl,
+      storefrontImageUrl: db.storefrontImageUrl,
       primaryColor: db.primaryColor,
       instagramHandle: db.instagramHandle,
       active: db.active,

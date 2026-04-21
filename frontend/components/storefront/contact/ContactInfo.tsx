@@ -40,7 +40,10 @@ export function ContactInfo({ store }: ContactInfoProps) {
           </IconWrapper>
           <InfoContent>
             <InfoLabel>Telefone / WhatsApp</InfoLabel>
-            <InfoValue>{store.phone}{store.secondaryPhone ? ` / ${store.secondaryPhone}` : ""}</InfoValue>
+            <InfoValue>
+              {store.phone}
+              {store.secondaryPhone ? ` / ${store.secondaryPhone}` : ""}
+            </InfoValue>
           </InfoContent>
         </InfoItem>
       )}
@@ -64,7 +67,7 @@ export function ContactInfo({ store }: ContactInfoProps) {
               component="a"
               href={`https://instagram.com/${store.instagramHandle.replace(
                 "@",
-                ""
+                "",
               )}`}
               target="_blank"
               size="xl"

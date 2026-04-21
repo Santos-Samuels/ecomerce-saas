@@ -9,3 +9,4 @@ export * from './product.interface';
 export * from './orders.interface';
 export * from './payment-method.interface';
 export * from './store-layout.interface';
+export * from './gallery.interface';

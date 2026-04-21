@@ -20,6 +20,11 @@ import {
     setMaterialSlice
 } from "./slices/material.slice";
 import {
+    fetchPublicGallery,
+    setStorefrontGallerySlice,
+    storefrontGalleryReducer
+} from "./slices/gallery.slice";
+import {
     fetchPublicProductBySlug,
     fetchPublicProducts,
     productReducer,
@@ -40,6 +45,7 @@ export const storefrontReducer = combineReducers({
   store: storeReducer,
   layout: layoutReducer,
   feedbacks: feedbackReducer,
+  gallery: storefrontGalleryReducer,
   products: productReducer,
   categories: categoryReducer,
   vehicles: vehicleReducer,
@@ -47,7 +53,7 @@ export const storefrontReducer = combineReducers({
 });
 
 export {
-    fetchCurrentStore, fetchPublicCategories, fetchPublicMaterials, fetchPublicProductBySlug, fetchPublicProducts,
-    fetchPublicVehicles, fetchStoreFeedbacks, fetchStoreLayout, setCategorySlice, setFeedbackSlice, setLayoutSlice, setMaterialSlice, setProductSlice, setStoreSlice, setVehicleSlice
+    fetchCurrentStore, fetchPublicCategories, fetchPublicGallery, fetchPublicMaterials, fetchPublicProductBySlug, fetchPublicProducts,
+    fetchPublicVehicles, fetchStoreFeedbacks, fetchStoreLayout, setCategorySlice, setFeedbackSlice, setLayoutSlice, setMaterialSlice, setProductSlice, setStoreSlice, setStorefrontGallerySlice, setVehicleSlice
 };
 

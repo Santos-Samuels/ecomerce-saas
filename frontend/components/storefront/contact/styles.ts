@@ -104,3 +104,63 @@ export const SocialGrid = styled.div`
   padding-top: 32px;
   border-top: 1px solid var(--mantine-color-gray-2);
 `;
+
+export const StorefrontImageWrapper = styled.div`
+  width: 100%;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  line-height: 0;
+`;
+
+export const MapEmbedWrapper = styled.div`
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  height: 0;
+  padding-bottom: 56.25%;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+`;
+
+export const LocationSection = styled.section`
+  margin-top: 48px;
+`;
+
+export const LocationTitle = styled.h2`
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  color: var(--mantine-color-dark-9);
+  text-align: center;
+`;
+
+export const LocationGrid = styled.div<{ $single: boolean }>`
+  display: grid;
+  gap: 24px;
+  grid-template-columns: ${({ $single }) => ($single ? "1fr" : "1fr 1.2fr")};
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const LocationCard = styled.div`
+  background: white;
+  padding: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+`;
+
+export const LocationMapCard = styled(LocationCard)`
+  min-height: 280px;
+`;

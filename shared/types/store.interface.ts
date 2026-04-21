@@ -10,6 +10,10 @@ export interface IStore {
   secondaryPhone?: string | null;
   email: string;
   logoUrl?: string | null;
+  /** Link de incorporação do Google Maps (para iframe) */
+  mapEmbedUrl?: string | null;
+  /** URL da imagem da fachada da loja */
+  storefrontImageUrl?: string | null;
   primaryColor?: string | null;
   instagramHandle?: string | null;
   active: boolean;

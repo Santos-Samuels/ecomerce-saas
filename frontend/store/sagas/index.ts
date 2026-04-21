@@ -5,6 +5,7 @@ import { watchProductMaterials } from "./productMaterials";
 import { watchProducts } from "./products";
 import { watchVehicles } from "./vehicles";
 import { watchStoreSettings } from "./storeSettings";
+import { watchGallery } from "./gallery";
 import { watchStoreFeedbacks } from "./storeFeedbacks";
 import { watchStoreLayout } from "./storeLayout";
 import { watchStorefront } from "./storefront";
@@ -23,6 +24,7 @@ export function* rootSaga() {
     watchVehicles(),
     watchStoreSettings(),
     watchStoreFeedbacks(),
+    watchGallery(),
     watchStoreLayout(),
     watchStorefront(),
     watchStaffPermissions(),

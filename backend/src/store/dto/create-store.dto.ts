@@ -38,6 +38,14 @@ export class CreateStoreDto {
 
   @IsString()
   @IsOptional()
+  mapEmbedUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  storefrontImageUrl?: string;
+
+  @IsString()
+  @IsOptional()
   primaryColor?: string;
 
   @IsString()

@@ -19,6 +19,10 @@ export class Store implements IStore {
 
   logoUrl?: string | null;
 
+  mapEmbedUrl?: string | null;
+
+  storefrontImageUrl?: string | null;
+
   primaryColor?: string | null;
 
   instagramHandle?: string | null;

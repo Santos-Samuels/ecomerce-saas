@@ -18,6 +18,7 @@ import { adminMenuReducer } from "./adminMenu/adminMenuSlice";
 import { storeSettingsReducer } from "./storeSettings/storeSettingsSlice";
 import { productsReducer } from "./products/productsSlice";
 import { vehiclesReducer } from "./vehicles/vehiclesSlice";
+import { galleryReducer } from "./gallery/gallerySlice";
 import { storeFeedbacksReducer } from "./storeFeedbacks/storeFeedbacksSlice";
 import { staffPermissionsReducer } from "./staffPermissions/staffPermissionsSlice";
 import { staffStoresReducer } from "./staffStores/staffStoresSlice";
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   adminMenu: adminMenuReducer,
   storeSettings: storeSettingsReducer,
   storeFeedbacks: storeFeedbacksReducer,
+  gallery: galleryReducer,
   storeLayout: storeLayoutReducer,
   storefront: storefrontReducer,
   staffPermissions: staffPermissionsReducer,

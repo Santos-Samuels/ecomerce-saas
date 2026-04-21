@@ -18,6 +18,8 @@ export interface SaveStoreSettingsPayload {
   phone: string;
   email: string;
   logoUrl?: string;
+  mapEmbedUrl?: string | null;
+  storefrontImageUrl?: string | null;
   primaryColor?: string | null;
   instagramHandle?: string;
 }

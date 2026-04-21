@@ -1,4 +1,12 @@
-import { IProduct, IProductCategory, IStore, IStoreFeedback, IStoreLayout, IVehicle } from "@ecomerce/shared";
+import {
+  IGallery,
+  IProduct,
+  IProductCategory,
+  IStore,
+  IStoreFeedback,
+  IStoreLayout,
+  IVehicle,
+} from "@ecomerce/shared";
 
 export interface FilterProductDto {
   categoryId?: string;
@@ -23,6 +31,11 @@ export interface StorefrontFeedbacksState {
   loading: boolean;
 }
 
+export interface StorefrontGalleryState {
+  items: IGallery[];
+  loading: boolean;
+}
+
 export interface StorefrontProductsState {
   items: IProduct[];
   currentProduct: IProduct | null;
@@ -44,6 +57,7 @@ export interface StorefrontState {
   store: StorefrontStoreState;
   layout: StorefrontLayoutState;
   feedbacks: StorefrontFeedbacksState;
+  gallery: StorefrontGalleryState;
   products: StorefrontProductsState;
   categories: StorefrontCategoriesState;
   vehicles: StorefrontVehiclesState;

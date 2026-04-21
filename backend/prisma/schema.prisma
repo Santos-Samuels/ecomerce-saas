@@ -16,6 +16,10 @@ model Store {
   secondaryPhone String?
   email       String   @unique
   logoUrl     String?
+  // URL de incorporação do Google Maps (iframe src)
+  mapEmbedUrl String?
+  // Imagem da fachada da loja
+  storefrontImageUrl String?
   primaryColor String?
   instagramHandle String?
   subdomain   String   @unique
@@ -31,6 +35,17 @@ model Store {
   storeFeedbacks    StoreFeedback[]
   layout            StoreLayout?
   permissions       StorePermission[]
+  gallery           Gallery[]
+}
+
+model Gallery {
+  id        String   @id @default(uuid())
+  storeId   String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
 }
 
 model StoreLayout {

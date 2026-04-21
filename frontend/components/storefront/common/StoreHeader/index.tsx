@@ -47,6 +47,7 @@ export function StoreHeader({ store, onOpenBudget }: StoreHeaderProps) {
         <NavLinks>
           <NavLink href="/">Início</NavLink>
           <NavLink href="/products">Produtos</NavLink>
+          <NavLink href="/gallery">Galeria</NavLink>
           <NavLink href="/contact">Contatos</NavLink>
           <NavLink as="button" onClick={onOpenBudget}>Orçamento</NavLink>
         </NavLinks>

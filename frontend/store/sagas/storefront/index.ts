@@ -1,6 +1,7 @@
 import {
   fetchCurrentStore,
   fetchPublicCategories,
+  fetchPublicGallery,
   fetchPublicMaterials,
   fetchPublicProductBySlug,
   fetchPublicProducts,
@@ -15,6 +16,7 @@ import { handleFetchPublicMaterials } from "./handleFetchPublicMaterials";
 import { handleFetchPublicProductBySlug } from "./handleFetchPublicProductBySlug";
 import { handleFetchPublicProducts } from "./handleFetchPublicProducts";
 import { handleFetchPublicVehicles } from "./handleFetchPublicVehicles";
+import { handleFetchPublicGallery } from "./handleFetchPublicGallery";
 import { handleFetchStoreFeedbacks } from "./handleFetchStoreFeedbacks";
 import { handleFetchStoreLayout } from "./handleFetchStoreLayout";
 
@@ -30,4 +32,5 @@ export function* watchStorefront() {
   yield takeLatest(fetchCurrentStore.type, handleFetchCurrentStore);
   yield takeLatest(fetchStoreLayout.type, handleFetchStoreLayout);
   yield takeLatest(fetchStoreFeedbacks.type, handleFetchStoreFeedbacks);
+  yield takeLatest(fetchPublicGallery.type, handleFetchPublicGallery);
 }

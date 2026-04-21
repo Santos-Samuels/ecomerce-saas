@@ -16,18 +16,72 @@ import {
 } from "@/store/storeSettings/storeSettingsSlice";
 import { api } from "@/lib/api";
 
+type ImageKitAuth = {
+  token: string;
+  expire: number;
+  signature: string;
+  publicKey: string;
+  uploadEndpoint: string;
+};
+
+async function uploadImageToImageKit(
+  file: File,
+  storeId: string,
+): Promise<string> {
+  const authResponse = await api.get<ImageKitAuth>("/imagekit/auth");
+
+  const { token, expire, signature, publicKey, uploadEndpoint } =
+    authResponse.data;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("fileName", file.name);
+  formData.append("publicKey", publicKey);
+  formData.append("token", token);
+  formData.append("expire", String(expire));
+  formData.append("signature", signature);
+  formData.append("folder", `stores/${storeId}`);
+
+  const uploadResponse = await fetch(uploadEndpoint, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!uploadResponse.ok) {
+    throw new Error("Upload failed");
+  }
+
+  const uploadData = (await uploadResponse.json()) as { url?: string };
+
+  if (!uploadData.url) {
+    throw new Error("Upload response missing URL");
+  }
+
+  return uploadData.url;
+}
+
+function revokeBlobUrl(url: string | undefined) {
+  if (url?.startsWith("blob:")) {
+    URL.revokeObjectURL(url);
+  }
+}
+
 export default function StoreSettingsPage() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { store, loading, saving } = useAppSelector(
-    (state) => state.storeSettings
+    (state) => state.storeSettings,
   );
   const [formState, setFormState] = useState<StoreFormValues | null>(null);
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | undefined>(
-    undefined
+    undefined,
   );
-  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [storefrontPreviewUrl, setStorefrontPreviewUrl] = useState<
+    string | undefined
+  >(undefined);
+  const [uploading, setUploading] = useState(false);
   const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [storefrontFile, setStorefrontFile] = useState<File | null>(null);
 
   const storeId = user?.storeId;
 
@@ -47,26 +101,29 @@ export default function StoreSettingsPage() {
       phone: store.phone,
       email: store.email,
       logoUrl: store.logoUrl ?? undefined,
+      mapEmbedUrl: store.mapEmbedUrl ?? null,
+      storefrontImageUrl: store.storefrontImageUrl ?? null,
       primaryColor: store.primaryColor ?? null,
       instagramHandle: store.instagramHandle ?? undefined,
     });
     setLogoPreviewUrl(store.logoUrl ?? undefined);
+    setStorefrontPreviewUrl(store.storefrontImageUrl ?? undefined);
     setLogoFile(null);
+    setStorefrontFile(null);
   }, [store]);
 
   useEffect(() => {
     return () => {
-      if (logoPreviewUrl) {
-        URL.revokeObjectURL(logoPreviewUrl);
-      }
+      revokeBlobUrl(logoPreviewUrl);
+      revokeBlobUrl(storefrontPreviewUrl);
     };
-  }, [logoPreviewUrl]);
+  }, [logoPreviewUrl, storefrontPreviewUrl]);
 
   if (!user || !storeId) return null;
 
   const handleChange = <K extends keyof StoreFormValues>(
     key: K,
-    value: StoreFormValues[K]
+    value: StoreFormValues[K],
   ) => {
     setFormState((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
@@ -74,9 +131,7 @@ export default function StoreSettingsPage() {
   const handleUploadLogo = (file: File) => {
     if (!formState) return;
 
-    if (logoPreviewUrl) {
-      URL.revokeObjectURL(logoPreviewUrl);
-    }
+    revokeBlobUrl(logoPreviewUrl);
 
     const previewUrl = URL.createObjectURL(file);
 
@@ -84,53 +139,39 @@ export default function StoreSettingsPage() {
     setLogoFile(file);
   };
 
+  const handleUploadStorefront = (file: File) => {
+    if (!formState) return;
+
+    revokeBlobUrl(storefrontPreviewUrl);
+
+    const previewUrl = URL.createObjectURL(file);
+
+    setStorefrontPreviewUrl(previewUrl);
+    setStorefrontFile(file);
+  };
+
   const handleSubmit = async () => {
     if (!formState) return;
 
     try {
-      setUploadingLogo(true);
+      setUploading(true);
 
       let logoUrl = formState.logoUrl;
+      let storefrontImageUrl = formState.storefrontImageUrl;
 
       if (logoFile) {
-        const authResponse = await api.get<{
-          token: string;
-          expire: number;
-          signature: string;
-          publicKey: string;
-          uploadEndpoint: string;
-        }>("/imagekit/auth");
-
-        const { token, expire, signature, publicKey, uploadEndpoint } =
-          authResponse.data;
-
-        const formData = new FormData();
-        formData.append("file", logoFile);
-        formData.append("fileName", logoFile.name);
-        formData.append("publicKey", publicKey);
-        formData.append("token", token);
-        formData.append("expire", String(expire));
-        formData.append("signature", signature);
-        formData.append("folder", `stores/${storeId}`);
-
-        const uploadResponse = await fetch(uploadEndpoint, {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Upload failed");
-        }
-
-        const uploadData = (await uploadResponse.json()) as { url?: string };
-
-        if (!uploadData.url) {
-          throw new Error("Upload response missing URL");
-        }
-
-        logoUrl = uploadData.url;
-        setLogoPreviewUrl(uploadData.url);
+        logoUrl = await uploadImageToImageKit(logoFile, storeId);
+        setLogoPreviewUrl(logoUrl);
         setLogoFile(null);
+      }
+
+      if (storefrontFile) {
+        storefrontImageUrl = await uploadImageToImageKit(
+          storefrontFile,
+          storeId,
+        );
+        setStorefrontPreviewUrl(storefrontImageUrl);
+        setStorefrontFile(null);
       }
 
       dispatch(
@@ -142,11 +183,16 @@ export default function StoreSettingsPage() {
           phone: formState.phone,
           email: formState.email,
           logoUrl,
+          mapEmbedUrl: formState.mapEmbedUrl?.trim()
+            ? formState.mapEmbedUrl.trim()
+            : null,
+          storefrontImageUrl,
           primaryColor: formState.primaryColor,
-        })
+          instagramHandle: formState.instagramHandle,
+        }),
       );
     } finally {
-      setUploadingLogo(false);
+      setUploading(false);
     }
   };
 
@@ -170,10 +216,12 @@ export default function StoreSettingsPage() {
           <StoreSettingsForm
             store={formState}
             saving={saving}
-            uploadingLogo={uploadingLogo}
+            uploading={uploading}
             logoPreviewUrl={logoPreviewUrl}
+            storefrontPreviewUrl={storefrontPreviewUrl}
             onChange={handleChange}
             onUploadLogo={handleUploadLogo}
+            onUploadStorefront={handleUploadStorefront}
             onSubmit={handleSubmit}
           />
         )}
