@@ -31,12 +31,21 @@ export const AboutTitle = styled.h2`
   font-weight: 700;
   color: var(--mantine-color-dark-9);
   line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
 `;
 
 export const AboutDescription = styled.p`
   font-size: 18px;
   color: var(--mantine-color-gray-7);
   line-height: 1.6;
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+    line-height: 1.5;
+  }
 `;
 
 export const AboutImageWrapper = styled.div`

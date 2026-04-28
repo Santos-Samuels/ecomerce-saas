@@ -2,7 +2,8 @@ import { toggleCart } from "@/store/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { IStore } from "@ecomerce/shared";
 import { Indicator } from "@mantine/core";
-import { FiMenu, FiSearch, FiShoppingBag, FiUser } from "react-icons/fi";
+import { useState } from "react";
+import { FiMenu, FiShoppingBag, FiX } from "react-icons/fi";
 import {
   ActionButton,
   FallbackLogo,
@@ -11,6 +12,7 @@ import {
   LogoImage,
   LogoSection,
   MobileMenuButton,
+  MobileNavLinks,
   NavActions,
   NavLink,
   NavLinks,
@@ -24,6 +26,7 @@ interface StoreHeaderProps {
 
 export function StoreHeader({ store, onOpenBudget }: StoreHeaderProps) {
   const dispatch = useAppDispatch();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cartItemsCount = useAppSelector((state) => 
     state.cart.items.reduce((acc, item) => acc + item.quantity, 0)
   );
@@ -53,12 +56,6 @@ export function StoreHeader({ store, onOpenBudget }: StoreHeaderProps) {
         </NavLinks>
 
         <NavActions>
-          <ActionButton aria-label="Search">
-            <FiSearch size={20} />
-          </ActionButton>
-          <ActionButton aria-label="Account">
-            <FiUser size={20} />
-          </ActionButton>
           <Indicator 
             label={cartItemsCount} 
             size={16} 
@@ -75,11 +72,38 @@ export function StoreHeader({ store, onOpenBudget }: StoreHeaderProps) {
               <FiShoppingBag size={20} />
             </ActionButton>
           </Indicator>
-          <MobileMenuButton aria-label="Menu">
-            <FiMenu size={20} />
+          <MobileMenuButton
+            aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          >
+            {isMobileMenuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
           </MobileMenuButton>
         </NavActions>
       </HeaderContainer>
+
+      <MobileNavLinks $isOpen={isMobileMenuOpen}>
+        <NavLink href="/" onClick={() => setIsMobileMenuOpen(false)}>
+          Início
+        </NavLink>
+        <NavLink href="/products" onClick={() => setIsMobileMenuOpen(false)}>
+          Produtos
+        </NavLink>
+        <NavLink href="/gallery" onClick={() => setIsMobileMenuOpen(false)}>
+          Galeria
+        </NavLink>
+        <NavLink href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+          Contatos
+        </NavLink>
+        <NavLink
+          as="button"
+          onClick={() => {
+            onOpenBudget?.();
+            setIsMobileMenuOpen(false);
+          }}
+        >
+          Orçamento
+        </NavLink>
+      </MobileNavLinks>
     </HeaderWrapper>
   );
 }

@@ -22,9 +22,14 @@ export function HeroSection({ layout, primaryColor }: HeroSectionProps) {
   }
 
   const hasImage = !!layout.heroBackgroundImage;
+  const hasTextContent =
+    !!layout.heroTitle || !!layout.heroSubtitle || !!layout.heroButtonText;
 
   return (
-    <HeroWrapper $backgroundImage={layout.heroBackgroundImage}>
+    <HeroWrapper
+      $backgroundImage={layout.heroBackgroundImage}
+      $contentless={!hasTextContent}
+    >
       <HeroContent $hasImage={hasImage}>
         {layout.heroTitle && <HeroTitle>{layout.heroTitle}</HeroTitle>}
         {layout.heroSubtitle && (

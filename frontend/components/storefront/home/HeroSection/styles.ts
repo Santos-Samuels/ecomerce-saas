@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
-export const HeroWrapper = styled.div<{ $backgroundImage?: string | null }>`
+export const HeroWrapper = styled.div<{
+  $backgroundImage?: string | null;
+  $contentless?: boolean;
+}>`
   position: relative;
   width: 100%;
   min-height: 500px;
@@ -28,6 +31,15 @@ export const HeroWrapper = styled.div<{ $backgroundImage?: string | null }>`
         ? "none"
         : "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5))"};
     z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    min-height: ${({ $contentless }) =>
+      $contentless ? "clamp(120px, 34vw, 180px)" : "300px"};
+    padding: ${({ $contentless }) => ($contentless ? "8px 16px" : "40px 16px")};
+    background-size: ${({ $contentless }) => ($contentless ? "contain" : "cover")};
+    background-repeat: no-repeat;
+    background-position: center top;
   }
 `;
 

@@ -20,6 +20,7 @@ export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 `;
 
 export const LogoSection = styled.a`
@@ -29,6 +30,8 @@ export const LogoSection = styled.a`
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  min-width: 0;
+  flex: 1;
   
   &:hover {
     opacity: 0.9;
@@ -61,9 +64,12 @@ export const StoreName = styled.h1`
   font-weight: 700;
   margin: 0;
   line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   
   @media (max-width: 768px) {
-    font-size: 18px;
+    font-size: 16px;
   }
 `;
 
@@ -71,6 +77,7 @@ export const NavLinks = styled.nav`
   display: flex;
   gap: 32px;
   margin: 0 48px;
+  flex-shrink: 0;
 
   @media (max-width: 768px) {
     display: none;
@@ -112,6 +119,7 @@ export const NavActions = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-shrink: 0;
 `;
 
 export const ActionButton = styled.button`
@@ -136,5 +144,23 @@ export const MobileMenuButton = styled(ActionButton)`
   display: none;
   @media (max-width: 768px) {
     display: flex;
+  }
+`;
+
+export const MobileNavLinks = styled.nav<{ $isOpen: boolean }>`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 20px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+    ${NavLink} {
+      width: 100%;
+      text-align: left;
+      padding: 10px 0;
+    }
   }
 `;

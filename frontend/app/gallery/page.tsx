@@ -92,7 +92,7 @@ export default function GalleryPage() {
           ) : items.length === 0 ? (
             <Text c="dimmed">Em breve novas fotos por aqui.</Text>
           ) : (
-            <SimpleGrid cols={{ base: 2, sm: 3, md: 4 }} spacing="md">
+            <SimpleGrid cols={{ base: 1, sm: 3, md: 4 }} spacing="md">
               {items.map((item) => (
                 <Box key={item.id}>
                   <img

@@ -66,7 +66,7 @@ export function ProductGrid({
         </Title>
       )}
 
-      <SimpleGrid cols={{ base: 1, xs: 2, sm: 3, md: 4, lg: 4 }} spacing="md">
+      <SimpleGrid cols={{ base: 2, xs: 2, sm: 2, md: 2, lg: 2 }} spacing="md">
         {products.map((product) => {
           const discount = product.promotionalPrice
             ? calculateDiscount(Number(product.price), Number(product.promotionalPrice))
