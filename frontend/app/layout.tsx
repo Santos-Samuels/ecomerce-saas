@@ -22,6 +22,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "E-commerce Admin",
   description: "Portal Administrativo",
+  icons: {
+    icon: "/vendemais-icone.png",
+    shortcut: "/vendemais-icone.png",
+    apple: "/vendemais-icone.png",
+  },
 };
 
 export default function RootLayout({
@@ -33,6 +38,9 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
+        <link rel="icon" type="image/png" href="/vendemais-icone.png" />
+        <link rel="shortcut icon" href="/vendemais-icone.png" />
+        <link rel="apple-touch-icon" href="/vendemais-icone.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
