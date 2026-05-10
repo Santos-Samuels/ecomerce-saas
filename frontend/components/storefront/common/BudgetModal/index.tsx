@@ -41,6 +41,7 @@ export function BudgetModal({ store, opened, onClose }: BudgetModalProps) {
   const { items: materials, loading: materialsLoading } = useAppSelector((state) => state.storefront.materials);
   const { items: categories, loading: categoriesLoading } = useAppSelector((state) => state.storefront.categories);
   const [active, setActive] = useState(0);
+  const today = new Date().toLocaleDateString("en-CA");
 
   const canManageMaterials = store.permissions?.includes(StorePermission.MATERIAL_MANAGE);
 
@@ -72,6 +73,7 @@ export function BudgetModal({ store, opened, onClose }: BudgetModalProps) {
       vehicleDetails: (v) => (active === 1 && v.trim().length === 0 ? "Informe os detalhes do veículo" : null),
       paymentMethod: (v) => (active === 2 && !v ? "Selecione uma forma de pagamento" : null),
       friendName: (v, values) => (active === 2 && values.pickupOption === "friend" && !v ? "Informe o nome do amigo" : null),
+      deliveryDate: (v) => (active === 2 && v && v < today ? "A data não pode ser no passado" : null),
     },
   });
 
@@ -198,6 +200,7 @@ export function BudgetModal({ store, opened, onClose }: BudgetModalProps) {
               <TextInput
                 label="Data pretendida para entrega"
                 type="date"
+                min={today}
                 {...form.getInputProps("deliveryDate")}
               />
 

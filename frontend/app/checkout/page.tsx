@@ -27,6 +27,7 @@ import * as S from "./styles";
 interface CheckoutFormValues {
   customerName: string;
   customerPhone: string;
+  vehicleDetails: string;
   paymentMethod: string;
   pickupDate: string;
   observations: string;
@@ -35,6 +36,7 @@ interface CheckoutFormValues {
 export default function CheckoutPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const today = new Date().toLocaleDateString("en-CA");
   const {
     store: { data: store, loading: storeLoading, notFound: storeNotFound },
   } = useAppSelector((state) => state.storefront);
@@ -50,6 +52,7 @@ export default function CheckoutPage() {
     initialValues: {
       customerName: "",
       customerPhone: "",
+      vehicleDetails: "",
       paymentMethod: "",
       pickupDate: "",
       observations: "",
@@ -58,8 +61,10 @@ export default function CheckoutPage() {
       customerName: (v) => (v.trim().length < 2 ? "Informe o nome completo" : null),
       customerPhone: (v) =>
         v.replace(/\D/g, "").length < 10 ? "Informe um WhatsApp válido" : null,
+      vehicleDetails: (v) => (v.trim().length === 0 ? "Informe os detalhes do veículo" : null),
       paymentMethod: (v) => (!v ? "Selecione a forma de pagamento" : null),
-      pickupDate: (v) => (!v ? "Informe a data de retirada" : null),
+      pickupDate: (v) =>
+        !v ? "Informe a data de retirada" : v < today ? "A data não pode ser no passado" : null,
     },
   });
 
@@ -146,6 +151,7 @@ export default function CheckoutPage() {
       "*Cliente*",
       `- Nome: ${values.customerName}`,
       `- WhatsApp: ${values.customerPhone}`,
+      `- Veículo: ${values.vehicleDetails}`,
       "",
       "*Entrega*",
       "- Forma: *Retirada na loja*",
@@ -235,6 +241,12 @@ export default function CheckoutPage() {
                     {...form.getInputProps("customerPhone")}
                     required
                   />
+                  <TextInput
+                    label="Veículo (Marca, Modelo e Ano)"
+                    placeholder="Ex: Volvo FH 2020"
+                    {...form.getInputProps("vehicleDetails")}
+                    required
+                  />
                 </Stack>
               </S.Section>
 
@@ -250,6 +262,7 @@ export default function CheckoutPage() {
                   <TextInput
                     type="date"
                     label="Data de retirada"
+                    min={today}
                     {...form.getInputProps("pickupDate")}
                     required
                   />

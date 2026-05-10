@@ -17,14 +17,20 @@ export function AboutSection({ layout }: AboutSectionProps) {
     return null;
   }
 
+  const aboutParagraphs =
+    layout.aboutDescription
+      ?.split(/\r?\n+/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean) ?? [];
+
   return (
     <AboutWrapper>
       <AboutContainer>
         <AboutContent>
           {layout.aboutTitle && <AboutTitle>{layout.aboutTitle}</AboutTitle>}
-          {layout.aboutDescription && (
-            <AboutDescription>{layout.aboutDescription}</AboutDescription>
-          )}
+          {aboutParagraphs.map((paragraph, index) => (
+            <AboutDescription key={`${paragraph}-${index}`}>{paragraph}</AboutDescription>
+          ))}
         </AboutContent>
         {layout.aboutImage && (
           <AboutImageWrapper>
